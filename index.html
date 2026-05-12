@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0e14">
+<title>BHA Checklist — Op. Especiais</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Source+Code+Pro:wght@500;600&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0e14;--surf:#141920;--surf2:#1b2230;--bord:#252d3a;--amber:#f59e0b;--green:#22c55e;--red:#ef4444;--blue:#60a5fa;--purple:#a78bfa;--text:#dde4f0;--muted:#6b7a99;--dim:#3d4d66;--head:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;--mono:'Source Code Pro',monospace;--topH:56px;--botH:64px;--safe-bot:env(safe-area-inset-bottom,0px);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--body);overflow:hidden;}
+input,select,textarea{font-family:var(--body);color:var(--text);background:var(--surf2);border:1.5px solid var(--bord);border-radius:8px;padding:10px 14px;font-size:15px;outline:none;width:100%;-webkit-appearance:none;}
+input[type=date]{color-scheme:dark;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%236b7a99'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+textarea{resize:vertical;min-height:72px;}
+button{font-family:var(--body);cursor:pointer;border:none;outline:none;}
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topH);background:var(--surf);border-bottom:1px solid var(--bord);z-index:100;display:flex;align-items:center;padding:0 14px;gap:10px;}
+#topbar-back{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--amber);font-size:22px;border:none;background:transparent;flex-shrink:0;}
+#topbar-title{font-family:var(--head);font-size:19px;font-weight:900;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#sync-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;flex-shrink:0;border:1px solid var(--bord);color:var(--muted);cursor:pointer;}
+#sync-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);}
+.sp-online #sync-dot{background:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,0.2);}
+.sp-online{border-color:rgba(34,197,94,0.3)!important;color:var(--green)!important;}
+.sp-offline{border-color:rgba(245,158,11,0.3)!important;color:var(--amber)!important;}
+.sp-offline #sync-dot{background:var(--amber);}
+.sp-error{border-color:rgba(239,68,68,0.3)!important;color:var(--red)!important;}
+.sp-error #sync-dot{background:var(--red);}
+#stepbar{position:fixed;top:var(--topH);left:0;right:0;background:var(--surf);border-bottom:1px solid var(--bord);z-index:99;display:none;padding:8px 16px;}
+#stepbar.show{display:block;}
+.stepbar-row{display:flex;gap:4px;}
+.step-dot{flex:1;height:3px;border-radius:2px;background:var(--bord);transition:background 0.3s;}
+.step-dot.done{background:var(--green);}
+.step-dot.cur{background:var(--amber);}
+.stepbar-lbl{display:flex;justify-content:space-between;margin-top:5px;}
+.stepbar-lbl span{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1px;}
+#stepbar-txt{font-size:11px;color:var(--amber);font-weight:700;margin-top:4px;}
+.view{position:fixed;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none;padding-bottom:calc(var(--botH) + var(--safe-bot) + 20px);}
+.view.active{display:block;}
+.view.full-top{top:var(--topH);}
+.view.step-top{top:calc(var(--topH) + 64px);}
+.pad{padding:16px;}
+.section{background:var(--surf);border:1px solid var(--bord);border-radius:12px;margin-bottom:14px;overflow:hidden;}
+.sec-hdr{padding:10px 16px;border-bottom:1px solid var(--bord);font-size:10px;font-weight:800;color:var(--amber);letter-spacing:2px;text-transform:uppercase;background:var(--surf2);display:flex;align-items:center;justify-content:space-between;}
+.sec-body{padding:14px 16px;}
+.field{margin-bottom:13px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.field label.req::after{content:' ★';color:var(--amber);}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#botnav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--botH) + var(--safe-bot));background:var(--surf);border-top:1px solid var(--bord);z-index:100;display:flex;align-items:flex-start;padding-top:8px;}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;background:none;border:none;color:var(--muted);}
+.bnav-btn.active{color:var(--amber);}
+.bnav-btn svg{width:22px;height:22px;}
+.bnav-btn span{font-size:9px;font-weight:700;letter-spacing:1px;}
+.card{background:var(--surf);border:1px solid var(--bord);border-radius:12px;margin-bottom:10px;overflow:hidden;cursor:pointer;}
+.card:active{border-color:var(--amber);}
+.card-body{padding:13px 16px;}
+.card-title{font-weight:700;font-size:15px;margin-bottom:5px;}
+.card-meta{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:7px;align-items:center;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:12px;font-size:9px;font-weight:800;}
+.b-green{background:rgba(34,197,94,0.15);color:var(--green);}
+.b-amber{background:rgba(245,158,11,0.15);color:var(--amber);}
+.b-red{background:rgba(239,68,68,0.15);color:var(--red);}
+.b-blue{background:rgba(96,165,250,0.15);color:var(--blue);}
+.b-purple{background:rgba(167,139,250,0.15);color:var(--purple);}
+.tool-item{background:var(--surf);border:2px solid var(--bord);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.tool-item.done{border-color:rgba(34,197,94,0.4);}
+.tool-item.is-main{border-color:rgba(245,158,11,0.8);box-shadow:0 0 0 1px rgba(245,158,11,0.15);}
+.tool-header{padding:12px 14px;display:flex;align-items:flex-start;gap:10px;}
+.tool-pos{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:24px;margin-top:3px;}
+.tool-info{flex:1;}
+.tool-name{font-weight:700;font-size:14px;line-height:1.3;}
+.tool-cat{font-size:10px;color:var(--muted);margin-top:2px;}
+.tool-pbar{height:3px;background:var(--bord);}
+.tool-pfill{height:3px;background:var(--amber);transition:width 0.3s;}
+.tool-pfill.done{background:var(--green);}
+.tool-actions{display:flex;gap:5px;flex-shrink:0;}
+.icon-btn{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;border:1.5px solid var(--bord);background:transparent;color:var(--text);}
+.icon-btn:disabled{opacity:0.3;}
+.icon-btn.del{border-color:rgba(239,68,68,0.4);color:var(--red);}
+.icon-btn.star{border-color:rgba(245,158,11,0.4);color:var(--amber);}
+.icon-btn.star.active{background:rgba(245,158,11,0.2);border-color:var(--amber);}
+.q-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bord);background:var(--surf2);}
+.q-row:last-child{border-bottom:none;}
+.q-num{font-family:var(--mono);font-size:9px;color:var(--dim);min-width:20px;text-align:right;flex-shrink:0;}
+.q-lbl{flex:1;font-size:12.5px;line-height:1.4;}
+.q-btns{display:flex;gap:4px;flex-shrink:0;}
+.q-btn{padding:6px 10px;border-radius:6px;font-size:10px;font-weight:800;border:1.5px solid var(--bord);background:transparent;color:var(--muted);}
+.q-btn.s{border-color:var(--green);background:rgba(34,197,94,0.15);color:var(--green);}
+.q-btn.n{border-color:var(--red);background:rgba(239,68,68,0.15);color:var(--red);}
+.q-btn.na{border-color:var(--muted);background:rgba(107,122,153,0.15);color:var(--muted);}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.photo-slot{aspect-ratio:1;border-radius:10px;border:2px dashed var(--bord);overflow:hidden;position:relative;background:var(--surf2);}
+.photo-slot.filled{border:2px solid var(--green);}
+.photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-slot-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;padding:10px;cursor:pointer;}
+.photo-slot-inner input{display:none;}
+.photo-slot-inner span{font-size:10px;font-weight:700;color:var(--muted);text-align:center;}
+.photo-del{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:6px;background:var(--red);color:#fff;border:none;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.75);padding:4px 8px;font-size:9px;font-weight:800;color:var(--green);}
+.btn{display:block;width:100%;padding:14px;border-radius:10px;font-size:14px;font-weight:700;text-align:center;cursor:pointer;border:none;transition:opacity 0.15s;}
+.btn:active{opacity:0.8;}
+.btn-amber{background:var(--amber);color:#000;}
+.btn-green{background:var(--green);color:#000;}
+.btn-outline{background:transparent;border:1.5px solid var(--bord);color:var(--text);}
+.btn-outline-amber{background:transparent;border:1.5px solid var(--amber);color:var(--amber);}
+.btn-outline-red{background:transparent;border:1.5px solid var(--red);color:var(--red);}
+.btn:disabled{opacity:0.35;cursor:not-allowed;}
+.btn-row{display:flex;gap:10px;margin-top:14px;}
+.btn-row .btn{flex:1;}
+.alert{padding:12px 16px;border-radius:10px;font-size:12px;font-weight:600;margin-bottom:14px;line-height:1.5;}
+.alert-red{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:var(--red);}
+.alert-amber{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber);}
+.alert-green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:var(--green);}
+.alert-blue{background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);color:var(--blue);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;display:none;align-items:flex-end;}
+.modal-overlay.show{display:flex;}
+.modal-sheet{background:var(--surf);border-radius:18px 18px 0 0;width:100%;max-height:88vh;display:flex;flex-direction:column;animation:slideUp 0.25s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-drag{width:40px;height:4px;background:var(--bord);border-radius:2px;margin:10px auto 0;}
+.modal-head{padding:14px 20px 12px;border-bottom:1px solid var(--bord);display:flex;align-items:center;gap:10px;}
+.modal-head h3{flex:1;font-family:var(--head);font-size:20px;font-weight:900;}
+.modal-close{width:36px;height:36px;border-radius:8px;background:var(--surf2);border:none;color:var(--muted);font-size:18px;}
+.modal-search{padding:10px 16px;border-bottom:1px solid var(--bord);}
+.modal-filter{padding:8px 16px;border-bottom:1px solid var(--bord);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+.modal-filter::-webkit-scrollbar{display:none;}
+.fchip{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;background:var(--surf2);border:1.5px solid var(--bord);color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.fchip.active{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.1);}
+.modal-list{overflow-y:auto;flex:1;}
+.modal-item{padding:12px 20px;border-bottom:1px solid rgba(37,45,58,0.5);cursor:pointer;display:flex;align-items:flex-start;gap:12px;}
+.modal-item:active{background:var(--surf2);}
+.modal-item-info{flex:1;}
+.modal-item-name{font-weight:700;font-size:14px;line-height:1.3;}
+.modal-item-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.modal-item-add{font-size:24px;color:var(--amber);font-weight:900;flex-shrink:0;margin-top:2px;}
+.insp-nav{display:flex;gap:10px;padding:16px;}
+.insp-nav .btn{padding:12px;}
+.rev-tool{background:var(--surf);border:1px solid var(--bord);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.rev-tool.main{border-color:rgba(245,158,11,0.5);}
+.rev-tool-hdr{padding:12px 16px;background:var(--surf2);display:flex;align-items:center;gap:10px;}
+.rev-pos{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:24px;}
+.rev-name{flex:1;font-weight:700;}
+.rev-body{padding:12px 16px;}
+.rev-meas{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.rev-chip{font-family:var(--mono);font-size:10px;padding:3px 8px;background:var(--surf2);border-radius:4px;color:var(--muted);}
+.rev-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;}
+.rev-photo{aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bord);}
+.rev-photo img{width:100%;height:100%;object-fit:cover;}
+.rev-nok{font-size:11px;color:var(--red);margin-top:6px;}
+.rev-obs{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px;}
+.hero{background:linear-gradient(135deg,var(--surf2),var(--surf));border:1px solid var(--bord);border-radius:14px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;}
+.hero::before{content:'◈';position:absolute;right:-10px;top:-20px;font-size:120px;color:var(--amber);opacity:0.04;line-height:1;}
+.hero-title{font-family:var(--head);font-size:30px;font-weight:900;color:var(--amber);}
+.hero-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
+.hero-stats{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--text);}
+.hero-stat-lbl{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1px;margin-top:2px;}
+.hero-divider{width:1px;background:var(--bord);}
+.tab-bar{display:flex;border-bottom:1px solid var(--bord);}
+.tab-btn{flex:1;padding:12px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:transparent;border:none;color:var(--muted);border-bottom:2px solid transparent;}
+.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.stat-card{background:var(--surf);border:1px solid var(--bord);border-radius:12px;padding:14px 16px;}
+.stat-val{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--amber);line-height:1;}
+.stat-lbl{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;margin-top:6px;text-transform:uppercase;}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.bar-lbl{font-size:11px;min-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;background:var(--bord);border-radius:3px;height:8px;}
+.bar-fill{height:8px;border-radius:3px;}
+.bar-val{font-family:var(--mono);font-size:11px;color:var(--muted);min-width:26px;text-align:right;}
+.well-section{display:flex;align-items:center;gap:10px;margin-bottom:5px;}
+.well-bar{height:22px;border-radius:3px;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;color:#000;min-width:60px;}
+.well-info{font-size:10px;color:var(--muted);}
+.empty{text-align:center;padding:50px 20px;}
+.empty-ico{font-size:48px;margin-bottom:12px;}
+.empty-title{font-family:var(--head);font-size:22px;font-weight:900;color:var(--muted);}
+.empty-sub{font-size:13px;color:var(--dim);margin-top:6px;}
+.user-pill{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surf);border:1px solid var(--bord);border-radius:10px;margin-bottom:14px;cursor:pointer;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--amber);color:#000;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--bord);border-top-color:var(--amber);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;bottom:calc(var(--botH) + var(--safe-bot) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--surf);border:1px solid var(--bord);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;max-width:90vw;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.ok{border-color:var(--green);color:var(--green);}
+#toast.err{border-color:var(--red);color:var(--red);}
+#confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;}
+#confirm-modal.show{display:flex;}
+.confirm-box{background:var(--surf);border:1px solid var(--bord);border-radius:14px;padding:24px;width:100%;max-width:340px;}
+/* SETUP SCREEN */
+.setup-step{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
+.setup-num{width:30px;height:30px;border-radius:50%;background:var(--amber);color:#000;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.setup-txt{flex:1;font-size:13px;line-height:1.6;}
+.code-block{background:var(--surf2);border:1px solid var(--bord);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--amber);margin-top:8px;word-break:break-all;line-height:1.6;}
+@media print{#topbar,#botnav,#stepbar,.insp-nav,.btn-row,.no-print{display:none!important}.view{position:static!important;overflow:visible!important;display:block!important;padding:0!important}}
+</style>
+</head>
+<body>
+
+<!-- Config lida do localStorage — configurável dentro do próprio app -->
+<script>
+// Lê configuração salva pelo usuário dentro do app.
+// Fallback: URL padrão da Petro Recôncavo detectada automaticamente
+function getSPSite(){
+  return localStorage.getItem('bha_sp_site') ||
+    'https://petroreconcavo.sharepoint.com/sites/OperaesEspeciais-Sondas';
+}
+function getSPList(){
+  return localStorage.getItem('bha_sp_list') || 'BHAChecklists';
+}
+// SP_SITE e SP_LIST são funções agora — acesso via getSPSite() / getSPList()
+const APP_VERSAO = 'v3.1-SharePoint';
+</script>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <button id="topbar-back" onclick="navBack()" style="display:none">←</button>
+  <div id="topbar-title">◈ BHA CHECKLIST</div>
+  <div id="sync-pill" onclick="showView('setup')">
+    <div id="sync-dot"></div>
+    <span id="sync-label">configurar</span>
+  </div>
+</div>
+
+<!-- STEPBAR -->
+<div id="stepbar">
+  <div class="stepbar-row">
+    <div class="step-dot" id="sd0"></div><div class="step-dot" id="sd1"></div>
+    <div class="step-dot" id="sd2"></div><div class="step-dot" id="sd3"></div>
+  </div>
+  <div class="stepbar-lbl">
+    <span>IDENTIFICAÇÃO</span><span>BHA</span><span>INSPEÇÃO</span><span>LIBERAÇÃO</span>
+  </div>
+  <div id="stepbar-txt"></div>
+</div>
+
+<!-- ═════ HOME ═════ -->
+<div class="view full-top active" id="view-home">
+  <div class="pad">
+    <div class="hero">
+      <div class="hero-title">BHA CHECKLIST</div>
+      <div class="hero-sub">Operações Especiais · Petrobras</div>
+      <div class="hero-stats" id="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-val">—</div><div class="hero-stat-lbl">BHAs</div></div>
+      </div>
+    </div>
+    <div class="user-pill" onclick="changeUser()" id="user-pill">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div style="flex:1"><div id="user-name-lbl" style="font-weight:700;font-size:14px;">Carregando...</div>
+      <div style="font-size:10px;color:var(--muted);">Toque para alterar nome</div></div>
+      <span style="color:var(--muted);font-size:16px;">✎</span>
+    </div>
+    <button class="btn btn-amber" style="margin-bottom:10px;font-size:16px;padding:16px;" onclick="startNewBHA()">＋ NOVO CHECKLIST DE BHA</button>
+    <div id="draft-banner" style="display:none" class="alert alert-amber"></div>
+    <div id="setup-needed" style="display:none" class="alert alert-amber" onclick="showView('setup')" style="cursor:pointer;"></div>
+    <div style="font-size:10px;font-weight:800;color:var(--muted);letter-spacing:2px;margin:18px 0 10px;">ÚLTIMOS REGISTROS</div>
+    <div id="recent-list"></div>
+  </div>
+</div>
+
+<!-- ═════ SETUP ═════ -->
+<div class="view full-top" id="view-setup">
+  <div class="pad">
+    <div style="font-family:var(--head);font-size:32px;font-weight:900;color:var(--amber);margin-bottom:4px;">CONFIGURAÇÃO</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">Conecte ao SharePoint da Petro Recôncavo</div>
+
+    <div class="section">
+      <div class="sec-hdr">1 — URL do Site SharePoint</div>
+      <div class="sec-body">
+        <div class="field">
+          <label>Cole aqui a URL do seu site SharePoint</label>
+          <input id="setup-sp-site" type="url" placeholder="https://petroreconcavo.sharepoint.com/sites/..." style="font-size:13px;">
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;">
+          Copie somente até o nome do site.<br>
+          Exemplo: <span style="color:var(--amber);font-family:var(--mono);font-size:10px;">https://petroreconcavo.sharepoint.com/sites/OperaesEspeciais-Sondas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-hdr">2 — Nome da Lista</div>
+      <div class="sec-body">
+        <div class="field">
+          <label>Nome exato da lista criada no SharePoint</label>
+          <input id="setup-sp-list" type="text" value="BHAChecklists" style="font-family:var(--mono);">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-hdr">3 — Colunas da Lista</div>
+      <div class="sec-body">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Crie estas colunas na lista do SharePoint (Configurações da lista → Criar coluna):</div>
+        <div class="code-block">
+          Colunas de Linha de texto única:<br>
+          BHAId · UserName · Status · Ativo · Poco<br>
+          Operacao · DataOp · Encarregado · Supervisor<br><br>
+          Colunas de Várias linhas de texto:<br>
+          HeaderJson · ToolsJson · LiberacaoJson · PhotosJson
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-hdr">Status da Conexão</div>
+      <div class="sec-body">
+        <div id="setup-status-msg" class="alert alert-amber">⏳ Não testado ainda.</div>
+        <button class="btn btn-amber" onclick="testConnection()">🔄 TESTAR CONEXÃO</button>
+      </div>
+    </div>
+
+    <div class="alert alert-blue" style="margin-bottom:14px;">
+      💡 <strong>Modo local ativo enquanto não configurado.</strong> Dados ficam só neste dispositivo. Após conectar, todos da equipe passam a ver os registros em tempo real.
+    </div>
+    <button class="btn btn-outline" onclick="showView('home');renderHome()">← VOLTAR AO APP</button>
+  </div>
+</div>
+
+<!-- ═════ HEADER ═════ -->
+<div class="view step-top" id="view-header">
+  <div class="pad">
+    <div class="section">
+      <div class="sec-hdr">Identificação do Poço</div>
+      <div class="sec-body">
+        <div class="field"><label class="req">Ativo / Campo</label>
+          <select id="h-ativo"><option value="">Selecionar ativo...</option><option value="BAHIA">BAHIA (E&P-NNE/ST/SE-SEAL)</option><option value="POTIGUAR">POTIGUAR (RN)</option></select>
+        </div>
+        <div class="field"><label class="req">Poço</label><input id="h-poco" type="text" placeholder="Ex: 7-MO-XXX-BA"></div>
+        <div class="field"><label>Sonda / Unidade</label><input id="h-sonda" type="text"></div>
+        <div class="dual">
+          <div class="field"><label class="req">Data</label><input id="h-data" type="date"></div>
+          <div class="field"><label>Turno</label><select id="h-turno"><option>Dia</option><option>Noite</option></select></div>
+        </div>
+        <div class="field"><label>Tipo de Operação</label>
+          <select id="h-op"><option>Workover</option><option>Well Service</option><option>Pesca</option><option>Completação</option><option>Recompletação</option><option>Acidificação</option><option>Outro</option></select>
+        </div>
+        <div class="field"><label>Profundidade Alvo (m)</label><input id="h-prof" type="number" step="0.1" placeholder="0.0"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-hdr">Perfil de Revestimento
+        <button onclick="addRev()" style="background:var(--amber);color:#000;border:none;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;">+ SEÇÃO</button>
+      </div>
+      <div class="sec-body">
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Adicione as seções do revestimento do poço (topo → fundo).</p>
+        <div id="rev-list"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-hdr">Responsáveis</div>
+      <div class="sec-body">
+        <div class="field"><label class="req">Encarregado</label><input id="h-enc" type="text"></div>
+        <div class="field"><label class="req">Supervisor de Campo</label><input id="h-sup" type="text"></div>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-amber" onclick="goToBuilder()">MONTAR BHA →</button></div>
+  </div>
+</div>
+
+<!-- ═════ BUILDER ═════ -->
+<div class="view step-top" id="view-builder">
+  <div id="bha-builder-content"></div>
+  <div class="pad">
+    <div class="alert alert-blue" style="margin-bottom:10px;font-size:11px;">★ Marque a Ferramenta Principal — ela recebe inspeção completa (8 itens + 4 fotos). As demais: 3 itens.</div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToHeader()">← VOLTAR</button>
+      <button class="btn btn-amber" id="btn-go-inspect" onclick="goToInspect()">INSPECIONAR →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════ INSPECT ═════ -->
+<div class="view step-top" id="view-inspect">
+  <div id="insp-hdr" style="padding:14px 16px;background:var(--surf2);border-bottom:1px solid var(--bord);display:flex;align-items:flex-start;gap:10px;">
+    <div id="insp-pos" style="font-family:var(--mono);font-size:12px;color:var(--muted);flex-shrink:0;margin-top:4px;min-width:38px;">—</div>
+    <div style="flex:1;"><div id="insp-name" style="font-family:var(--head);font-size:22px;font-weight:900;">—</div><div id="insp-badge" style="margin-top:4px;"></div></div>
+    <div id="insp-pct" style="font-family:var(--mono);font-size:16px;font-weight:600;flex-shrink:0;margin-top:4px;color:var(--amber);">0%</div>
+  </div>
+  <div id="insp-body" class="pad"></div>
+  <div class="insp-nav">
+    <button class="btn btn-outline" id="btn-insp-prev" onclick="inspPrev()">← ANT.</button>
+    <button class="btn btn-amber" id="btn-insp-next" onclick="inspNext()">PRÓX. →</button>
+  </div>
+</div>
+
+<!-- ═════ RELEASE ═════ -->
+<div class="view step-top" id="view-release">
+  <div class="pad">
+    <div id="rel-alerts"></div>
+    <div id="rel-bha-list"></div>
+    <div class="section">
+      <div class="sec-hdr">Liberação de Descida</div>
+      <div class="sec-body">
+        <div class="field"><label class="req">Confirmação — Encarregado</label><input id="rel-enc" type="text"></div>
+        <div class="field"><label class="req">Confirmação — Supervisor</label><input id="rel-sup" type="text"></div>
+        <div class="field"><label>Horário da Liberação</label><input id="rel-time" type="text" readonly style="color:var(--muted)"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="goToInspect(true)">← INSPEÇÃO</button>
+      <button class="btn btn-green" id="btn-liberar" onclick="liberar()">✓ LIBERAR BHA</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn btn-outline" onclick="window.print()">🖨 IMPRIMIR</button></div>
+  </div>
+</div>
+
+<!-- ═════ MANAGER ═════ -->
+<div class="view full-top" id="view-manager">
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-lista" onclick="mgrTab('lista')">REGISTROS</button>
+    <button class="tab-btn" id="tab-stats" onclick="mgrTab('stats')">ESTATÍSTICAS</button>
+  </div>
+  <div id="mgr-lista" class="pad"></div>
+  <div id="mgr-stats" class="pad" style="display:none"></div>
+</div>
+
+<!-- ═════ DETAIL ═════ -->
+<div class="view full-top" id="view-detail"><div class="pad" id="detail-body"></div></div>
+
+<!-- BOTTOM NAV -->
+<div id="botnav">
+  <button class="bnav-btn active" id="bn-home" onclick="showView('home');renderHome()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>HOME</span>
+  </button>
+  <button class="bnav-btn" onclick="startNewBHA()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>NOVO BHA</span>
+  </button>
+  <button class="bnav-btn" id="bn-mgr" onclick="showView('manager');renderManager()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span>GERENCIADOR</span>
+  </button>
+</div>
+
+<!-- CATALOG MODAL -->
+<div class="modal-overlay" id="modal-catalog" onclick="if(event.target===this)closeCatalog()">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="modal-head"><h3>CATÁLOGO DE FERRAMENTAS</h3><button class="modal-close" onclick="closeCatalog()">✕</button></div>
+    <div class="modal-search"><input id="cat-search" type="text" placeholder="🔍 Buscar..." oninput="renderCatalog()" autocomplete="off"></div>
+    <div class="modal-filter" id="cat-filters"></div>
+    <div class="modal-list" id="cat-list"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal">
+  <div class="confirm-box">
+    <div style="font-family:var(--head);font-size:22px;font-weight:900;margin-bottom:8px;" id="confirm-title">Confirmar</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;" id="confirm-msg"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-outline" style="flex:1" id="confirm-cancel">CANCELAR</button>
+      <button class="btn" style="flex:1;background:var(--red);color:#fff;" id="confirm-ok">CONFIRMAR</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<!-- MODAL: PRIMEIRO ACESSO — visível por padrão, JS oculta após nome definido -->
+<div id="modal-firstrun" style="position:fixed;inset:0;background:rgba(11,14,20,0.97);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#141920;border:1.5px solid #f59e0b;border-radius:16px;padding:28px;width:100%;max-width:360px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#f59e0b;margin-bottom:6px;">◈ BHA CHECKLIST</div>
+    <div style="font-size:13px;color:#6b7a99;margin-bottom:20px;line-height:1.5;">Operações Especiais · Petro Recôncavo<br><br>Digite seu nome para identificar seus registros:</div>
+    <input id="firstrun-name" type="text" placeholder="Seu nome completo" style="margin-bottom:14px;font-size:16px;padding:12px 14px;border-radius:8px;border:1.5px solid #252d3a;background:#1b2230;color:#dde4f0;width:100%;font-family:sans-serif;" maxlength="60">
+    <button onclick="submitFirstRun()" style="display:block;width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;background:#f59e0b;color:#000;border:none;cursor:pointer;">ENTRAR NO APP →</button>
+    <div id="firstrun-err" style="color:#ef4444;font-size:12px;margin-top:8px;display:none;">Digite seu nome para continuar.</div>
+  </div>
+</div>
+
+<!-- MODAL: ALTERAR NOME -->
+<div id="modal-rename" style="position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#141920;border:1px solid #252d3a;border-radius:14px;padding:24px;width:100%;max-width:340px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;margin-bottom:14px;">ALTERAR NOME</div>
+    <input id="rename-input" type="text" placeholder="Seu nome" style="margin-bottom:14px;padding:10px 14px;border-radius:8px;border:1.5px solid #252d3a;background:#1b2230;color:#dde4f0;width:100%;font-size:15px;">
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('modal-rename').style.display='none'" style="flex:1;padding:12px;border-radius:10px;background:transparent;border:1.5px solid #252d3a;color:#dde4f0;font-size:13px;font-weight:700;">CANCELAR</button>
+      <button onclick="submitRename()" style="flex:1;padding:12px;border-radius:10px;background:#f59e0b;color:#000;border:none;font-size:13px;font-weight:700;">SALVAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+                         JAVASCRIPT
+══════════════════════════════════════════════════════════════ -->
+<script>
+/* ─── CATÁLOGO COMPLETO ─────────────────────────────────────── */
+const CAT = [
+  {id:'col-238-eu',name:'Coluna 2 3/8" EU',cat:'Coluna',ativo:'AMBOS',od:'2 3/8"',conn:'EU',sub:'Tubing API'},
+  {id:'col-238-nu',name:'Coluna 2 3/8" NU',cat:'Coluna',ativo:'AMBOS',od:'2 3/8"',conn:'NU',sub:'Tubing API'},
+  {id:'col-278-eu',name:'Coluna 2 7/8" EU',cat:'Coluna',ativo:'AMBOS',od:'2 7/8"',conn:'EU',sub:'Tubing API'},
+  {id:'col-278-nu',name:'Coluna 2 7/8" NU',cat:'Coluna',ativo:'AMBOS',od:'2 7/8"',conn:'NU',sub:'Tubing API'},
+  {id:'col-312-eu',name:'Coluna 3 1/2" EU',cat:'Coluna',ativo:'AMBOS',od:'3 1/2"',conn:'EU',sub:'Tubing API'},
+  {id:'col-312-nu',name:'Coluna 3 1/2" NU',cat:'Coluna',ativo:'AMBOS',od:'3 1/2"',conn:'NU',sub:'Tubing API'},
+  {id:'col-412-eu',name:'Coluna 4 1/2" EU',cat:'Coluna',ativo:'AMBOS',od:'4 1/2"',conn:'EU',sub:'Tubing API'},
+  {id:'cmd-338-125',name:'Comando 3 3/8" x 1 1/4"',cat:'Comando',ativo:'AMBOS',od:'3 3/8"',sub:'24.4 lb/pé · 2.3/8" IF'},
+  {id:'cmd-312-150',name:'Comando 3 1/2" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'3 1/2"',sub:'26.7 lb/pé · 2.3/8" IF'},
+  {id:'cmd-312-175',name:'Comando 3 1/2" x 1 3/4"',cat:'Comando',ativo:'AMBOS',od:'3 1/2"',sub:'24.5 lb/pé · 2.3/8" IF'},
+  {id:'cmd-334-150',name:'Comando 3 3/4" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'3 3/4"',sub:'31.5 lb/pé · 2.3/8" IF'},
+  {id:'cmd-334-175',name:'Comando 3 3/4" x 1 3/4"',cat:'Comando',ativo:'AMBOS',od:'3 3/4"',sub:'29.3 lb/pé · 2.3/8" IF'},
+  {id:'cmd-400-150',name:'Comando 4" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'4"',sub:'36.7 lb/pé · 2.7/8" IF'},
+  {id:'cmd-414-150',name:'Comando 4 1/4" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'4 1/4"',sub:'42.2 lb/pé · 2.7/8" IF'},
+  {id:'cmd-412-150',name:'Comando 4 1/2" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'4 1/2"',sub:'48.0 lb/pé · 2.7/8" IF'},
+  {id:'cmd-434-150',name:'Comando 4 3/4" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'4 3/4"',sub:'54.2 lb/pé · 3.1/2" IF'},
+  {id:'cmd-434-200',name:'Comando 4 3/4" x 2"',cat:'Comando',ativo:'AMBOS',od:'4 3/4"',sub:'49.5 lb/pé · 3.1/2" IF'},
+  {id:'cmd-434-225',name:'Comando 4 3/4" x 2 1/4"',cat:'Comando',ativo:'AMBOS',od:'4 3/4"',sub:'46.7 lb/pé · 3.1/2" IF'},
+  {id:'cmd-500-150',name:'Comando 5" x 1 1/2"',cat:'Comando',ativo:'AMBOS',od:'5"',sub:'60.1 lb/pé · 3.1/2" IF'},
+  {id:'ovs-ba-001',name:'Overshot 4 9/16" S150',cat:'Overshot',ativo:'BAHIA',od:'4 9/16"',conn:'2.3/8" IF',sub:'Bowen S150 · 4 UND'},
+  {id:'ovs-ba-002',name:'Overshot 4 11/16" S150',cat:'Overshot',ativo:'BAHIA',od:'4 11/16"',conn:'2.3/8" IF',sub:'Bowen S150 · 1 UND'},
+  {id:'ovs-ba-003',name:'Overshot 5 3/4" S150',cat:'Overshot',ativo:'BAHIA',od:'5 3/4"',conn:'3.1/2" IF',sub:'Bowen S150 · 3 UND'},
+  {id:'ovs-ba-005',name:'Overshot 4 11/16" S70',cat:'Overshot',ativo:'BAHIA',od:'4 11/16"',conn:'2.3/8" IF',sub:'Bowen S70 · 1 UND'},
+  {id:'ovs-ba-006',name:'Overshot 5 7/8" S70',cat:'Overshot',ativo:'BAHIA',od:'5 7/8"',conn:'3.1/2" IF',sub:'Bowen S70 · 1 UND'},
+  {id:'ovs-ba-007',name:'Overshot 5 3/4" Wide Catch S70',cat:'Overshot',ativo:'BAHIA',od:'5 3/4"',conn:'3.1/2" IF',sub:'Bowen WC · 1 UND'},
+  {id:'ovs-pot-001',name:'Overshot 5 3/4" S150',cat:'Overshot',ativo:'POTIGUAR',od:'5 3/4"',sub:'Bowen · 3 UND'},
+  {id:'ovs-pot-002',name:'Overshot 5 7/8" S70',cat:'Overshot',ativo:'POTIGUAR',od:'5 7/8"',sub:'Bowen · 2 UND'},
+  {id:'ovs-pot-003',name:'Overshot 4 9/16" S150',cat:'Overshot',ativo:'POTIGUAR',od:'4 9/16"',sub:'Bowen · 2 UND'},
+  {id:'ovs-pot-004',name:'Overshot 4 11/16" S70',cat:'Overshot',ativo:'POTIGUAR',od:'4 11/16"',sub:'Bowen · 1 UND'},
+  {id:'ovs-pot-005',name:'Overshot 3 3/4" S20',cat:'Overshot',ativo:'POTIGUAR',od:'3 3/4"',sub:'Bowen · 1 UND'},
+  {id:'ovs-pot-006',name:'Overshot 2 5/16" S10',cat:'Overshot',ativo:'POTIGUAR',od:'2 5/16"',sub:'Bowen · 1 UND'},
+  {id:'jar-ba-001',name:'Jar Hidráulico Superior 4 3/4"',cat:'Jar',ativo:'BAHIA',od:'4 3/4"',conn:'3.1/2" IF',sub:'Bowen 611-475 · 3 UND'},
+  {id:'jar-ba-002',name:'Jar Hidráulico Superior 3 3/4"',cat:'Jar',ativo:'BAHIA',od:'3 3/4"',conn:'2.3/8" IF',sub:'Bowen 611-375 · 3 UND'},
+  {id:'jar-pot-001',name:'Jar Hidráulico Tipo Z 4 3/4"',cat:'Jar',ativo:'POTIGUAR',od:'4 3/4"',sub:'2 UND'},
+  {id:'jar-pot-002',name:'Jar Hidráulico Tipo Z 3 3/4"',cat:'Jar',ativo:'POTIGUAR',od:'3 3/4"',sub:'1 UND'},
+  {id:'jar-pot-003',name:'Super Jar Hidráulico 4 3/4"',cat:'Jar',ativo:'POTIGUAR',od:'4 3/4"',sub:'2 UND'},
+  {id:'jar-pot-004',name:'Super Jar Hidráulico 3 3/4"',cat:'Jar',ativo:'POTIGUAR',od:'3 3/4"',sub:'1 UND'},
+  {id:'acc-ba-001',name:'Acelerador (Energizer) 4 3/4"',cat:'Acelerador',ativo:'BAHIA',od:'4 3/4"',conn:'3.1/2" IF',sub:'Bowen 614-475'},
+  {id:'acc-ba-002',name:'Acelerador (Energizer) 3 3/4"',cat:'Acelerador',ativo:'BAHIA',od:'3 3/4"',conn:'2.3/8" IF',sub:'Bowen 614-375'},
+  {id:'acc-pot-001',name:'Acelerador de Jar 4 3/4"',cat:'Acelerador',ativo:'POTIGUAR',od:'4 3/4"',sub:'1 UND'},
+  {id:'acc-pot-002',name:'Acelerador de Jar 3 3/4"',cat:'Acelerador',ativo:'POTIGUAR',od:'3 3/4"',sub:'1 UND'},
+  {id:'bmp-ba-001',name:'Bumper Sub 4 3/4"',cat:'Bumper Sub',ativo:'BAHIA',od:'4 3/4"',conn:'3.1/2" IF',sub:'Bowen 604-475 · 2 UND'},
+  {id:'bmp-ba-002',name:'Bumper Sub 3 3/4"',cat:'Bumper Sub',ativo:'BAHIA',od:'3 3/4"',conn:'2.3/8" IF',sub:'Bowen 604-375 · 1 UND'},
+  {id:'bmp-pot-001',name:'Bumper Sub 4 3/4"',cat:'Bumper Sub',ativo:'POTIGUAR',od:'4 3/4"',sub:'3 UND'},
+  {id:'bmp-pot-002',name:'Bumper Sub 3 3/4"',cat:'Bumper Sub',ativo:'POTIGUAR',od:'3 3/4"',sub:'1 UND'},
+  {id:'jseg-ba-001',name:'Junta de Segurança 3 3/4"',cat:'Junta de Segurança',ativo:'BAHIA',od:'3 3/4"',sub:'Bowen'},
+  {id:'jseg-pot-001',name:'Junta de Segurança 4 3/4" CT',cat:'Junta de Segurança',ativo:'POTIGUAR',od:'4 3/4"',sub:'Coarse Thread · 1 UND'},
+  {id:'jseg-pot-002',name:'Junta de Segurança 3 3/4" CT',cat:'Junta de Segurança',ativo:'POTIGUAR',od:'3 3/4"',sub:'Coarse Thread · 1 UND'},
+  {id:'brm-ba-001',name:'Broca Mill 5 7/8"',cat:'Mill',ativo:'BAHIA',od:'5 7/8"',conn:'3.1/2" REG'},
+  {id:'brm-ba-002',name:'Broca Mill 4 1/2"',cat:'Mill',ativo:'BAHIA',od:'4 1/2"',conn:'2.7/8" REG'},
+  {id:'brm-ba-003',name:'Broca Mill 4 5/8"',cat:'Mill',ativo:'BAHIA',od:'4 5/8"',conn:'2.7/8" REG'},
+  {id:'stm-ba-001',name:'String Mill 4 1/2"',cat:'Mill',ativo:'BAHIA',od:'4 1/2"'},
+  {id:'stm-ba-002',name:'String Mill 4 3/4"',cat:'Mill',ativo:'BAHIA',od:'4 3/4"'},
+  {id:'stm-ba-003',name:'String Mill 4 7/8"',cat:'Mill',ativo:'BAHIA',od:'4 7/8"'},
+  {id:'stm-ba-004',name:'String Mill 6"',cat:'Mill',ativo:'BAHIA',od:'6"'},
+  {id:'thm-ba-001',name:'Thompson Mill p/ Casing 7"',cat:'Mill',ativo:'BAHIA',od:'7"'},
+  {id:'thm-ba-002',name:'Thompson Mill p/ Casing 5 1/2"',cat:'Mill',ativo:'BAHIA',od:'5 1/2"'},
+  {id:'jkm-ba-001',name:'Junk Mill 4 3/4"',cat:'Mill',ativo:'BAHIA',od:'4 3/4"',conn:'2.7/8" REG'},
+  {id:'jkm-ba-002',name:'Junk Mill 6 1/8"',cat:'Mill',ativo:'BAHIA',od:'6 1/8"',conn:'3.1/2" IF'},
+  {id:'cxm-ba-001',name:'Crossover Mill 4 1/2" HD',cat:'Mill',ativo:'BAHIA',od:'4 1/2"'},
+  {id:'cxm-ba-002',name:'Crossover Mill 4 3/4" HD',cat:'Mill',ativo:'BAHIA',od:'4 3/4"'},
+  {id:'cxm-ba-003',name:'Crossover Mill 6" HD',cat:'Mill',ativo:'BAHIA',od:'6"'},
+  {id:'brm-pot-001',name:'Broca Mill 4 5/16"',cat:'Mill',ativo:'POTIGUAR',od:'4 5/16"',sub:'1 UND'},
+  {id:'brm-pot-002',name:'Broca Mill 5 3/4"',cat:'Mill',ativo:'POTIGUAR',od:'5 3/4"',sub:'1 UND'},
+  {id:'arp-ba-001',name:'Arpão Externo p/ Casing 7"',cat:'Arpão/Spear',ativo:'BAHIA',od:'7"',conn:'3.1/2" IF'},
+  {id:'arp-ba-002',name:'Arpão Externo p/ Casing 5 1/2"',cat:'Arpão/Spear',ativo:'BAHIA',od:'5 1/2"',conn:'2.3/8" IF'},
+  {id:'spr-ba-001',name:'Spear p/ Casing 5 1/2"',cat:'Arpão/Spear',ativo:'BAHIA',od:'5"',sub:'Garra 4.805"'},
+  {id:'spr-ba-002',name:'Spear p/ Tubing OD 2 5/16"',cat:'Arpão/Spear',ativo:'BAHIA',od:'2 5/16"',sub:'Garra 2.938"'},
+  {id:'arp-pot-001',name:'Arpão Externo p/ Rev. 5 1/2"',cat:'Arpão/Spear',ativo:'POTIGUAR',sub:'2 UND'},
+  {id:'arp-pot-002',name:'Arpão Externo p/ Rev. 7"',cat:'Arpão/Spear',ativo:'POTIGUAR',sub:'1 UND'},
+  {id:'spr-pot-003',name:'Spear p/ Revestimento 7"',cat:'Arpão/Spear',ativo:'POTIGUAR',sub:'1 UND'},
+  {id:'dcl-ba-001',name:'Die Collar 5 1/4"',cat:'Die Collar/Taper',ativo:'BAHIA',od:'5 1/4"',conn:'3.1/2" REG'},
+  {id:'tpt-ba-001',name:'Taper Tap Range 2 3/4"-3 5/8"',cat:'Die Collar/Taper',ativo:'BAHIA',od:'4"'},
+  {id:'tpt-ba-002',name:'Taper Tap Range 3 11/16"-4 3/4"',cat:'Die Collar/Taper',ativo:'BAHIA',od:'4 3/4"'},
+  {id:'dcl-pot-001',name:'Die Collar Range 4 7/8"-5 1/2"',cat:'Die Collar/Taper',ativo:'POTIGUAR',sub:'1 UND'},
+  {id:'tpt-pot-001',name:'Taper Tap Range 1 13/16"-3 1/2"',cat:'Die Collar/Taper',ativo:'POTIGUAR',sub:'2 UND'},
+  {id:'tpt-pot-002',name:'Taper Tap Range 4 3/16"-5 5/8"',cat:'Die Collar/Taper',ativo:'POTIGUAR',sub:'1 UND'},
+  {id:'crt-ba-001',name:'Cortador Mecânico Int. Casing 5 1/2"',cat:'Cortador',ativo:'BAHIA',od:'4"'},
+  {id:'crt-ba-002',name:'Cortador Hidráulico Int. Casing 7"',cat:'Cortador',ativo:'BAHIA',od:'5 9/16"'},
+  {id:'crt-ba-003',name:'Cortador Mecânico Ext. Tubing 5 7/8"',cat:'Cortador',ativo:'BAHIA',od:'5 7/8"'},
+  {id:'crt-pot-001',name:'Cortador Externo 5 7/8"',cat:'Cortador',ativo:'POTIGUAR',od:'5 7/8"',sub:'1 UND'},
+  {id:'crt-pot-002',name:'Cortador Externo 4 11/16"',cat:'Cortador',ativo:'POTIGUAR',od:'4 11/16"',sub:'1 UND'},
+  {id:'est-pot-001',name:'Estampador 6"',cat:'Outros',ativo:'POTIGUAR',od:'6"',sub:'2 UND'},
+  {id:'mag-pot-001',name:'Magneto 6"',cat:'Outros',ativo:'POTIGUAR',od:'6"',sub:'1 UND'},
+  {id:'mag-pot-002',name:'Magneto 4 1/2"',cat:'Outros',ativo:'POTIGUAR',od:'4 1/2"',sub:'1 UND'},
+  {id:'hst-pot-001',name:'Pescador de Haste 3/4" e 7/8"',cat:'Outros',ativo:'POTIGUAR',sub:'3 UND'},
+  {id:'sap-ba-001',name:'Sapata de Lavagem 4 1/2"',cat:'Outros',ativo:'BAHIA',od:'4 1/2"'},
+  {id:'sap-ba-002',name:'Sapata de Lavagem 5 7/8"',cat:'Outros',ativo:'BAHIA',od:'5 7/8"'},
+  {id:'sap-ba-003',name:'Sapata de Lavagem 6"',cat:'Outros',ativo:'BAHIA',od:'6"'},
+  {id:'cxo-ba-001',name:'Crossover/Redução (Bahia)',cat:'Outros',ativo:'BAHIA',sub:'Consultar tabela'},
+  {id:'cxo-pot-001',name:'Crossover/Redução (Potiguar)',cat:'Outros',ativo:'POTIGUAR',sub:'Consultar tabela'},
+  {id:'custom',name:'Ferramenta Customizada',cat:'Outros',ativo:'AMBOS'},
+];
+
+const CATS = ['Todos','Coluna','Comando','Overshot','Jar','Acelerador','Bumper Sub','Junta de Segurança','Mill','Arpão/Spear','Die Collar/Taper','Cortador','Outros'];
+const CONN = ['','EU','NU','EUE','NUE','BTC','LTC','2.3/8" IF','2.7/8" IF','3.1/2" IF','2.3/8" REG','2.7/8" REG','3.1/2" REG','NC23','NC31','NC38','Outro'];
+const REV_COLORS = ['#f59e0b','#22c55e','#60a5fa','#a78bfa','#f472b6'];
+
+const IQ_MAIN = [
+  {id:'conexoes',lbl:'Conexões inspecionadas (filete, desgaste, rebarbas, vedação)'},
+  {id:'limpeza', lbl:'Ferramenta limpa e livre de contaminantes'},
+  {id:'marcacao',lbl:'Marcação / TAG / placa de identificação correta'},
+  {id:'avarias', lbl:'Ausência de avarias, trincas ou corrosão severa'},
+  {id:'elasto',  lbl:'Elastômeros / vedantes em bom estado'},
+  {id:'moveis',  lbl:'Partes móveis operando corretamente'},
+  {id:'pressao', lbl:'Teste de pressão realizado e aprovado'},
+  {id:'cert',    lbl:'Certificado / documentação de fábrica conferido'},
+];
+const IQ_SEC = [
+  {id:'conexoes',lbl:'Conexões inspecionadas (filete, desgaste)'},
+  {id:'limpeza', lbl:'Ferramenta limpa e sem danos visíveis'},
+  {id:'avarias', lbl:'Ausência de avarias ou corrosão severa'},
+];
+const PHOTO_SLOTS = [
+  {lbl:'Vista 0°',sub:'Conector Superior'},{lbl:'Vista 90°',sub:'Lateral Direita'},
+  {lbl:'Vista 180°',sub:'Conector Inferior'},{lbl:'Vista 270°',sub:'Lateral Esquerda'},
+];
+
+/* ─── SHAREPOINT API ─────────────────────────────────────────── */
+
+let SP_CONFIGURED = false;
+let SP_DIGEST = null;
+let SP_DIGEST_EXPIRES = 0;
+
+// Fetch com timeout de 8 segundos
+async function fetchWithTimeout(url, opts={}, ms=8000){
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), ms);
+  try{
+    const r = await fetch(url, {...opts, signal:ctrl.signal, credentials:'include'});
+    clearTimeout(t); return r;
+  }catch(e){ clearTimeout(t); throw e; }
+}
+
+async function spGetDigest(){
+  if(Date.now() < SP_DIGEST_EXPIRES) return SP_DIGEST;
+  try{
+    const r = await fetchWithTimeout(`${getSPSite()}/_api/contextinfo`,{
+      method:'POST', headers:{'Accept':'application/json;odata=verbose'}
+    });
+    if(!r.ok) throw new Error('No digest');
+    const d = await r.json();
+    SP_DIGEST = d.d.GetContextWebInformation.FormDigestValue;
+    SP_DIGEST_EXPIRES = Date.now() + 25*60*1000;
+    return SP_DIGEST;
+  }catch(e){ return null; }
+}
+
+async function spGet(path){
+  const r = await fetchWithTimeout(`${getSPSite()}/_api/${path}`,{
+    headers:{'Accept':'application/json;odata=verbose'}
+  });
+  if(!r.ok) throw new Error(`SP GET ${r.status}`);
+  return r.json();
+}
+
+async function spPost(path, body){
+  const digest = await spGetDigest();
+  if(!digest) throw new Error('Sem autenticação SharePoint');
+  const r = await fetchWithTimeout(`${getSPSite()}/_api/${path}`,{
+    method:'POST',
+    headers:{
+      'Accept':'application/json;odata=verbose',
+      'Content-Type':'application/json;odata=verbose',
+      'X-RequestDigest': digest,
+    },
+    body: JSON.stringify(body)
+  });
+  if(!r.ok){ const t=await r.text(); throw new Error(`SP POST ${r.status}: ${t.slice(0,200)}`); }
+  return r.json();
+}
+
+async function spPatch(path, body, etag='*'){
+  const digest = await spGetDigest();
+  if(!digest) throw new Error('Sem autenticação SharePoint');
+  const r = await fetchWithTimeout(`${getSPSite()}/_api/${path}`,{
+    method:'POST',
+    headers:{
+      'Accept':'application/json;odata=verbose',
+      'Content-Type':'application/json;odata=verbose',
+      'X-RequestDigest': digest,
+      'X-HTTP-Method':'MERGE',
+      'IF-MATCH': etag,
+    },
+    body: JSON.stringify(body)
+  });
+  if(r.status!==204 && !r.ok) throw new Error(`SP PATCH ${r.status}`);
+}
+
+async function spDelete(path, etag='*'){
+  const digest = await spGetDigest();
+  if(!digest) throw new Error('Sem autenticação SharePoint');
+  await fetchWithTimeout(`${getSPSite()}/_api/${path}`,{
+    method:'POST',
+    headers:{
+      'X-RequestDigest': digest,
+      'X-HTTP-Method':'DELETE',
+      'IF-MATCH': etag,
+    }
+  });
+}
+
+async function testConnection(){
+  setSyncStatus('loading');
+  const msgEl = document.getElementById('setup-status-msg');
+  const siteVal = document.getElementById('setup-sp-site')?.value.trim() || getSPSite();
+  const listVal = document.getElementById('setup-sp-list')?.value.trim() || getSPList();
+  // Salva temporariamente para testar
+  localStorage.setItem('bha_sp_site', siteVal);
+  localStorage.setItem('bha_sp_list', listVal);
+  try{
+    const r = await fetchWithTimeout(`${siteVal}/_api/web/lists/getbytitle('${listVal}')/items?$top=1`,{
+      headers:{'Accept':'application/json;odata=verbose'}
+    }, 10000);
+    if(!r.ok) throw new Error(`HTTP ${r.status} — verifique se a lista existe e se você está logado no SharePoint`);
+    SP_CONFIGURED = true;
+    setSyncStatus('online');
+    if(msgEl){ msgEl.className='alert alert-green'; msgEl.innerHTML='✅ <strong>Conexão estabelecida!</strong> O app está sincronizando com SharePoint.'; }
+    toast('✓ SharePoint conectado!');
+  }catch(e){
+    SP_CONFIGURED = false;
+    setSyncStatus('error');
+    const msg = e.name==='AbortError' ? 'Timeout — verifique a URL e se você está logado no SharePoint neste navegador.' : e.message;
+    if(msgEl){ msgEl.className='alert alert-red'; msgEl.innerHTML=`❌ <strong>Erro:</strong> ${msg}<br><br><strong>Dicas:</strong><br>• Confirme que a URL está correta<br>• Abra o SharePoint em outra aba antes de testar<br>• Verifique se a lista "BHAChecklists" foi criada`; }
+  }
+}
+
+function setSyncStatus(s){
+  const pill=document.getElementById('sync-pill'), dot=document.getElementById('sync-dot'), lbl=document.getElementById('sync-label');
+  pill.className=''; dot.style.boxShadow='';
+  if(s==='online'){ pill.classList.add('sp-online'); lbl.textContent='SharePoint ✓'; }
+  else if(s==='offline'){ pill.classList.add('sp-offline'); lbl.textContent='local'; }
+  else if(s==='error'){ pill.classList.add('sp-error'); lbl.textContent='erro SP'; }
+  else{ lbl.textContent='configurar'; }
+}
+
+/* ─── SHAREPOINT CRUD ──────────────────────────────────────── */
+
+function bhaToSP(bha){
+  const toolsNoPhotos = (bha.tools||[]).map(t=>({...t,insp:{...t.insp,photos:t.insp.photos.map(p=>p?'__FOTO__':null)}}));
+  return {
+    '__metadata':{'type':`SP.Data.${getSPList()}ListItem`},
+    'Title':        bha.header?.poco || '—',
+    'BHAId':        bha.id,
+    'UserName':     bha.user_name || getUser(),
+    'Status':       bha.status || 'rascunho',
+    'Ativo':        bha.header?.ativo || '',
+    'Poco':         bha.header?.poco  || '',
+    'Operacao':     bha.header?.operacao || '',
+    'DataOp':       bha.header?.data  || '',
+    'Encarregado':  bha.header?.encarregado || '',
+    'Supervisor':   bha.header?.supervisor  || '',
+    'HeaderJson':   JSON.stringify(bha.header   || {}),
+    'ToolsJson':    JSON.stringify(toolsNoPhotos),
+    'LiberacaoJson':JSON.stringify(bha.liberacao || {}),
+    'PhotosJson':   JSON.stringify((bha.tools||[]).map(t=>t.insp.photos)),
+  };
+}
+
+function spItemToBHA(item){
+  const header   = tryParse(item.HeaderJson,    {});
+  const tools    = tryParse(item.ToolsJson,     []);
+  const lib      = tryParse(item.LiberacaoJson, {});
+  const photos   = tryParse(item.PhotosJson,    []);
+  const localRec = DB.get(item.BHAId);
+  const finalTools = tools.map((t,i)=>{
+    const localTool = localRec?.tools?.[i];
+    return {...t, insp:{...t.insp, photos: localTool?.insp?.photos || photos[i] || [null,null,null,null]}};
+  });
+  return {
+    id:          item.BHAId || String(item.Id),
+    _spId:       item.Id,
+    createdAt:   item.Created,
+    updatedAt:   item.Modified,
+    user_name:   item.UserName,
+    status:      item.Status,
+    header,
+    tools:       finalTools,
+    liberacao:   lib,
+  };
+}
+
+function tryParse(s,def){ try{ return JSON.parse(s||'null')||def; }catch{ return def; } }
+
+async function spUpsert(bha){
+  if(!SP_CONFIGURED) return false;
+  try{
+    const payload = bhaToSP(bha);
+    const existing = await spGet(`web/lists/getbytitle('${getSPList()}')/items?$filter=BHAId eq '${bha.id}'&$top=1`);
+    if(existing.d.results.length > 0){
+      const spId = existing.d.results[0].Id;
+      await spPatch(`web/lists/getbytitle('${getSPList()}')/items(${spId})`, payload);
+    } else {
+      await spPost(`web/lists/getbytitle('${getSPList()}')/items`, payload);
+    }
+    setSyncStatus('online');
+    return true;
+  }catch(e){
+    setSyncStatus('error');
+    toast('⚠ Erro ao sincronizar: '+e.message, true);
+    return false;
+  }
+}
+
+async function spDeleteRecord(bha){
+  if(!SP_CONFIGURED || !bha._spId) return false;
+  try{
+    await spDelete(`web/lists/getbytitle('${getSPList()}')/items(${bha._spId})`);
+    return true;
+  }catch(e){ return false; }
+}
+
+async function fetchRecords(limit=100){
+  if(SP_CONFIGURED){
+    try{
+      const d = await spGet(`web/lists/getbytitle('${getSPList()}')/items?$top=${limit}&$orderby=Created desc`);
+      return d.d.results.map(spItemToBHA);
+    }catch(e){ setSyncStatus('error'); }
+  }
+  return DB.getAll().slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,limit);
+}
+
+async function fetchOne(id){
+  const local = DB.get(id);
+  if(SP_CONFIGURED){
+    try{
+      const d = await spGet(`web/lists/getbytitle('${getSPList()}')/items?$filter=BHAId eq '${id}'&$top=1`);
+      if(d.d.results.length>0){
+        const rec = spItemToBHA(d.d.results[0]);
+        if(local) rec.tools = rec.tools.map((t,i)=>({...t,insp:{...t.insp,photos:local.tools?.[i]?.insp?.photos||t.insp.photos}}));
+        return rec;
+      }
+    }catch(e){}
+  }
+  return local;
+}
+
+/* ─── LOCAL DB (fallback + draft) ──────────────────────────── */
+
+const DB = {
+  KEY:'bha_op_esp_sp',
+  getAll(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'[]');}catch{return[];} },
+  save(r){ try{localStorage.setItem(this.KEY,JSON.stringify(r));return true;}catch{toast('Storage local cheio!',true);return false;} },
+  upsert(rec){ const a=this.getAll(); const i=a.findIndex(r=>r.id===rec.id); if(i>=0)a[i]=rec; else a.push(rec); return this.save(a); },
+  delete(id){ return this.save(this.getAll().filter(r=>r.id!==id)); },
+  get(id){ return this.getAll().find(r=>r.id===id)||null; },
+  kbUsed(){ try{return Math.round(new Blob([localStorage.getItem(this.KEY)||'']).size/1024);}catch{return 0;} },
+  draft:{
+    KEY:'bha_draft_sp',
+    get(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'null');}catch{return null;} },
+    set(d){ try{localStorage.setItem(this.KEY,JSON.stringify(d));}catch{} },
+    clear(){ localStorage.removeItem(this.KEY); }
+  }
+};
+
+/* ─── USER ────────────────────────────────────────────────── */
+
+function getUser(){
+  try{ return localStorage.getItem('bha_user')||''; }catch(e){ return ''; }
+}
+function setUser(n){
+  try{ localStorage.setItem('bha_user',n); }catch(e){}
+  updateUserPill();
+}
+function updateUserPill(){
+  try{
+    const u=getUser()||'?';
+    const el=document.getElementById('user-name-lbl');
+    if(el) el.textContent=u;
+    const av=document.getElementById('user-avatar');
+    if(av) av.textContent=u.charAt(0).toUpperCase();
+  }catch(e){}
+}
+function changeUser(){
+  try{
+    const inp=document.getElementById('rename-input');
+    if(inp) inp.value=getUser();
+    document.getElementById('modal-rename').style.display='flex';
+    setTimeout(()=>inp?.focus(),100);
+  }catch(e){}
+}
+function submitRename(){
+  try{
+    const n=(document.getElementById('rename-input')?.value||'').trim();
+    if(!n) return;
+    setUser(n);
+    document.getElementById('modal-rename').style.display='none';
+    toast('Nome atualizado!');
+  }catch(e){}
+}
+function hideFirstRun(){
+  try{ document.getElementById('modal-firstrun').style.display='none'; }catch(e){}
+}
+function submitFirstRun(){
+  try{
+    const n=(document.getElementById('firstrun-name')?.value||'').trim();
+    const errEl=document.getElementById('firstrun-err');
+    if(!n){
+      if(errEl) errEl.style.display='block';
+      return;
+    }
+    setUser(n);
+    hideFirstRun();
+    renderHome();
+  }catch(e){
+    hideFirstRun();
+    renderHome();
+  }
+}
+
+/* ─── STATE ───────────────────────────────────────────────── */
+
+let bha=null, inspIdx=0, catCat='Todos', mgrCurrentTab='lista', viewHistory=[];
+
+const uid    = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const today  = ()=>new Date().toISOString().slice(0,10);
+const nowStr = ()=>new Date().toLocaleString('pt-BR');
+const esc    = s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const inToMm = v=>v?(parseFloat(v)*25.4).toFixed(2):'';
+const mmToIn = v=>v?(parseFloat(v)/25.4).toFixed(4):'';
+
+function newBHA(){
+  return {id:uid(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),status:'rascunho',user_name:getUser(),
+    header:{ativo:'',poco:'',sonda:'',data:today(),turno:'Dia',operacao:'Workover',profundidade:'',encarregado:'',supervisor:'',revestimentos:[]},
+    tools:[],liberacao:{}};
+}
+
+function mkTool(c){
+  return {uid:uid(),catalogId:c.id,name:c.id==='custom'?'':c.name,cat:c.cat,ativo:c.ativo,isCustom:c.id==='custom',isMain:false,
+    catalogOD:c.od||'',catalogConn:c.conn||'',
+    insp:{serial:'',od_in:'',od_mm:'',id_in:'',id_mm:'',len_m:'',conn_top:'',conn_bot:'',torque:'',notes:'',
+      qs:Object.fromEntries([...new Map([...IQ_MAIN,...IQ_SEC].map(q=>[q.id,q])).values()].map(q=>[q.id,null])),
+      photos:[null,null,null,null]}};
+}
+
+function pct(t){
+  const qs=t.isMain?IQ_MAIN:IQ_SEC; let n=0,d=0;
+  n++; if(t.insp.od_in||t.insp.od_mm) d++;
+  qs.forEach(q=>{n++;if(t.insp.qs[q.id]!==null)d++;});
+  if(t.isMain){[0,1,2,3].forEach(k=>{n++;if(t.insp.photos[k])d++;});}
+  return Math.round(d/n*100);
+}
+const isDone = t=>pct(t)===100;
+const hasNOK = t=>Object.values(t.insp.qs).includes('N');
+
+function compress(file,cb){
+  const r=new FileReader(); r.onload=e=>{
+    const img=new Image(); img.onload=()=>{
+      const mx=600; let w=img.width,h=img.height;
+      if(w>mx||h>mx){const s=Math.min(mx/w,mx/h);w=Math.round(w*s);h=Math.round(h*s);}
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      cb(c.toDataURL('image/jpeg',0.65));
+    }; img.src=e.target.result;
+  }; r.readAsDataURL(file);
+}
+
+/* ─── NAV ─────────────────────────────────────────────────── */
+
+function showView(name,noHist=false){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const v=document.getElementById('view-'+name); if(v)v.classList.add('active');
+  const inFlow=['header','builder','inspect','release'].includes(name);
+  document.getElementById('stepbar').classList.toggle('show',inFlow);
+  document.getElementById('botnav').style.display=inFlow?'none':'flex';
+  document.getElementById('topbar-back').style.display=['home','manager'].includes(name)?'none':'flex';
+  const titles={home:'◈ BHA CHECKLIST',setup:'CONFIGURAÇÃO SHAREPOINT',header:'NOVA OPERAÇÃO',builder:'MONTAR BHA',inspect:'INSPEÇÃO',release:'REVISÃO & LIBERAÇÃO',manager:'GERENCIADOR',detail:'DETALHE'};
+  document.getElementById('topbar-title').textContent=titles[name]||'BHA';
+  ['home','mgr'].forEach(id=>document.getElementById('bn-'+id)?.classList.remove('active'));
+  if(name==='home') document.getElementById('bn-home')?.classList.add('active');
+  if(name==='manager') document.getElementById('bn-mgr')?.classList.add('active');
+  if(!noHist) viewHistory.push(name);
+  if(inFlow){
+    const steps=['header','builder','inspect','release'],si=steps.indexOf(name);
+    steps.forEach((_,i)=>{const d=document.getElementById('sd'+i);d.className='step-dot'+(i<si?' done':i===si?' cur':'');});
+    document.getElementById('stepbar-txt').textContent=['Identificação do Poço','Montagem do BHA','Inspeção das Ferramentas','Liberação de Descida'][si]||'';
+  }
+  if(name==='setup') setTimeout(renderSetupScreen,50);
+}
+
+function navBack(){
+  if(viewHistory.length>1){viewHistory.pop();showView(viewHistory[viewHistory.length-1],true);}
+  else showView('home');
+}
+
+/* ─── REVESTIMENTO ─────────────────────────────────────────── */
+
+function addRev(){ if(!bha)return; bha.header.revestimentos.push({tipo:'Revestimento',od:'7"',peso:'23',de:'0',ate:''}); renderRevList(); DB.draft.set(bha); }
+function delRev(i){ bha.header.revestimentos.splice(i,1); renderRevList(); DB.draft.set(bha); }
+function updRev(i,k,v){ if(bha){bha.header.revestimentos[i][k]=v;DB.draft.set(bha);} }
+
+function renderRevList(){
+  const el=document.getElementById('rev-list'); if(!el||!bha)return;
+  if(!bha.header.revestimentos.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;">Nenhuma seção — clique + SEÇÃO para adicionar.</div>';return;}
+  el.innerHTML=bha.header.revestimentos.map((r,i)=>`
+    <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:8px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="width:12px;height:12px;border-radius:50%;background:${REV_COLORS[i%5]};flex-shrink:0;"></div>
+        <select onchange="updRev(${i},'tipo',this.value)" style="flex:1;padding:6px;font-size:12px;">${['Revestimento','Liner','Casing Conductor'].map(t=>`<option${r.tipo===t?' selected':''}>${t}</option>`).join('')}</select>
+        <button onclick="delRev(${i})" style="background:none;border:none;color:var(--red);font-size:18px;padding:0 6px;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><label style="font-size:10px;color:var(--muted);font-weight:700;display:block;margin-bottom:3px;">OD</label>
+          <select onchange="updRev(${i},'od',this.value)" style="width:100%;padding:6px;font-size:12px;">${['3 1/2"','4 1/2"','5"','5 1/2"','6 5/8"','7"','7 5/8"','8 5/8"','9 5/8"','9"','10 3/4"','13 3/8"','16"','20"','Outro'].map(o=>`<option${r.od===o?' selected':''}>${o}</option>`).join('')}</select></div>
+        <div><label style="font-size:10px;color:var(--muted);font-weight:700;display:block;margin-bottom:3px;">PESO (lb/pé)</label>
+          <input type="text" value="${r.peso}" onchange="updRev(${i},'peso',this.value)" style="width:100%;padding:6px;font-size:12px;" placeholder="23"></div>
+        <div><label style="font-size:10px;color:var(--muted);font-weight:700;display:block;margin-bottom:3px;">DE (m)</label>
+          <input type="number" step="0.1" value="${r.de}" onchange="updRev(${i},'de',this.value)" style="width:100%;padding:6px;font-size:12px;font-family:var(--mono);" placeholder="0"></div>
+        <div><label style="font-size:10px;color:var(--muted);font-weight:700;display:block;margin-bottom:3px;">ATÉ (m)</label>
+          <input type="number" step="0.1" value="${r.ate}" onchange="updRev(${i},'ate',this.value)" style="width:100%;padding:6px;font-size:12px;font-family:var(--mono);" placeholder="Prof. final"></div>
+      </div>
+    </div>`).join('');
+}
+
+/* ─── HOME ─────────────────────────────────────────────────── */
+
+async function renderHome(){
+  updateUserPill();
+  const sn=document.getElementById('setup-needed');
+  if(!SP_CONFIGURED){ sn.style.display='block'; sn.innerHTML='🔧 <strong>SharePoint não configurado.</strong> Dados ficam só neste dispositivo. Toque aqui para configurar →'; sn.onclick=()=>showView('setup'); }
+  else sn.style.display='none';
+  const draft=DB.draft.get(), banner=document.getElementById('draft-banner');
+  if(draft?.header){
+    banner.style.display='block';
+    banner.innerHTML=`⚠ Rascunho: <strong>${draft.header.poco||'Poço —'}</strong> · ${draft.header.ativo||'—'}<br>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-amber" style="padding:8px;font-size:12px;" onclick="continueDraft()">CONTINUAR</button>
+        <button class="btn btn-outline" style="padding:8px;font-size:12px;" onclick="discardDraft()">DESCARTAR</button>
+      </div>`;
+  } else banner.style.display='none';
+  const records=await fetchRecords(10);
+  const total=records.length, tm=records.filter(r=>r.header?.data?.startsWith(today().slice(0,7))).length, tools=records.reduce((a,r)=>a+(r.tools?.length||0),0);
+  document.getElementById('hero-stats').innerHTML=`
+    <div class="hero-stat"><div class="hero-stat-val">${total}</div><div class="hero-stat-lbl">BHAs</div></div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat"><div class="hero-stat-val">${tm}</div><div class="hero-stat-lbl">Esse Mês</div></div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat"><div class="hero-stat-val">${tools}</div><div class="hero-stat-lbl">Ferramentas</div></div>`;
+  const el=document.getElementById('recent-list');
+  if(!records.length){el.innerHTML=`<div class="empty"><div class="empty-ico">🔩</div><div class="empty-title">NENHUM REGISTRO</div><div class="empty-sub">Inicie um novo checklist</div></div>`;return;}
+  el.innerHTML=records.map(r=>cardHTML(r)).join('');
+}
+
+function cardHTML(r){
+  const nok=r.tools?.filter(hasNOK).length||0, dn=r.tools?.filter(isDone).length||0;
+  const stC=r.status==='liberado'?(nok>0?'b-red':'b-green'):'b-amber';
+  const stL=r.status==='liberado'?(nok>0?`⚠ ${nok} NOK`:'✓ LIBERADO'):'RASCUNHO';
+  return `<div class="card" onclick="openDetail('${r.id}')"><div class="card-body">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+      <div class="card-title">${esc(r.header?.poco||'Poço —')}</div>
+      <span class="badge ${stC}">${stL}</span>
+    </div>
+    <div class="card-meta">
+      <span>📍 ${r.header?.ativo||'—'}</span><span>🔧 ${r.header?.operacao||'—'}</span>
+      <span>📅 ${r.header?.data||'—'}</span><span>👤 ${esc(r.user_name||'—')}</span>
+      <span>⚙ ${r.tools?.length||0} ferr. (${dn} OK)</span>
+    </div>
+  </div></div>`;
+}
+
+/* ─── BHA FLOW ─────────────────────────────────────────────── */
+
+function startNewBHA(){
+  const d=DB.draft.get();
+  if(d){if(!confirm('Há um rascunho em andamento. Descartar e iniciar novo?'))return; DB.draft.clear();}
+  bha=newBHA(); fillHeaderForm(); showView('header');
+}
+function continueDraft(){ const d=DB.draft.get(); if(!d)return; bha=d; fillHeaderForm(); showView('header'); }
+function discardDraft(){ confirmDlg('Descartar rascunho?','O rascunho será perdido.','DESCARTAR',()=>{DB.draft.clear();renderHome();}); }
+
+function fillHeaderForm(){
+  if(!bha)return;
+  const h=bha.header;
+  const m={ativo:'h-ativo',poco:'h-poco',sonda:'h-sonda',data:'h-data',turno:'h-turno',operacao:'h-op',profundidade:'h-prof',encarregado:'h-enc',supervisor:'h-sup'};
+  Object.entries(m).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.value=h[k]||'';});
+  document.getElementById('h-data').value=h.data||today();
+  renderRevList();
+}
+
+function readHeader(){
+  bha.header={
+    ativo:document.getElementById('h-ativo').value, poco:document.getElementById('h-poco').value.trim(),
+    sonda:document.getElementById('h-sonda').value.trim(), data:document.getElementById('h-data').value,
+    turno:document.getElementById('h-turno').value, operacao:document.getElementById('h-op').value,
+    profundidade:document.getElementById('h-prof').value, encarregado:document.getElementById('h-enc').value.trim(),
+    supervisor:document.getElementById('h-sup').value.trim(), revestimentos:bha.header.revestimentos||[],
+  };
+  bha.updatedAt=new Date().toISOString(); DB.draft.set(bha);
+}
+
+function goToBuilder(){
+  readHeader();
+  const h=bha.header;
+  if(!h.ativo||!h.poco||!h.encarregado||!h.supervisor){toast('Preencha os campos obrigatórios ★',true);return;}
+  renderBuilder(); showView('builder');
+}
+function goToHeader(){ readHeader(); showView('header'); }
+
+/* ─── BUILDER ──────────────────────────────────────────────── */
+
+function renderBuilder(){
+  const el=document.getElementById('bha-builder-content');
+  const hasMain=bha.tools.some(t=>t.isMain);
+  let html=`<div class="pad" style="padding-bottom:0;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+      <div><div style="font-size:10px;font-weight:800;color:var(--muted);letter-spacing:2px;">${bha.tools.length} FERRAMENTA${bha.tools.length!==1?'S':''} · TOPO → FUNDO</div>
+        ${!hasMain&&bha.tools.length?'<div style="font-size:11px;color:var(--amber);margin-top:4px;">⚠ Marque a ferramenta principal com ★</div>':''}
+      </div>
+      <button class="btn btn-amber" style="width:auto;padding:8px 16px;font-size:12px;" onclick="openCatalog()">+ ADICIONAR</button>
+    </div>`;
+  if(!bha.tools.length){
+    html+=`<div class="empty"><div class="empty-ico">🔩</div><div class="empty-title">BHA VAZIO</div><div class="empty-sub">Adicione ferramentas do catálogo</div></div>`;
+  } else {
+    bha.tools.forEach((t,i)=>{
+      const p=pct(t),ok=isDone(t);
+      html+=`<div class="tool-item${ok?' done':''}${t.isMain?' is-main':''}">
+        <div class="tool-header">
+          <div class="tool-pos">${String(i+1).padStart(2,'0')}</div>
+          <div class="tool-info">
+            ${t.isCustom?`<input value="${esc(t.name)}" placeholder="Nome da ferramenta..." oninput="setToolName('${t.uid}',this.value)" onclick="event.stopPropagation()" style="background:transparent;border:none;padding:0;font-size:14px;font-weight:700;width:100%;color:var(--text);">`:
+              `<div class="tool-name">${esc(t.name)}</div>`}
+            <div class="tool-cat">${t.cat}${t.catalogOD?' · OD '+t.catalogOD:''}</div>
+            ${t.isMain?'<span class="badge b-amber" style="margin-top:4px;">★ FERRAMENTA PRINCIPAL</span>':''}
+          </div>
+          <div class="tool-actions">
+            <button class="icon-btn star${t.isMain?' active':''}" onclick="toggleMain('${t.uid}')">★</button>
+            <button class="icon-btn" onclick="moveUp(${i})" ${i===0?'disabled':''}>↑</button>
+            <button class="icon-btn" onclick="moveDn(${i})" ${i===bha.tools.length-1?'disabled':''}>↓</button>
+            <button class="icon-btn del" onclick="delTool('${t.uid}')">✕</button>
+          </div>
+        </div>
+        <div class="tool-pbar"><div class="tool-pfill${ok?' done':''}" style="width:${p}%"></div></div>
+      </div>`;
+    });
+  }
+  el.innerHTML=html+'</div>';
+  document.getElementById('btn-go-inspect').disabled=bha.tools.length===0;
+}
+
+function toggleMain(uid){ bha.tools=bha.tools.map(t=>({...t,isMain:t.uid===uid?!t.isMain:false})); DB.draft.set(bha); renderBuilder(); }
+function setToolName(uid,v){ const t=bha.tools.find(x=>x.uid===uid); if(t){t.name=v;DB.draft.set(bha);} }
+function moveUp(i){ if(i<1)return; [bha.tools[i-1],bha.tools[i]]=[bha.tools[i],bha.tools[i-1]]; DB.draft.set(bha); renderBuilder(); }
+function moveDn(i){ if(i>=bha.tools.length-1)return; [bha.tools[i],bha.tools[i+1]]=[bha.tools[i+1],bha.tools[i]]; DB.draft.set(bha); renderBuilder(); }
+function delTool(uid){ bha.tools=bha.tools.filter(t=>t.uid!==uid); DB.draft.set(bha); renderBuilder(); }
+function addTool(c){ bha.tools.push(mkTool(c)); DB.draft.set(bha); renderBuilder(); closeCatalog(); }
+
+/* ─── CATALOG ──────────────────────────────────────────────── */
+
+function openCatalog(){ catCat='Todos'; document.getElementById('cat-search').value=''; renderCatalogFilters(); renderCatalog(); document.getElementById('modal-catalog').classList.add('show'); }
+function closeCatalog(){ document.getElementById('modal-catalog').classList.remove('show'); }
+
+function renderCatalogFilters(){
+  document.getElementById('cat-filters').innerHTML=CATS.map(c=>`<button class="fchip${catCat===c?' active':''}" onclick="catCat='${c}';renderCatalogFilters();renderCatalog()">${c}</button>`).join('');
+}
+
+function renderCatalog(){
+  const src=document.getElementById('cat-search').value.toLowerCase();
+  const ativ=bha?.header?.ativo||'';
+  const list=CAT.filter(c=>{
+    if(catCat!=='Todos'&&c.cat!==catCat) return false;
+    if(ativ&&c.ativo!=='AMBOS'&&c.ativo!==ativ) return false;
+    if(src&&!c.name.toLowerCase().includes(src)) return false;
+    return true;
+  });
+  document.getElementById('cat-list').innerHTML=list.length?
+    list.map(c=>`<div class="modal-item" onclick="addTool(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+      <div class="modal-item-info">
+        <div class="modal-item-name">${esc(c.name)}</div>
+        <div class="modal-item-sub">${c.cat}${c.od?' · OD '+c.od:''}${c.sub?' · '+c.sub:''} · ${c.ativo==='AMBOS'?'BA/POT':c.ativo}</div>
+      </div><div class="modal-item-add">+</div>
+    </div>`).join(''):
+    '<div style="padding:40px;text-align:center;color:var(--muted);">Nenhuma ferramenta encontrada</div>';
+}
+
+/* ─── INSPECT ──────────────────────────────────────────────── */
+
+function goToInspect(goLast=false){
+  if(!bha.tools.length){toast('Adicione ferramentas ao BHA primeiro',true);return;}
+  inspIdx=goLast?bha.tools.length-1:0; renderInspect(); showView('inspect');
+}
+
+function renderInspect(){
+  const t=bha.tools[inspIdx]; if(!t)return;
+  const p=pct(t);
+  document.getElementById('insp-pos').textContent=`${String(inspIdx+1).padStart(2,'0')}/${bha.tools.length}`;
+  document.getElementById('insp-name').textContent=t.name||'Ferramenta Customizada';
+  document.getElementById('insp-badge').innerHTML=t.isMain?
+    '<span class="badge b-amber">★ FERRAMENTA PRINCIPAL — Inspeção Completa (8 itens + 4 fotos)</span>':
+    '<span style="font-size:11px;color:var(--muted);">Checklist Simplificado · 3 itens · Fotos opcionais</span>';
+  const pctEl=document.getElementById('insp-pct');
+  pctEl.textContent=p+'%'; pctEl.style.color=isDone(t)?'var(--green)':p>0?'var(--amber)':'var(--muted)';
+  document.getElementById('btn-insp-prev').textContent=inspIdx>0?`← ${String(inspIdx).padStart(2,'0')}/${bha.tools.length}`:'← BHA';
+  document.getElementById('btn-insp-next').textContent=inspIdx<bha.tools.length-1?`${String(inspIdx+2).padStart(2,'0')}/${bha.tools.length} →`:'→ LIBERAR';
+  document.getElementById('btn-insp-next').className=inspIdx<bha.tools.length-1?'btn btn-amber':'btn btn-green';
+  const qs=t.isMain?IQ_MAIN:IQ_SEC, i=t.insp;
+  const catRef=t.catalogOD?`<div style="font-size:11px;color:var(--amber);margin-bottom:12px;">📋 Catálogo: OD ${t.catalogOD}${t.catalogConn?' · '+t.catalogConn:''}</div>`:'';
+  document.getElementById('insp-body').innerHTML=`
+    ${catRef}
+    <div class="section"><div class="sec-hdr">Identificação</div><div class="sec-body">
+      <div class="field"><label>Nº Série / TAG / Fabricante</label><input type="text" value="${esc(i.serial)}" placeholder="S/N, TAG ou fabricante" oninput="upd('serial',this.value)"></div>
+    </div></div>
+    <div class="section"><div class="sec-hdr">Medições ★ (OD obrigatório)</div><div class="sec-body">
+      <div class="dual">
+        <div class="field"><label class="req">OD (pol)</label><input type="number" step="0.001" value="${i.od_in}" placeholder='0.000"' style="font-family:var(--mono)" oninput="upd('od_in',this.value);autoMM('od',this.value)"></div>
+        <div class="field"><label>OD (mm) auto</label><input type="number" step="0.01" value="${i.od_mm}" style="font-family:var(--mono)" oninput="upd('od_mm',this.value);autoIN('od',this.value)"></div>
+      </div>
+      <div class="dual">
+        <div class="field"><label>ID (pol)</label><input type="number" step="0.001" value="${i.id_in}" placeholder='0.000"' style="font-family:var(--mono)" oninput="upd('id_in',this.value);autoMM('id',this.value)"></div>
+        <div class="field"><label>ID (mm) auto</label><input type="number" step="0.01" value="${i.id_mm}" style="font-family:var(--mono)" oninput="upd('id_mm',this.value);autoIN('id',this.value)"></div>
+      </div>
+      <div class="dual">
+        <div class="field"><label>Comprimento (m)</label><input type="number" step="0.01" value="${i.len_m}" style="font-family:var(--mono)" oninput="upd('len_m',this.value)"></div>
+        <div class="field"><label>Torque (ft·lbf)</label><input type="number" value="${i.torque}" style="font-family:var(--mono)" oninput="upd('torque',this.value)"></div>
+      </div>
+      <div class="dual">
+        <div class="field"><label>Conexão Superior</label><select onchange="upd('conn_top',this.value)">${CONN.map(c=>`<option${i.conn_top===c?' selected':''}>${c||'Selecionar...'}</option>`).join('')}</select></div>
+        <div class="field"><label>Conexão Inferior</label><select onchange="upd('conn_bot',this.value)">${CONN.map(c=>`<option${i.conn_bot===c?' selected':''}>${c||'Selecionar...'}</option>`).join('')}</select></div>
+      </div>
+    </div></div>
+    <div class="section"><div class="sec-hdr">Inspeção Visual ★ — ${t.isMain?'8 itens (Principal)':'3 itens (Simplificado)'}</div>
+      ${qs.map((q,qi)=>{const v=i.qs[q.id];return `<div class="q-row">
+        <div class="q-num">${String(qi+1).padStart(2,'0')}</div>
+        <div class="q-lbl">${q.lbl}</div>
+        <div class="q-btns">
+          <button class="q-btn${v==='S'?' s':''}" onclick="updQ('${q.id}','S')">SIM</button>
+          <button class="q-btn${v==='N'?' n':''}" onclick="updQ('${q.id}','N')">NÃO</button>
+          <button class="q-btn${v==='NA'?' na':''}" onclick="updQ('${q.id}','NA')">N/A</button>
+        </div></div>`;}).join('')}
+    </div>
+    ${t.isMain?`
+    <div class="section"><div class="sec-hdr">Fotos ★ — 4 Ângulos Obrigatórios</div><div class="sec-body">
+      <div class="photo-grid">
+        ${PHOTO_SLOTS.map((s,k)=>{const ph=i.photos[k]; return `<div class="photo-slot${ph?' filled':''}">
+          ${ph?`<img src="${ph}"><button class="photo-del" onclick="delPhoto(${k})">✕</button><div class="photo-lbl">✓ ${s.lbl}</div>`:
+          `<label class="photo-slot-inner"><input type="file" accept="image/*" capture="environment" onchange="addPhoto(${k},this.files[0])">
+            <span style="font-size:28px;">📷</span><span>${s.lbl}<br><span style="color:var(--dim);font-size:9px;">${s.sub}</span></span>
+          </label>`}
+        </div>`;}).join('')}
+      </div></div></div>`:`<div class="alert alert-blue" style="margin-top:0;font-size:11px;">📷 Fotos não obrigatórias para ferramentas secundárias.</div>`}
+    <div class="section"><div class="sec-hdr">Observações</div><div class="sec-body">
+      <div class="field"><textarea placeholder="Anomalias, desvios ou informações relevantes..." oninput="upd('notes',this.value)">${esc(i.notes)}</textarea></div>
+    </div></div>`;
+}
+
+function upd(k,v){ const t=bha.tools[inspIdx]; if(t){t.insp[k]=v;DB.draft.set(bha);updPct();} }
+function autoMM(w,v){ const t=bha.tools[inspIdx]; if(t){t.insp[w+'_mm']=inToMm(v);DB.draft.set(bha);} }
+function autoIN(w,v){ const t=bha.tools[inspIdx]; if(t){t.insp[w+'_in']=mmToIn(v);DB.draft.set(bha);} }
+function updQ(qid,v){ const t=bha.tools[inspIdx]; if(t){t.insp.qs[qid]=v;DB.draft.set(bha);renderInspect();} }
+function addPhoto(slot,file){ if(!file)return; compress(file,b64=>{const t=bha.tools[inspIdx];if(t){t.insp.photos[slot]=b64;DB.draft.set(bha);renderInspect();}}); }
+function delPhoto(slot){ const t=bha.tools[inspIdx]; if(t){t.insp.photos[slot]=null;DB.draft.set(bha);renderInspect();} }
+function updPct(){ const t=bha.tools[inspIdx]; if(!t)return; const p=pct(t); const el=document.getElementById('insp-pct'); if(el){el.textContent=p+'%';el.style.color=isDone(t)?'var(--green)':p>0?'var(--amber)':'var(--muted)';} }
+function inspPrev(){ if(inspIdx>0){inspIdx--;renderInspect();document.getElementById('view-inspect').scrollTop=0;}else{renderBuilder();showView('builder');} }
+function inspNext(){ if(inspIdx<bha.tools.length-1){inspIdx++;renderInspect();document.getElementById('view-inspect').scrollTop=0;}else{renderRelease();showView('release');} }
+
+/* ─── RELEASE ──────────────────────────────────────────────── */
+
+function renderRelease(){
+  document.getElementById('rel-time').value=nowStr();
+  document.getElementById('rel-enc').value=bha.liberacao?.sigEnc||bha.header.encarregado;
+  document.getElementById('rel-sup').value=bha.liberacao?.sigSup||bha.header.supervisor;
+  const allOk=bha.tools.every(isDone), nok=bha.tools.filter(hasNOK);
+  let alerts='';
+  if(!allOk){const inc=bha.tools.filter(t=>!isDone(t));alerts+=`<div class="alert alert-amber">⚠ ${inc.length} ferramenta(s) com inspeção incompleta: ${inc.map(t=>t.name||'Customizada').join(', ')}</div>`;}
+  if(nok.length){alerts+=`<div class="alert alert-red">✗ ITENS REPROVADOS:<br>${nok.map(t=>`<strong>${t.name}</strong>: ${IQ_MAIN.filter(q=>t.insp.qs[q.id]==='N').map(q=>q.lbl).join('; ')}`).join('<br>')}</div>`;}
+  if(allOk&&!nok.length){alerts+=`<div class="alert alert-green">✓ Todas as ferramentas aprovadas — BHA liberado para descida.</div>`;}
+  if(bha.header.revestimentos?.length){
+    const md=Math.max(...bha.header.revestimentos.map(r=>parseFloat(r.ate)||0),parseFloat(bha.header.profundidade)||100);
+    alerts+=`<div class="section" style="margin-bottom:14px;"><div class="sec-hdr">Perfil do Poço</div><div class="sec-body">
+      ${bha.header.revestimentos.map((r,i)=>`<div class="well-section">
+        <div class="well-bar" style="background:${REV_COLORS[i%5]};max-width:${Math.max(20,Math.round((parseFloat(r.ate)||0)/md*100))}%;">${r.od}</div>
+        <div class="well-info">${r.tipo} · ${r.od} · ${r.peso}lb/pé · ${r.de||0}m→${r.ate||'?'}m</div>
+      </div>`).join('')}
+      ${bha.header.profundidade?`<div style="font-size:11px;color:var(--amber);margin-top:8px;">⬇ Alvo: ${bha.header.profundidade}m</div>`:''}
+    </div></div>`;
+  }
+  document.getElementById('rel-alerts').innerHTML=alerts;
+  document.getElementById('rel-bha-list').innerHTML=`<div class="section"><div class="sec-hdr">Sequência do BHA — ${esc(bha.header.poco||'—')} · ${bha.header.ativo||'—'}</div>
+    ${bha.tools.map((t,i)=>{
+      const ok=isDone(t),nkI=IQ_MAIN.filter(q=>t.insp.qs[q.id]==='N');
+      return `<div class="rev-tool${t.isMain?' main':''}">
+        <div class="rev-tool-hdr"><div class="rev-pos">${String(i+1).padStart(2,'0')}</div>
+          <div class="rev-name">${esc(t.name||'Customizada')}${t.isMain?' ★':''}</div>
+          <span class="badge ${ok?(nkI.length?'b-red':'b-green'):'b-amber'}">${ok?(nkI.length?'NOK':'✓'):'?'}</span>
+        </div>
+        <div class="rev-body">
+          <div class="rev-meas">
+            ${t.insp.od_in?`<span class="rev-chip">OD: ${t.insp.od_in}" (${t.insp.od_mm}mm)</span>`:''}
+            ${t.insp.id_in?`<span class="rev-chip">ID: ${t.insp.id_in}"</span>`:''}
+            ${t.insp.len_m?`<span class="rev-chip">L: ${t.insp.len_m}m</span>`:''}
+            ${t.insp.serial?`<span class="rev-chip">S/N: ${esc(t.insp.serial)}</span>`:''}
+            ${t.insp.conn_top?`<span class="rev-chip">↑${t.insp.conn_top}</span>`:''}
+            ${t.insp.conn_bot?`<span class="rev-chip">↓${t.insp.conn_bot}</span>`:''}
+            ${t.insp.torque?`<span class="rev-chip">${t.insp.torque}ft·lbf</span>`:''}
+          </div>
+          ${nkI.length?`<div class="rev-nok">${nkI.map(q=>`✗ ${q.lbl}`).join('<br>')}</div>`:''}
+          ${t.insp.notes?`<div class="rev-obs">Obs: ${esc(t.insp.notes)}</div>`:''}
+          ${t.insp.photos.some(Boolean)?`<div class="rev-photos">${t.insp.photos.map(ph=>`<div class="rev-photo">${ph?`<img src="${ph}">`:''}</div>`).join('')}</div>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+async function liberar(){
+  const enc=document.getElementById('rel-enc').value.trim();
+  const sup=document.getElementById('rel-sup').value.trim();
+  if(!enc||!sup){toast('Confirmação de encarregado e supervisor obrigatória',true);return;}
+  bha.liberacao={sigEnc:enc,sigSup:sup,timestamp:nowStr()};
+  bha.status='liberado'; bha.updatedAt=new Date().toISOString(); bha.user_name=getUser();
+  DB.upsert(bha); DB.draft.clear();
+  const btn=document.getElementById('btn-liberar');
+  btn.disabled=true; btn.textContent='Salvando no SharePoint...';
+  const ok=await spUpsert(bha);
+  btn.disabled=false; btn.textContent='✓ LIBERAR BHA';
+  toast(ok?'✓ BHA liberado e salvo no SharePoint!':'✓ BHA salvo localmente (SharePoint offline)');
+  setTimeout(()=>{ showView('home'); renderHome(); },1400);
+}
+
+/* ─── MANAGER ──────────────────────────────────────────────── */
+
+function renderManager(){ if(mgrCurrentTab==='lista')renderMgrList(); else renderMgrStats(); }
+
+function mgrTab(tab){
+  mgrCurrentTab=tab;
+  document.getElementById('mgr-lista').style.display=tab==='lista'?'block':'none';
+  document.getElementById('mgr-stats').style.display=tab==='stats'?'block':'none';
+  document.getElementById('tab-lista').classList.toggle('active',tab==='lista');
+  document.getElementById('tab-stats').classList.toggle('active',tab==='stats');
+  if(tab==='lista')renderMgrList(); else renderMgrStats();
+}
+
+let _allRecords=[];
+
+async function renderMgrList(){
+  const el=document.getElementById('mgr-lista');
+  el.innerHTML='<div style="text-align:center;padding:30px;"><div class="spinner"></div><div style="margin-top:10px;font-size:12px;color:var(--muted);">Buscando registros no SharePoint...</div></div>';
+  _allRecords=await fetchRecords(200);
+  const users=[...new Set(_allRecords.map(r=>r.user_name).filter(Boolean))];
+  const spStatus=SP_CONFIGURED?`<div class="alert alert-green" style="margin-bottom:10px;font-size:11px;">🟢 SharePoint Online · ${_allRecords.length} registros · ${users.length} usuário(s): ${users.map(u=>`<strong>${esc(u)}</strong>`).join(', ')}</div>`:
+    `<div class="alert alert-amber" style="margin-bottom:10px;font-size:11px;">⚠ Modo local — configure SharePoint para ver registros de todos os usuários. <span style="text-decoration:underline;cursor:pointer;" onclick="showView('setup')">Configurar →</span></div>`;
+  el.innerHTML=`
+    ${spStatus}
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <input id="f-search" type="search" placeholder="🔍 Buscar por poço..." style="flex:1;min-width:100px;padding:7px 12px;font-size:13px;" oninput="filterMgr()">
+      <select id="f-user" style="padding:7px 12px;font-size:12px;width:auto;" onchange="filterMgr()">
+        <option value="">Todos usuários</option>${users.map(u=>`<option>${u}</option>`).join('')}
+      </select>
+      <select id="f-ativo" style="padding:7px 12px;font-size:12px;width:auto;" onchange="filterMgr()">
+        <option value="">Todos ativos</option><option value="BAHIA">BAHIA</option><option value="POTIGUAR">POTIGUAR</option>
+      </select>
+      <button class="btn btn-outline-amber" style="width:auto;padding:7px 14px;font-size:12px;" onclick="renderMgrList()">🔄</button>
+    </div>
+    <div id="mgr-records"></div>
+    <div class="btn-row no-print">
+      <button class="btn btn-outline-amber" onclick="exportCSV()">📊 EXPORTAR CSV</button>
+      <button class="btn btn-outline" onclick="exportJSON()">💾 BACKUP LOCAL</button>
+    </div>`;
+  filterMgr();
+}
+
+function filterMgr(){
+  const src=(document.getElementById('f-search')?.value||'').toLowerCase();
+  const user=document.getElementById('f-user')?.value||'';
+  const ativo=document.getElementById('f-ativo')?.value||'';
+  const filtered=_allRecords.filter(r=>{
+    if(ativo&&r.header?.ativo!==ativo) return false;
+    if(user&&r.user_name!==user) return false;
+    if(src&&!r.header?.poco?.toLowerCase().includes(src)&&!r.user_name?.toLowerCase().includes(src)) return false;
+    return true;
+  });
+  const rd=document.getElementById('mgr-records');
+  if(rd) rd.innerHTML=filtered.length?filtered.map(r=>cardHTML(r)).join(''):
+    '<div class="empty"><div class="empty-ico">📂</div><div class="empty-title">SEM REGISTROS</div></div>';
+}
+
+async function renderMgrStats(){
+  const el=document.getElementById('mgr-stats');
+  el.innerHTML='<div style="text-align:center;padding:30px;"><div class="spinner"></div></div>';
+  const records=await fetchRecords(500);
+  if(!records.length){el.innerHTML='<div class="empty"><div class="empty-ico">📊</div><div class="empty-title">SEM DADOS</div></div>';return;}
+  const total=records.length, tm=records.filter(r=>r.header?.data?.startsWith(today().slice(0,7))).length;
+  const allT=records.flatMap(r=>r.tools||[]);
+  const semNOK=records.filter(r=>r.tools?.every(t=>!hasNOK(t))).length;
+  const taxa=total?Math.round(semNOK/total*100):0;
+  const toolF={};allT.forEach(t=>{toolF[t.name]=(toolF[t.name]||0)+1;});
+  const topT=Object.entries(toolF).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const nokF={};allT.forEach(t=>{IQ_MAIN.filter(q=>t.insp.qs[q.id]==='N').forEach(q=>{nokF[q.lbl]=(nokF[q.lbl]||0)+1;});});
+  const topN=Object.entries(nokF).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const byUser={};records.forEach(r=>{if(r.user_name)byUser[r.user_name]=(byUser[r.user_name]||0)+1;});
+  const byAtivo={};records.forEach(r=>{if(r.header?.ativo)byAtivo[r.header.ativo]=(byAtivo[r.header.ativo]||0)+1;});
+  const mxT=topT[0]?.[1]||1, mxN=topN[0]?.[1]||1;
+  el.innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-lbl">Total BHAs</div></div>
+      <div class="stat-card"><div class="stat-val">${tm}</div><div class="stat-lbl">Este Mês</div></div>
+      <div class="stat-card"><div class="stat-val">${allT.length}</div><div class="stat-lbl">Ferramentas</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:${taxa>=80?'var(--green)':taxa>=50?'var(--amber)':'var(--red)'}">${taxa}%</div><div class="stat-lbl">Taxa Aprovação</div></div>
+    </div>
+    ${Object.keys(byUser).length?`<div class="section"><div class="sec-hdr">BHAs por Usuário</div><div class="sec-body">
+      ${Object.entries(byUser).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="bar-row"><div class="bar-lbl">${esc(n)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/total*100)}%;background:var(--purple)"></div></div><div class="bar-val">${c}</div></div>`).join('')}
+    </div></div>`:''}
+    ${Object.keys(byAtivo).length?`<div class="section"><div class="sec-hdr">BHAs por Ativo</div><div class="sec-body">
+      ${Object.entries(byAtivo).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`<div class="bar-row"><div class="bar-lbl">${n}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/total*100)}%;background:var(--blue)"></div></div><div class="bar-val">${c}</div></div>`).join('')}
+    </div></div>`:''}
+    ${topT.length?`<div class="section"><div class="sec-hdr">Top Ferramentas Usadas</div><div class="sec-body">
+      ${topT.map(([n,c])=>`<div class="bar-row"><div class="bar-lbl" title="${n}">${n.length>22?n.slice(0,22)+'…':n}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/mxT*100)}%;background:var(--amber)"></div></div><div class="bar-val">${c}x</div></div>`).join('')}
+    </div></div>`:''}
+    ${topN.length?`<div class="section"><div class="sec-hdr">Itens Mais Reprovados (NOK)</div><div class="sec-body">
+      ${topN.map(([n,c])=>`<div class="bar-row"><div class="bar-lbl">${n.length>22?n.slice(0,22)+'…':n}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/mxN*100)}%;background:var(--red)"></div></div><div class="bar-val">${c}</div></div>`).join('')}
+    </div></div>`:`<div class="alert alert-green" style="margin-bottom:14px;">✓ Nenhum item reprovado registrado</div>`}`;
+}
+
+/* ─── DETAIL ──────────────────────────────────────────────── */
+
+async function openDetail(id){
+  const r=await fetchOne(id); if(!r)return;
+  const nok=r.tools?.filter(hasNOK)||[];
+  document.getElementById('detail-body').innerHTML=`
+    <div class="section"><div class="sec-hdr">Identificação</div><div class="sec-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;margin-bottom:12px;">
+        <div><span style="font-size:9px;color:var(--muted);display:block;margin-bottom:2px;font-weight:700;">POÇO</span><strong>${esc(r.header?.poco||'—')}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted);display:block;margin-bottom:2px;font-weight:700;">ATIVO</span><strong>${r.header?.ativo||'—'}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted);display:block;margin-bottom:2px;font-weight:700;">OPERAÇÃO</span><strong>${r.header?.operacao||'—'}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted);display:block;margin-bottom:2px;font-weight:700;">DATA</span><strong>${r.header?.data||'—'}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted);display:block;margin-bottom:2px;font-weight:700;">ENCARREGADO</span><strong>${esc(r.header?.encarregado||'—')}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted);display:block;margin-bottom:2px;font-weight:700;">USUÁRIO</span><strong>${esc(r.user_name||'—')}</strong></div>
+      </div>
+      ${r.status==='liberado'?`<div class="alert alert-green">✓ Liberado por ${esc(r.liberacao?.sigEnc||'')} e ${esc(r.liberacao?.sigSup||'')}<br>${r.liberacao?.timestamp||''}</div>`:''}
+      ${nok.length?`<div class="alert alert-red">⚠ ${nok.length} ferramenta(s) com itens reprovados</div>`:''}
+    </div></div>
+    ${(r.tools||[]).map((t,i)=>{
+      const ok=isDone(t),nkI=IQ_MAIN.filter(q=>t.insp.qs[q.id]==='N');
+      return `<div class="rev-tool${t.isMain?' main':''}">
+        <div class="rev-tool-hdr"><div class="rev-pos">${String(i+1).padStart(2,'0')}</div>
+          <div class="rev-name">${esc(t.name||'Customizada')}${t.isMain?' ★':''}</div>
+          <span class="badge ${ok?(nkI.length?'b-red':'b-green'):'b-amber'}">${ok?(nkI.length?'NOK':'OK'):'?'}</span>
+        </div>
+        <div class="rev-body">
+          <div class="rev-meas">
+            ${t.insp.od_in?`<span class="rev-chip">OD: ${t.insp.od_in}" (${t.insp.od_mm}mm)</span>`:''}
+            ${t.insp.id_in?`<span class="rev-chip">ID: ${t.insp.id_in}"</span>`:''}
+            ${t.insp.len_m?`<span class="rev-chip">L: ${t.insp.len_m}m</span>`:''}
+            ${t.insp.serial?`<span class="rev-chip">S/N: ${esc(t.insp.serial)}</span>`:''}
+            ${t.insp.conn_top?`<span class="rev-chip">↑${t.insp.conn_top}</span>`:''}
+            ${t.insp.conn_bot?`<span class="rev-chip">↓${t.insp.conn_bot}</span>`:''}
+          </div>
+          ${nkI.length?`<div class="rev-nok">${nkI.map(q=>`✗ ${q.lbl}`).join('<br>')}</div>`:''}
+          ${t.insp.notes?`<div class="rev-obs">Obs: ${esc(t.insp.notes)}</div>`:''}
+          ${t.insp.photos.some(p=>p&&p!=='__FOTO__')?`<div class="rev-photos">${t.insp.photos.map(ph=>`<div class="rev-photo">${ph&&ph!=='__FOTO__'?`<img src="${ph}">`:ph==='__FOTO__'?'<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;">📷</div>':''}</div>`).join('')}</div>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+    <div class="btn-row no-print">
+      <button class="btn btn-outline-red" onclick="deleteRecord('${r.id}')">🗑 EXCLUIR</button>
+      <button class="btn btn-outline" onclick="window.print()">🖨 IMPRIMIR</button>
+      <button class="btn btn-outline-amber" onclick="exportSingleCSV('${r.id}')">↓ CSV</button>
+    </div>`;
+  showView('detail');
+}
+
+async function deleteRecord(id){
+  confirmDlg('Excluir registro?','Esta ação não pode ser desfeita.','EXCLUIR',async()=>{
+    const r=DB.get(id); DB.delete(id);
+    if(r&&r._spId) await spDeleteRecord(r);
+    toast('Registro excluído.'); navBack(); renderManager();
+  });
+}
+
+/* ─── EXPORT CSV ───────────────────────────────────────────── */
+
+const CSV_COLS=['ID','Data','Usuario','Ativo','Poco','Sonda','Operacao','Turno','Profundidade','Encarregado','Supervisor','Status','Pos','Principal','Ferramenta','Categoria','Serial','OD_pol','OD_mm','ID_pol','ID_mm','Comprimento_m','ConnSup','ConnInf','Torque_ftlbf','Conexoes','Limpeza','Marcacao','Avarias','Elastomeros','Partes_Moveis','Teste_Pressao','Certificado','Fotos','Observacoes'];
+
+function toCSVRows(r){
+  return (r.tools||[]).map((t,i)=>[
+    r.id,r.header?.data||'',r.user_name||'',r.header?.ativo||'',r.header?.poco||'',r.header?.sonda||'',
+    r.header?.operacao||'',r.header?.turno||'',r.header?.profundidade||'',r.header?.encarregado||'',r.header?.supervisor||'',r.status,
+    i+1,t.isMain?'SIM':'NAO',t.name||'',t.cat||'',
+    t.insp.serial||'',t.insp.od_in||'',t.insp.od_mm||'',t.insp.id_in||'',t.insp.id_mm||'',
+    t.insp.len_m||'',t.insp.conn_top||'',t.insp.conn_bot||'',t.insp.torque||'',
+    t.insp.qs.conexoes||'',t.insp.qs.limpeza||'',t.insp.qs.marcacao||'',t.insp.qs.avarias||'',
+    t.insp.qs.elasto||'',t.insp.qs.moveis||'',t.insp.qs.pressao||'',t.insp.qs.cert||'',
+    t.insp.photos.filter(p=>p&&p!=='__FOTO__').length+'/4',
+    (t.insp.notes||'').replace(/;/g,',')
+  ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';'));
+}
+
+function dlBlob(c,fn,t){ const b=new Blob([c],{type:t}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=fn; a.click(); }
+
+async function exportCSV(){
+  const r=await fetchRecords(500);
+  if(!r.length){toast('Sem dados',true);return;}
+  dlBlob('\uFEFF'+[CSV_COLS.join(';'),...r.flatMap(toCSVRows)].join('\n'),`BHA_Export_${today()}.csv`,'text/csv;charset=utf-8');
+  toast('CSV exportado!');
+}
+function exportJSON(){ dlBlob(JSON.stringify(DB.getAll(),null,2),`BHA_Backup_${today()}.json`,'application/json'); toast('Backup JSON exportado!'); }
+async function exportSingleCSV(id){ const r=await fetchOne(id); if(!r)return; dlBlob('\uFEFF'+[CSV_COLS.join(';'),...toCSVRows(r)].join('\n'),`BHA_${r.header?.poco||r.id}.csv`,'text/csv;charset=utf-8'); toast('CSV exportado!'); }
+async function exportAll(){ await exportCSV(); }
+
+/* ─── UTILS ────────────────────────────────────────────────── */
+
+function toast(msg,err=false){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show'+(err?' err':' ok');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.className='',2800);
+}
+
+let _cb=null;
+function confirmDlg(title,msg,btnLbl,cb){
+  document.getElementById('confirm-title').textContent=title;
+  document.getElementById('confirm-msg').textContent=msg;
+  document.getElementById('confirm-ok').textContent=btnLbl;
+  _cb=cb; document.getElementById('confirm-modal').classList.add('show');
+}
+document.getElementById('confirm-ok').onclick=()=>{document.getElementById('confirm-modal').classList.remove('show');_cb?.();};
+document.getElementById('confirm-cancel').onclick=()=>document.getElementById('confirm-modal').classList.remove('show');
+
+/* ─── AUTO-REFRESH MANAGER (30s) ──────────────────────────── */
+
+setInterval(()=>{
+  if(document.getElementById('view-manager').classList.contains('active')&&SP_CONFIGURED) renderMgrList();
+},30000);
+
+function renderCatalogFilters(){
+  document.getElementById('cat-filters').innerHTML=CATS.map(c=>`<button class="fchip${catCat===c?' active':''}" onclick="catCat='${c}';renderCatalogFilters();renderCatalog()">${c}</button>`).join('');
+}
+
+function renderSetupScreen(){
+  try{
+    const siteEl=document.getElementById('setup-sp-site');
+    const listEl=document.getElementById('setup-sp-list');
+    if(siteEl) siteEl.value=getSPSite();
+    if(listEl) listEl.value=getSPList();
+    const msgEl=document.getElementById('setup-status-msg');
+    if(msgEl){
+      if(SP_CONFIGURED){ msgEl.className='alert alert-green'; msgEl.innerHTML='✅ Conectado ao SharePoint com sucesso!'; }
+      else { msgEl.className='alert alert-amber'; msgEl.innerHTML='⏳ Não conectado ainda. Preencha a URL e clique em Testar Conexão.'; }
+    }
+  }catch(e){}
+}
+
+async function init(){
+  try{
+    renderCatalogFilters();
+    const usuario = getUser();
+    if(usuario){
+      // Usuário já tem nome — oculta modal e carrega home
+      hideFirstRun();
+      updateUserPill();
+      renderHome();
+      // Testa SP em background, não bloqueia UI
+      try{
+        const r = await fetchWithTimeout(
+          `${getSPSite()}/_api/web/lists/getbytitle('${getSPList()}')/items?$top=1`,
+          { headers:{'Accept':'application/json;odata=verbose'} },
+          8000
+        );
+        if(r && r.ok){ SP_CONFIGURED=true; setSyncStatus('online'); renderHome(); }
+        else setSyncStatus('offline');
+      }catch(spErr){ setSyncStatus('offline'); }
+    } else {
+      // Primeiro acesso — modal já está visível no HTML, só foca o input
+      try{
+        const inp = document.getElementById('firstrun-name');
+        if(inp) setTimeout(()=>inp.focus(), 400);
+      }catch(e){}
+    }
+  }catch(e){
+    // Último recurso: tenta carregar home mesmo com erro
+    try{ hideFirstRun(); renderHome(); }catch(e2){}
+  }
+}
+
+// Protege contra erros em qualquer parte do JS
+window.onerror = function(msg, src, line){
+  console.warn('BHA App error:', msg, 'linha:', line);
+  return false;
+};
+
+init();
+</script>
+</body>
+</html>
