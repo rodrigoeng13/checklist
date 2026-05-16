@@ -399,40 +399,40 @@ const PERC=[
 // ─── CALCULADORA ──────────────────────────────────────────────────
 const CALCS={
   comp:[
-    {n:"Metros → Pés",u1:"m",u2:"ft",f:v=>v*3.28084,fi:v=>v/3.28084,rev:"Pés → Metros"},
-    {n:"Polegadas → Milímetros",u1:"pol.",u2:"mm",f:v=>v*25.4,fi:v=>v/25.4,rev:"mm → Polegadas"},
-    {n:"Polegadas → Centímetros",u1:"pol.",u2:"cm",f:v=>v*2.54,fi:v=>v/2.54,rev:"cm → Polegadas"},
-    {n:"Metros → Milímetros",u1:"m",u2:"mm",f:v=>v*1000,fi:v=>v/1000,rev:"mm → Metros"},
+    {n:"Metros → Pés",u1:"m",u2:"ft",f:v=>v*3.28084,fi:v=>v/3.28084,rev:"Pés → Metros",dica:"1 m = 3.28084 ft. Uso: profundidade de poço, comprimento de coluna."},
+    {n:"Polegadas → Milímetros",u1:"pol.",u2:"mm",f:v=>v*25.4,fi:v=>v/25.4,rev:"mm → Polegadas",dica:"1 pol. = 25.4 mm (exato). Uso: diâmetros de tubulares, drift, OD/ID."},
+    {n:"Polegadas → Centímetros",u1:"pol.",u2:"cm",f:v=>v*2.54,fi:v=>v/2.54,rev:"cm → Polegadas",dica:"1 pol. = 2.54 cm (exato). Uso: dimensões de ferramentas de fundo."},
+    {n:"Metros → Milímetros",u1:"m",u2:"mm",f:v=>v*1000,fi:v=>v/1000,rev:"mm → Metros",dica:"1 m = 1000 mm. Uso: curso de jar, course de packer."},
   ],
   pres:[
-    {n:"PSI → kPa",u1:"PSI",u2:"kPa",f:v=>v*6.89476,fi:v=>v/6.89476,rev:"kPa → PSI"},
-    {n:"PSI → bar",u1:"PSI",u2:"bar",f:v=>v*0.0689476,fi:v=>v/0.0689476,rev:"bar → PSI"},
-    {n:"PSI → kgf/cm²",u1:"PSI",u2:"kgf/cm²",f:v=>v*0.070307,fi:v=>v/0.070307,rev:"kgf/cm² → PSI"},
-    {n:"PSI → atm",u1:"PSI",u2:"atm",f:v=>v*0.068046,fi:v=>v/0.068046,rev:"atm → PSI"},
-    {n:"PSI → MPa",u1:"PSI",u2:"MPa",f:v=>v*0.00689476,fi:v=>v/0.00689476,rev:"MPa → PSI"},
-    {n:"Gradiente PSI/ft → ppg",u1:"PSI/ft",u2:"ppg",f:v=>v/0.052,fi:v=>v*0.052,rev:"ppg → PSI/ft"},
+    {n:"PSI → kPa",u1:"PSI",u2:"kPa",f:v=>v*6.89476,fi:v=>v/6.89476,rev:"kPa → PSI",dica:"1 PSI = 6.895 kPa. Padrão SI. Uso: pressão de assentamento de packers hidráulicos."},
+    {n:"PSI → bar",u1:"PSI",u2:"bar",f:v=>v*0.0689476,fi:v=>v/0.0689476,rev:"bar → PSI",dica:"1 PSI = 0.0689 bar. Uso: especificações de equipamentos europeus."},
+    {n:"PSI → kgf/cm²",u1:"PSI",u2:"kgf/cm²",f:v=>v*0.070307,fi:v=>v/0.070307,rev:"kgf/cm² → PSI",dica:"1 PSI = 0.0703 kgf/cm². Uso: manômetros e bombas em unidade métrica."},
+    {n:"PSI → atm",u1:"PSI",u2:"atm",f:v=>v*0.068046,fi:v=>v/0.068046,rev:"atm → PSI",dica:"1 PSI = 0.068 atm. Pressão atm ao nível do mar = 14.696 PSI."},
+    {n:"PSI → MPa",u1:"PSI",u2:"MPa",f:v=>v*0.00689476,fi:v=>v/0.00689476,rev:"MPa → PSI",dica:"1 PSI = 0.00689 MPa. Uso: especificações de resistência de tubulares API."},
+    {n:"Gradiente PSI/ft → ppg",u1:"PSI/ft",u2:"ppg",f:v=>v/0.052,fi:v=>v*0.052,rev:"ppg → PSI/ft",dica:"Fórmula: grad(PSI/ft) = peso(ppg) × 0.052. Água doce = 8.34 ppg = 0.433 PSI/ft. Água salgada ≈ 8.6 ppg."},
   ],
   vol:[
-    {n:"BBL → Litros",u1:"BBL",u2:"L",f:v=>v*158.987,fi:v=>v/158.987,rev:"Litros → BBL"},
-    {n:"BBL → m³",u1:"BBL",u2:"m³",f:v=>v*0.158987,fi:v=>v/0.158987,rev:"m³ → BBL"},
-    {n:"Galões → Litros",u1:"gal (US)",u2:"L",f:v=>v*3.78541,fi:v=>v/3.78541,rev:"Litros → Galões"},
-    {n:"bbl/m → bbl/ft",u1:"bbl/m",u2:"bbl/ft",f:v=>v*0.3048,fi:v=>v/0.3048,rev:"bbl/ft → bbl/m"},
-    {n:"m³ → Litros",u1:"m³",u2:"L",f:v=>v*1000,fi:v=>v/1000,rev:"L → m³"},
+    {n:"BBL → Litros",u1:"BBL",u2:"L",f:v=>v*158.987,fi:v=>v/158.987,rev:"Litros → BBL",dica:"1 BBL (petróleo) = 158.987 L = 42 galões US. Padrão API para O&G."},
+    {n:"BBL → m³",u1:"BBL",u2:"m³",f:v=>v*0.158987,fi:v=>v/0.158987,rev:"m³ → BBL",dica:"1 BBL = 0.158987 m³. Uso: volumes de fluido de completação e circulação."},
+    {n:"Galões → Litros",u1:"gal (US)",u2:"L",f:v=>v*3.78541,fi:v=>v/3.78541,rev:"Litros → Galões",dica:"1 gal US = 3.785 L. Atenção: 1 gal UK = 4.546 L (diferente!)."},
+    {n:"bbl/m → bbl/ft",u1:"bbl/m",u2:"bbl/ft",f:v=>v*0.3048,fi:v=>v/0.3048,rev:"bbl/ft → bbl/m",dica:"Capacidade tubular: bbl/m = ID²/313.6 · bbl/ft = ID²/1029.4 (ID em polegadas)."},
+    {n:"m³ → Litros",u1:"m³",u2:"L",f:v=>v*1000,fi:v=>v/1000,rev:"L → m³",dica:"1 m³ = 1000 L = 6.2898 BBL. Uso: volumes de cimento e fluidos em m³."},
   ],
   den:[
-    {n:"ppg → kg/m³",u1:"ppg",u2:"kg/m³",f:v=>v*119.826,fi:v=>v/119.826,rev:"kg/m³ → ppg"},
-    {n:"ppg → g/cm³",u1:"ppg",u2:"g/cm³",f:v=>v*0.119826,fi:v=>v/0.119826,rev:"g/cm³ → ppg"},
-    {n:"ppg → PSI/ft (grad.)",u1:"ppg",u2:"PSI/ft",f:v=>v*0.052,fi:v=>v/0.052,rev:"PSI/ft → ppg"},
-    {n:"g/cm³ → kg/m³",u1:"g/cm³",u2:"kg/m³",f:v=>v*1000,fi:v=>v/1000,rev:"kg/m³ → g/cm³"},
-    {n:"kg/m³ → PSI/ft",u1:"kg/m³",u2:"PSI/ft",f:v=>v*0.000434,fi:v=>v/0.000434,rev:"PSI/ft → kg/m³"},
+    {n:"ppg → kg/m³",u1:"ppg",u2:"kg/m³",f:v=>v*119.826,fi:v=>v/119.826,rev:"kg/m³ → ppg",dica:"Água doce = 8.34 ppg = 1000 kg/m³. Salmoura = 9-10 ppg. Fluido de perfuração típico: 9-18 ppg."},
+    {n:"ppg → g/cm³",u1:"ppg",u2:"g/cm³",f:v=>v*0.119826,fi:v=>v/0.119826,rev:"g/cm³ → ppg",dica:"Água doce = 8.34 ppg = 1.000 g/cm³. Óleo leve ≈ 0.82 g/cm³ = 6.84 ppg."},
+    {n:"ppg → PSI/ft (grad.)",u1:"ppg",u2:"PSI/ft",f:v=>v*0.052,fi:v=>v/0.052,rev:"PSI/ft → ppg",dica:"Regra: cada 1 ppg gera 0.052 PSI por pé de coluna de fluido. P = peso × 0.052 × profundidade(ft)."},
+    {n:"g/cm³ → kg/m³",u1:"g/cm³",u2:"kg/m³",f:v=>v*1000,fi:v=>v/1000,rev:"kg/m³ → g/cm³",dica:"1 g/cm³ = 1000 kg/m³ = 1 kg/L. Água doce = 1.000 g/cm³."},
+    {n:"kg/m³ → PSI/ft",u1:"kg/m³",u2:"PSI/ft",f:v=>v*0.000434,fi:v=>v/0.000434,rev:"PSI/ft → kg/m³",dica:"Gradiente hidrostático: P(PSI/ft) = densidade(kg/m³) × 0.000434."},
   ],
   force:[
-    {n:"lbs → kgf",u1:"lbs",u2:"kgf",f:v=>v*0.453592,fi:v=>v/0.453592,rev:"kgf → lbs"},
-    {n:"lbs → kN",u1:"lbs",u2:"kN",f:v=>v*0.00444822,fi:v=>v/0.00444822,rev:"kN → lbs"},
-    {n:"ft-lb → N·m",u1:"ft-lb",u2:"N·m",f:v=>v*1.35582,fi:v=>v/1.35582,rev:"N·m → ft-lb"},
-    {n:"ft-lb → kgf·m",u1:"ft-lb",u2:"kgf·m",f:v=>v*0.138255,fi:v=>v/0.138255,rev:"kgf·m → ft-lb"},
-    {n:"kips → kN",u1:"kips",u2:"kN",f:v=>v*4.44822,fi:v=>v/4.44822,rev:"kN → kips"},
-    {n:"Temperatura: °F → °C",u1:"°F",u2:"°C",f:v=>(v-32)*5/9,fi:v=>v*9/5+32,rev:"°C → °F"},
+    {n:"lbs → kgf",u1:"lbs",u2:"kgf",f:v=>v*0.453592,fi:v=>v/0.453592,rev:"kgf → lbs",dica:"1 lbs = 0.4536 kgf. Uso: carga de anel de cisalhamento, overpull, peso da coluna."},
+    {n:"lbs → kN",u1:"lbs",u2:"kN",f:v=>v*0.00444822,fi:v=>v/0.00444822,rev:"kN → lbs",dica:"1 lbs = 0.004448 kN. 1000 lbs = 4.448 kN. Uso: tensão em tubulares (API)."},
+    {n:"ft-lb → N·m",u1:"ft-lb",u2:"N·m",f:v=>v*1.35582,fi:v=>v/1.35582,rev:"N·m → ft-lb",dica:"1 ft-lb = 1.356 N·m. Uso: torques de make-up (rosqueamento) de conexões API."},
+    {n:"ft-lb → kgf·m",u1:"ft-lb",u2:"kgf·m",f:v=>v*0.138255,fi:v=>v/0.138255,rev:"kgf·m → ft-lb",dica:"1 ft-lb = 0.138 kgf·m. Uso: torques de juntas e ferramentas de fundo."},
+    {n:"kips → kN",u1:"kips",u2:"kN",f:v=>v*4.44822,fi:v=>v/4.44822,rev:"kN → kips",dica:"1 kip = 1000 lbs = 4.448 kN. Uso: especificações de resistência de BOP e wellhead."},
+    {n:"Temperatura: °F → °C",u1:"°F",u2:"°C",f:v=>(v-32)*5/9,fi:v=>v*9/5+32,rev:"°C → °F",dica:"Fórmula: °C = (°F - 32) × 5/9. Fundo típico onshore Bahia: 80-120°C. Afeta viscosidade do fluido do jar."},
   ],
 };
 
@@ -465,7 +465,7 @@ function capRender(){
       capLines.map((l,i)=>`<div class="card"><div class="row"><div style="flex:1">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <span class="tag tg" style="font-size:10px">LINE ${i+1}</span>
-          <span class="tag ${l.mode==='anular'?'tb':'tg'}" style="font-size:10px">${l.mode==='anular'?'ANULAR':'INTERNO'}</span>
+          <span class="tag ${l.mode==='anular'?(l.comm==='comun'?'tr':'tb'):'tg'}" style="font-size:10px">${l.mode==='anular'?(l.comm==='comun'?'ANULAR+COL.':'ANULAR'):'INTERNO'}</span>
         </div>
         <div style="font-size:14px;font-weight:700">${l.label}</div>
         <div style="font-size:11px;color:var(--mut);margin-top:4px">${l.capStr} &middot; ${l.len} m</div>
@@ -492,7 +492,7 @@ function capRender(){
   const items=(capState.cat&&capState.sz)?TD.filter(t=>t.cat===capState.cat&&t.size===capState.sz):[];
   const inAll=TD.filter(t=>t.cat==='Tubo');
   const inSz=[...new Set(inAll.map(t=>t.size))];
-  const maxS=mode==='simples'?3:4;
+  const maxS=mode==='simples'?3:5;
   let body='';
   if(step===1){
     const label=mode==='simples'?'Selecione o Revestimento:':'Revestimento externo (casing):';
@@ -519,19 +519,49 @@ function capRender(){
       <div class="row"><div style="font-size:13px;font-weight:600">${it.w} lb/ft &middot; OD=${it.od}&quot;</div>
       <div style="font-size:12px;color:var(--mut)">ID=${it.id}&quot;</div></div></button>`).join('')}`).join('')}
     <button class="btnO" onclick="capStep(2)">← Voltar</button>`;
+  } else if(step===4&&mode==='anular'){
+    // step 4 (equipado): tipo de comunicacao
+    const it=capState.item,inn=capState.inner;
+    const capAnular=(it&&inn&&sq(it.id)>sq(inn.od))?(sq(it.id)-sq(inn.od))/313.6:0;
+    const capComun=(it&&inn)?(sq(it.id)-sq(inn.od)+sq(inn.id))/313.6:0;
+    body=`<div style="font-size:13px;color:var(--mut);margin-bottom:12px">Configuracao de fluido no poco:</div>
+    <div class="card2" style="font-size:12px;color:var(--mut);margin-bottom:12px;line-height:1.6">
+      Rev: <b>${it?it.size:''} ${it?it.w:''} lb/ft</b> &middot; ID=${it?it.id:''}&quot;<br>
+      Coluna: <b>${inn?inn.size:''} ${inn?inn.w:''} lb/ft</b> &middot; OD=${inn?inn.od:''}&quot; &middot; ID=${inn?inn.id:''}&quot;
+    </div>
+    <button class="card" onclick="capSetComm('anular')" style="cursor:pointer;margin-bottom:10px;border:2px solid ${capState.comm==='anular'?'var(--grn)':'var(--bor)'}">
+      <div style="font-size:20px;margin-bottom:6px">🔒 Somente Anular</div>
+      <div style="font-size:13px;font-weight:700">Fluido apenas no espaco anular</div>
+      <div style="font-size:11px;color:var(--mut);margin-top:4px;line-height:1.4">Coluna fechada no fundo (packer assentado, plug, sapata cimentada)</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--grn);font-weight:700;background:var(--grn3);padding:6px 8px;border-radius:6px">Cap = (ID²rev - OD²col) / 313,6 = ${capAnular.toFixed(5)} bbl/m</div>
+    </button>
+    <button class="card" onclick="capSetComm('comun')" style="cursor:pointer;border:2px solid ${capState.comm==='comun'?'var(--grn)':'var(--bor)'}">
+      <div style="font-size:20px;margin-bottom:6px">🔓 Anular + Coluna</div>
+      <div style="font-size:13px;font-weight:700">Fluido no anular e dentro da coluna</div>
+      <div style="font-size:11px;color:var(--mut);margin-top:4px;line-height:1.4">Coluna aberta ou com canhoneado comunicando (kill, squeeze, equalizacao)</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--grn);font-weight:700;background:var(--grn3);padding:6px 8px;border-radius:6px">Cap = (ID²rev - OD²col + ID²col) / 313,6 = ${capComun.toFixed(5)} bbl/m</div>
+    </button>
+    <button class="btnO" onclick="capStep(3)">← Voltar</button>`;
   } else {
     // final: comprimento
     const it=capState.item,inn=capState.inner;
     if(!it){capCancel();return;}
-    const capV=mode==='simples'?C(it.id):(inn&&sq(it.id)>sq(inn.od)?(sq(it.id)-sq(inn.od))/313.6:0);
+    let capV,modeLabel;
+    if(mode==='simples'){
+      capV=C(it.id); modeLabel='Poco Desequipado - Volume Interno';
+    } else if(capState.comm==='comun'){
+      capV=(sq(it.id)-sq(inn.od)+sq(inn.id))/313.6; modeLabel='Poco Equipado - Anular + Coluna';
+    } else {
+      capV=(inn&&sq(it.id)>sq(inn.od))?(sq(it.id)-sq(inn.od))/313.6:0; modeLabel='Poco Equipado - Somente Anular';
+    }
     const prev=(capState.len&&capV>0)?+(capV*Number(capState.len)).toFixed(2):null;
-    const backStep=mode==='anular'?3:2;
+    const backStep=mode==='anular'?4:2;
     body=`<div class="card">
-      <div style="font-size:11px;color:var(--mut);font-weight:700">${mode==='simples'?'Poco Desequipado — Volume Interno':'Poco Equipado — Volume Anular'}</div>
-      <div style="font-size:15px;font-weight:700;margin-top:6px">Rev. ${it.size} — ${it.w} lb/ft</div>
-      <div style="font-size:12px;color:var(--mut);margin-top:2px">ID=${it.id}" &middot; Drift=${it.drift}"</div>
-      ${mode==='anular'&&inn?`<div style="font-size:13px;color:var(--blu);margin-top:6px;font-weight:600">Tubo: ${inn.size} ${inn.w} lb/ft &middot; OD=${inn.od}"</div>`:''}
-      <div style="font-size:13px;color:var(--grn);font-weight:700;margin-top:8px">Cap. ${mode==='anular'?'Anular':'Interna'} = ${capV.toFixed(5)} bbl/m</div>
+      <div style="font-size:11px;color:var(--mut);font-weight:700">${modeLabel}</div>
+      <div style="font-size:15px;font-weight:700;margin-top:6px">Rev. ${it.size} - ${it.w} lb/ft</div>
+      <div style="font-size:12px;color:var(--mut);margin-top:2px">ID=${it.id}&quot; - Drift=${it.drift}&quot;</div>
+      ${mode==='anular'&&inn?`<div style="font-size:13px;color:var(--blu);margin-top:6px;font-weight:600">Coluna: ${inn.size} ${inn.w} lb/ft - OD=${inn.od}&quot; - ID=${inn.id}&quot;</div>`:''}
+      <div style="font-size:13px;color:var(--grn);font-weight:700;margin-top:8px;background:var(--grn3);padding:6px 8px;border-radius:6px">Cap = ${capV.toFixed(5)} bbl/m</div>
     </div>
     <label style="font-size:11px;color:var(--grn);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;display:block">Comprimento da Linha (m)</label>
     <input class="inp" type="number" inputmode="decimal" placeholder="Ex: 1500" oninput="capLen(this.value)" autofocus>
@@ -544,13 +574,14 @@ function capRender(){
     <div style="font-size:13px;font-weight:700;color:var(--txt)">${mode==='simples'?'Desequipado':'Equipado'} — Passo ${step}/${maxS}</div>
     <div style="width:70px"></div></div>${body}`;
 }
-function capStart(m){capState={adding:true,mode:m,step:1,cat:'Rev.',sz:'',item:null,inner:null,len:''};capRender();}
+function capStart(m){capState={adding:true,mode:m,step:1,cat:'Rev.',sz:'',item:null,inner:null,len:'',comm:''};capRender();}
 function capCancel(){capState.adding=false;capRender();}
 function capSzDirect(sz){capState.sz=sz;capState.item=null;capStep(2);}
 function capSzByIdx(idx){const list=[...new Set(TD.filter(t=>t.cat==='Rev.').map(t=>t.size))];capSzDirect(list[idx]);}
+function capSetComm(comm){capState.comm=comm;capStep(9);}
 function capItemRev(i){capState.item=TD.filter(t=>t.cat==='Rev.'&&t.size===capState.sz)[i];capStep(capState.mode==='simples'?9:3);}
 function capInner(sz,i){capState.inner=TD.filter(t=>t.cat==='Tubo'&&t.size===sz)[i];capStep(9);}
-function capInnerByIdx(si,i){const inSz=[...new Set(TD.filter(t=>t.cat==='Tubo').map(t=>t.size))];const sz=inSz[si];capState.inner=TD.filter(t=>t.cat==='Tubo'&&t.size===sz)[i];capStep(9);}
+function capInnerByIdx(si,i){const inSz=[...new Set(TD.filter(t=>t.cat==='Tubo').map(t=>t.size))];const sz=inSz[si];capState.inner=TD.filter(t=>t.cat==='Tubo'&&t.size===sz)[i];capState.comm='';capStep(4);}
 function capStep(n){capState.step=n;capRender();}
 function capLen(v){
   capState.len=v;
@@ -569,10 +600,21 @@ function capLen(v){
 function capAdd(){
   const len=Number(capState.len);if(!capState.item||!len||len<=0)return;
   const it=capState.item,inn=capState.inner;let vol,label,capStr;
-  if(capState.mode==='simples'){const cap=C(it.id);vol=cap*len;label=it.cat+' '+it.size+' '+it.w+' lb/ft';capStr=cap.toFixed(5)+' bbl/m';}
-  else{const ca=(sq(it.id)-sq(inn.od))/313.6;vol=ca*len;label='Anular: '+it.size+' / '+inn.size+' '+inn.w;capStr=ca.toFixed(5)+' bbl/m';}
-  capLines.push({id:Date.now(),mode:capState.mode,label,len,vol,capStr});
-  capState={adding:false,mode:'simples',step:0,cat:'',sz:'',item:null,inner:null,len:''};capRender();
+  if(capState.mode==='simples'){
+    const cap=C(it.id);vol=cap*len;
+    label='Desequipado: '+it.size+' '+it.w+' lb/ft';
+    capStr=cap.toFixed(5)+' bbl/m';
+  } else if(capState.comm==='comun'){
+    const ca=(sq(it.id)-sq(inn.od)+sq(inn.id))/313.6;vol=ca*len;
+    label='Anular+Col.: '+it.size+' / '+inn.size+' '+inn.w;
+    capStr=ca.toFixed(5)+' bbl/m';
+  } else {
+    const ca=(sq(it.id)-sq(inn.od))/313.6;vol=ca*len;
+    label='Anular: '+it.size+' / '+inn.size+' '+inn.w;
+    capStr=ca.toFixed(5)+' bbl/m';
+  }
+  capLines.push({id:Date.now(),mode:capState.mode,comm:capState.comm||'',label,len,vol,capStr});
+  capState={adding:false,mode:'simples',step:0,cat:'',sz:'',item:null,inner:null,len:'',comm:''};capRender();
 }
 function capDel(id){capLines=capLines.filter(l=>l.id!==id);capRender();}
 function capClear(){capLines=[];capRender();}
@@ -746,7 +788,7 @@ function renderCalc(){
         <label style="font-size:11px;color:var(--grn);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;display:block">Valor em ${u1}</label>
         <input class="inp" type="number" inputmode="decimal" placeholder="Digite o valor…" oninput="calcInput(this.value)" autofocus>
       </div>
-      <div id="calc-preview"></div>
+      <div id="calc-preview">${calcConv&&calcConv.dica?`<div style="background:#f0f5f1;border:1px solid var(--bor);border-radius:8px;padding:10px 12px;margin-top:8px;display:flex;gap:8px;align-items:flex-start"><span style="font-size:16px;flex-shrink:0">💡</span><span style="font-size:12px;color:var(--mut);line-height:1.5">${calcConv.dica}</span></div>`:''}</div>
       <button class="btnO" onclick="calcDir=calcDir===1?-1:1;calcVal='';renderCalc()">⇄ Inverter direção</button>
       <button class="btnO" onclick="calcConv=null;calcVal='';renderCalc()">← Outra conversão</button>`;
   }
@@ -767,9 +809,16 @@ function calcInput(v){
       <div style="font-size:13px;color:var(--mut);margin-bottom:4px">${v} ${u1} =</div>
       <div style="font-size:32px;font-weight:900;color:var(--grn)">${disp}</div>
       <div style="font-size:16px;color:var(--grn2);font-weight:700;margin-top:2px">${u2}</div>
-    </div>`;
+    </div>
+    ${calcConv.dica?`<div style="background:#f0f5f1;border:1px solid var(--bor);border-radius:8px;padding:10px 12px;margin-top:8px;display:flex;gap:8px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">💡</span>
+      <span style="font-size:12px;color:var(--mut);line-height:1.5">${calcConv.dica}</span>
+    </div>`:''}`;
   } else {
-    prev.innerHTML='';
+    prev.innerHTML=calcConv.dica?`<div style="background:#f0f5f1;border:1px solid var(--bor);border-radius:8px;padding:10px 12px;margin-top:8px;display:flex;gap:8px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">💡</span>
+      <span style="font-size:12px;color:var(--mut);line-height:1.5">${calcConv.dica}</span>
+    </div>`:'';
   }
 }
 function calcSelect(i){calcConv=CALCS[calcTabName][i];calcVal='';calcDir=1;renderCalc();}
