@@ -1217,10 +1217,12 @@ function bdoInit(){bdoShowSub('list');bdoRenderList();}
 // ── Lista de poços ─────────────────────────────────────────────────
 function bdoRenderList(){
   const all=bdoAll();
-  const ativos=all.filter(r=>r.status==='ATIVO');
-  const conc=all.filter(r=>r.status==='CONCLUIDO');
-  const wells={};
-  ativos.forEach(r=>{const k=r.poco||'(sem poço)';if(!wells[k])wells[k]=[];wells[k].push(r);});
+  // agrupar todos os BHAs por poço
+  const allWells={};
+  all.forEach(r=>{const k=r.poco||'(sem poço)';if(!allWells[k])allWells[k]=[];allWells[k].push(r);});
+  // poço ativo = sem finalizadoEm; poço concluído = tem finalizadoEm
+  const activeWells=Object.keys(allWells).filter(w=>!bdoGetWellData(w).finalizadoEm).sort();
+  const concludedWells=Object.keys(allWells).filter(w=>!!bdoGetWellData(w).finalizadoEm).sort();
   const user=bdoGetUser();
   let html=`<div style="padding:14px 16px 0">`;
   html+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
@@ -1237,15 +1239,14 @@ function bdoRenderList(){
     html+=wNames.map(w=>bdoWellGroupHTML(w,wells[w],false)).join('');
   }
   // group all records by well for history
-  const allWells={};
-  bdoAll().forEach(r=>{const k=r.poco||'(sem poço)';if(!allWells[k])allWells[k]=[];allWells[k].push(r);});
-  const concludedWells=Object.keys(allWells).filter(w=>{
-    const wd=bdoGetWellData(w);
-    return wd.finalizadoEm && !wells[w]; // has finalization record and not already in active
-  });
+  if(!activeWells.length){
+    html+=`<div class="empty"><div style="font-size:40px;margin-bottom:10px">🔧</div><div style="font-size:15px;font-weight:700;color:var(--mut)">Sem operações ativas</div><div style="font-size:12px;color:var(--mut);margin-top:6px">Toque em + Novo BHA para começar</div></div>`;
+  } else {
+    html+=activeWells.map(w=>bdoWellGroupHTML(w,allWells[w],false)).join('');
+  }
   if(concludedWells.length){
     html+=`<div class="sec-title" style="margin-top:20px">Histórico — Intervenções Concluídas</div>`;
-    html+=concludedWells.sort().map(w=>bdoWellGroupHTML(w,allWells[w],true)).join('');
+    html+=concludedWells.map(w=>bdoWellGroupHTML(w,allWells[w],true)).join('');
   }
   html+=`</div>`;
   document.getElementById('bdo-sub-list').innerHTML=html;
@@ -1254,8 +1255,9 @@ function bdoRenderList(){
  
 function bdoWellGroupHTML(poco,records,concluded){
   const safeP=poco.replace(/'/g,"\\'");
-  const ativos=records.filter(r=>r.status==='ATIVO').length;
   const tiposUniq=[...new Set(records.map(r=>r.tipoOp).filter(Boolean))];
+  const bhaConcluidos=records.filter(r=>r.status==='CONCLUIDO').length;
+  const bhaAtivos=records.filter(r=>r.status==='ATIVO').length;
   const cards=records.map(r=>{
     const mt=r.tools?.find(t=>t.isMain&&!t.isColuna);
     const real=bdoCalcReal(r.tools,r.letDown);
@@ -1285,6 +1287,8 @@ function bdoWellGroupHTML(poco,records,concluded){
     </div>
     <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
       <span class="tag tb">${records.length} BHA${records.length!==1?'s':''}</span>
+      ${bhaAtivos>0?`<span class="tag ta">${bhaAtivos} ativo${bhaAtivos!==1?'s':''}</span>`:''}
+      ${bhaConcluidos>0?`<span class="tag tg">${bhaConcluidos} concluído${bhaConcluidos!==1?'s':''}</span>`:''}
       ${tiposUniq.map(t=>bdoTipoTag(t)).join('')}
     </div>
     ${cards}
@@ -1297,8 +1301,7 @@ function bdoWellGroupHTML(poco,records,concluded){
           <div style="font-size:10px;color:var(--mut);margin-top:6px">Finalizado por ${wd.finalizadoPor||'—'} · ${wd.finalizadoEm?new Date(wd.finalizadoEm).toLocaleString('pt-BR'):''}</div>
         </div>`:'';
       }
-      if(ativos>0) return `<button class="btnR" style="margin-top:4px" onclick="bdoConcluirPoço('${safeP}')">🏁 Finalizar Intervenção no Poço</button>`;
-      return '';
+      return `<button class="btnR" style="margin-top:4px" onclick="bdoConcluirPoço('${safeP}')">🏁 Finalizar Intervenção no Poço</button>`;
     })()}
   </div>`;
 }
@@ -1973,10 +1976,7 @@ function bdoFinModal(show){
 function bdoFinConfirm(){
   const poco=_bdoFinPoco;
   const relato=document.getElementById('bdo-fin-relato').value.trim();
-  const all=bdoLoad();
-  all.forEach(r=>{if(r.poco===poco&&r.status==='ATIVO'){r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();}});
-  bdoSave(all);
-  // save well-level data
+  // apenas registra a finalização da intervenção — BHAs individuais ficam como estão
   bdoSaveWellData(poco,{relato,finalizadoEm:new Date().toISOString(),finalizadoPor:bdoGetUser()});
   bdoFinModal(false);
   bdoRenderList();
