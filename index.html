@@ -65,6 +65,100 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
 .row{display:flex;justify-content:space-between;align-items:center}
 .conv-result{background:var(--grn3);border:1.5px solid var(--grn);border-radius:10px;padding:14px 16px;margin-top:12px;text-align:center}
 .sec-title{font-size:11px;color:var(--grn);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--grn4)}
+
+/* ── BDO ─────────────────────────────────────────── */
+.bdo-tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bdo-tipo-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;border-radius:10px;border:2px solid var(--bor);background:var(--card);color:var(--mut);font-weight:700;font-size:11px;cursor:pointer;text-align:center;line-height:1.3;}
+.bdo-tipo-btn.ativo-PESCARIA{border-color:var(--amb);color:var(--amb);background:#fef9e7;}
+.bdo-tipo-btn.ativo-RETIFICACAO{border-color:var(--blu);color:var(--blu);background:var(--blu2);}
+.bdo-tipo-btn.ativo-CONDICIONAMENTO{border-color:#6b21a8;color:#6b21a8;background:#f3e8ff;}
+.bdo-tipo-btn.ativo-CORTE{border-color:var(--red);color:var(--red);background:var(--red2);}
+.bdo-tipo-icon{font-size:22px;line-height:1;}
+.bdo-steps{display:flex;gap:4px;padding:10px 16px 0;}
+.bdo-dot{flex:1;height:3px;border-radius:2px;background:#ddd;}
+.bdo-dot.done{background:var(--grn2);}
+.bdo-dot.cur{background:var(--amb);}
+.bdo-step-lbl{font-size:10px;color:var(--amb);font-weight:700;letter-spacing:1px;padding:4px 16px 10px;}
+.bdo-depth-bar{background:var(--grn3);border:1px solid var(--bor);border-radius:10px;padding:12px 14px;margin:10px 0;}
+.bdo-dep-row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;}
+.bdo-dep-lbl{color:var(--mut);}
+.bdo-dep-val{font-weight:700;font-family:monospace;}
+.bdo-dep-row.real{border-top:1px solid var(--bor);margin-top:6px;padding-top:6px;}
+.bdo-dep-row.real .bdo-dep-lbl{color:var(--grn);font-weight:700;}
+.bdo-dep-row.real .bdo-dep-val{color:var(--grn);font-size:14px;}
+.bdo-dep-tool{display:flex;justify-content:space-between;font-size:10px;padding:1px 0;color:var(--mut);}
+.bdo-dep-tool span:last-child{font-family:monospace;color:var(--txt);}
+.bdo-dep-sep{border-top:1px dashed var(--bor);margin:6px 0;}
+.bdo-coluna-row{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.bdo-coluna-row input{width:68px;padding:8px 6px;text-align:center;font-size:14px;}
+.bdo-coluna-x{font-size:13px;color:var(--mut);font-weight:700;}
+.bdo-num-badge{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;padding:0 6px;border-radius:5px;background:var(--grn3);border:1px solid var(--bor);font-family:monospace;font-size:11px;color:var(--grn);font-weight:700;}
+.bdo-tipo-tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;}
+.bdo-tipo-PESCARIA{background:#fef9e7;color:var(--amb);border:1px solid #f5d98a;}
+.bdo-tipo-RETIFICACAO{background:var(--blu2);color:var(--blu);border:1px solid #b3c9f0;}
+.bdo-tipo-CONDICIONAMENTO{background:#f3e8ff;color:#6b21a8;border:1px solid #d8b4fe;}
+.bdo-tipo-CORTE{background:var(--red2);color:var(--red);border:1px solid #f0b8b3;}
+.bdo-well-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bdo-well-name{font-size:18px;font-weight:800;color:var(--grn);flex:1;}
+.bdo-tool-card{background:var(--card2);border:1px solid var(--bor);border-radius:8px;margin-bottom:6px;padding:10px 12px;}
+.bdo-tool-card.is-main{border-color:var(--amb);}
+.bdo-tool-card.is-coluna{border-color:var(--blu);}
+.bdo-tool-hdr{display:flex;align-items:center;gap:8px;}
+.bdo-tool-pos{font-family:monospace;font-size:10px;color:var(--mut);min-width:18px;}
+.bdo-tool-info{flex:1;}
+.bdo-tool-name{font-weight:700;font-size:13px;}
+.bdo-tool-cat{font-size:10px;color:var(--mut);}
+.bdo-tool-acts{display:flex;gap:4px;}
+.bdo-icon-btn{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--bor);background:var(--card);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.bdo-icon-btn.main{border-color:#f5d98a;color:var(--amb);}
+.bdo-icon-btn.main.on{background:#fef9e7;}
+.bdo-icon-btn.del{border-color:#f0b8b3;color:var(--red);}
+.bdo-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;flex-direction:column;justify-content:flex-end;}
+.bdo-picker-sheet{background:#fff;border-radius:16px 16px 0 0;max-height:80vh;display:flex;flex-direction:column;}
+.bdo-picker-head{padding:14px 16px 10px;border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:10px;}
+.bdo-picker-head h3{flex:1;font-size:17px;font-weight:800;}
+.bdo-picker-body{overflow-y:auto;flex:1;}
+.bdo-picker-item{padding:12px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.bdo-picker-item:active{background:var(--grn3);}
+.bdo-picker-item-info{flex:1;}
+.bdo-picker-item-name{font-weight:700;font-size:13px;}
+.bdo-picker-item-sub{font-size:10px;color:var(--mut);margin-top:1px;}
+.bdo-obs-box{background:var(--grn3);border:1px solid var(--bor);border-left:3px solid var(--grn);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--mut);font-style:italic;line-height:1.5;}
+
+
+/* BDO fotos inspeção */
+.bdo-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.bdo-photo-slot{aspect-ratio:1;border-radius:10px;border:2px dashed var(--bor);overflow:hidden;position:relative;background:var(--grn3);}
+.bdo-photo-slot.filled{border:2px solid var(--grn2);}
+.bdo-photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.bdo-photo-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:5px;cursor:pointer;}
+.bdo-photo-inner span.lbl{font-size:10px;font-weight:700;color:var(--mut);text-align:center;}
+.bdo-photo-del{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:5px;background:var(--red);color:#fff;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.bdo-photo-del:hover{opacity:.8;}
+/* export btn */
+.bdo-export-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,#1a6b3a,var(--grn));color:#fff;font-weight:800;font-size:14px;border:none;cursor:pointer;margin-top:8px;letter-spacing:.5px;}
+.bdo-export-btn:active{opacity:.85;}
+/* BDO checklist de inspeção */
+.bdo-cl-item{margin-bottom:12px;}
+.bdo-cl-lbl{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:6px;line-height:1.4;}
+.bdo-cl-btns{display:flex;gap:0;border:1.5px solid var(--bor);border-radius:8px;overflow:hidden;}
+.bdo-cl-btn{flex:1;padding:9px 4px;font-size:12px;font-weight:700;background:transparent;color:var(--mut);border:none;border-right:1px solid var(--bor);cursor:pointer;}
+.bdo-cl-btn:last-child{border-right:none;}
+.bdo-cl-btn.sim{background:var(--grn2);color:#fff;}
+.bdo-cl-btn.nao{background:var(--red);color:#fff;}
+.bdo-cl-btn.na{background:#ccc;color:#555;}
+
+/* BDO resumo operacional */
+.bdo-resumo{background:var(--grn);border-radius:12px;padding:14px 16px;margin-bottom:12px;color:#fff;}
+.bdo-resumo-title{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.8;margin-bottom:10px;}
+.bdo-resumo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bdo-resumo-cell{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;}
+.bdo-resumo-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.75;margin-bottom:3px;}
+.bdo-resumo-val{font-size:16px;font-weight:800;line-height:1.2;}
+.bdo-resumo-val.accent{font-size:22px;}
+.bdo-resumo-sub{font-size:10px;opacity:.7;margin-top:2px;}
+.bdo-resumo-full{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;}
+
 </style>
 </head>
 <body>
@@ -115,6 +209,12 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
       <div class="mod-title">Ferramentas Percussão</div>
       <div class="mod-sub">Jar · Energizer · Bumper Sub</div>
       <div style="margin-top:10px" class="tag tr">ABRIR →</div>
+    </button>
+    <button class="mod-btn" style="border-color:#f5d98a;background:linear-gradient(135deg,#fffdf0,#fff)" onclick="bdoInit();show('bdo')">
+      <div class="mod-icon">📋</div>
+      <div class="mod-title">BDO</div>
+      <div class="mod-sub">Boletim de Descida · Poços ativos</div>
+      <div style="margin-top:10px" class="tag ta">ABRIR →</div>
     </button>
   </div>
 
@@ -214,6 +314,44 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
   <div class="sec">
     <input class="inp" id="perc-search" placeholder="Buscar ferramenta…" oninput="percRender()" style="margin-bottom:14px">
     <div id="perc-list"></div>
+  </div>
+</div>
+
+<!-- ═══ BDO ═══ -->
+<div id="bdo" class="screen">
+  <div class="bar" id="bdo-bar">
+    <button class="back" id="bdo-back-btn" onclick="bdoBack()">← Início</button>
+    <div class="bar-title" id="bdo-bar-title">BDO — Boletim de Descida</div>
+  </div>
+  <!-- sub: lista -->
+  <div id="bdo-sub-list" style="padding-bottom:80px"></div>
+  <!-- sub: form wizard -->
+  <div id="bdo-sub-form" style="display:none;padding-bottom:80px">
+    <div class="bdo-steps" id="bdo-dots-row"></div>
+    <div class="bdo-step-lbl" id="bdo-step-lbl"></div>
+    <div id="bdo-form-body" style="padding:0 16px 16px"></div>
+  </div>
+  <!-- sub: detalhe -->
+  <div id="bdo-sub-detail" style="display:none;padding-bottom:80px">
+    <div id="bdo-detail-body" style="padding:16px"></div>
+  </div>
+</div>
+<!-- BDO: Seletor de ferramentas -->
+<div id="bdo-picker" style="display:none;position:fixed;inset:0;z-index:200">
+  <div class="bdo-picker-overlay" onclick="bdoClosePicker()">
+    <div class="bdo-picker-sheet" onclick="event.stopPropagation()">
+      <div class="bdo-picker-head">
+        <h3>Adicionar Ferramenta</h3>
+        <button onclick="bdoClosePicker()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--mut)">✕</button>
+      </div>
+      <div style="padding:10px 16px;border-bottom:1px solid var(--bor)">
+        <input class="inp" id="bdo-picker-search" placeholder="Buscar…" oninput="bdoRenderPicker()" style="margin:0">
+      </div>
+      <div style="padding:6px 16px;border-bottom:1px solid var(--bor);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none">
+        <div id="bdo-picker-filters"></div>
+      </div>
+      <div class="bdo-picker-body" id="bdo-picker-list"></div>
+    </div>
   </div>
 </div>
 
@@ -897,6 +1035,923 @@ function percClose(){percSel=null;document.querySelector('#perc .bar').innerHTML
 
 // ─── INIT ─────────────────────────────────────────────────────────
 renderRefCats();refRender();pkrRender();percRender();
+
+// ══════════════════════════════════════════════════════════════════
+//  BDO — Boletim de Descida de BHA
+// ══════════════════════════════════════════════════════════════════
+
+// ── Constantes ────────────────────────────────────────────────────
+const BDO_TIPOS=[
+  {id:'PESCARIA',     lbl:'Pescaria',              icon:'🎣'},
+  {id:'RETIFICACAO',  lbl:'Retificação',           icon:'🔧'},
+  {id:'CONDICIONAMENTO',lbl:'Cond. Revestimento',  icon:'🔩'},
+  {id:'CORTE',        lbl:'Corte',                 icon:'✂️'},
+];
+const BDO_CATALOG=[
+  {id:'col-ba-001',name:'Coluna 2 7/8"',cat:'Coluna',ativo:'BA',od:'2 7/8"'},
+  {id:'col-ba-002',name:'Coluna 3 1/2"',cat:'Coluna',ativo:'BA',od:'3 1/2"'},
+  {id:'col-ba-003',name:'Collar 4 3/4"',cat:'Coluna',ativo:'BA',od:'4 3/4"'},
+  {id:'col-ba-004',name:'Collar 3 3/4"',cat:'Coluna',ativo:'BA',od:'3 3/4"'},
+  {id:'col-rn-001',name:'Coluna 2 7/8"',cat:'Coluna',ativo:'RN',od:'2 7/8"'},
+  {id:'col-rn-002',name:'Coluna 3 1/2"',cat:'Coluna',ativo:'RN',od:'3 1/2"'},
+  {id:'cmd-ba-001',name:'Comando Tipo M 4 3/4"',cat:'Comando',ativo:'BA',od:'4 3/4"'},
+  {id:'cmd-ba-002',name:'Comando Tipo M 3 3/4"',cat:'Comando',ativo:'BA',od:'3 3/4"'},
+  {id:'cmd-rn-001',name:'Comando 4 3/4"',cat:'Comando',ativo:'RN',od:'4 3/4"'},
+  {id:'cmd-rn-002',name:'Comando 3 3/4"',cat:'Comando',ativo:'RN',od:'3 3/4"'},
+  {id:'ovs-ba-001',name:'Overshot 4 9/16" S150',cat:'Overshot',ativo:'BA',od:'4 9/16"'},
+  {id:'ovs-ba-002',name:'Overshot 4 11/16" S70',cat:'Overshot',ativo:'BA',od:'4 11/16"'},
+  {id:'ovs-ba-003',name:'Overshot 3 3/4" S150',cat:'Overshot',ativo:'BA',od:'3 3/4"'},
+  {id:'ovs-ba-004',name:'Overshot 3 3/4" S70',cat:'Overshot',ativo:'BA',od:'3 3/4"'},
+  {id:'ovs-ba-005',name:'Overshot 5 1/4" S150',cat:'Overshot',ativo:'BA',od:'5 1/4"'},
+  {id:'ovs-ba-006',name:'Overshot 5 7/8" S70',cat:'Overshot',ativo:'BA',od:'5 7/8"'},
+  {id:'ovs-ba-007',name:'Overshot 5 3/4" WC S70',cat:'Overshot',ativo:'BA',od:'5 3/4"'},
+  {id:'ovs-rn-001',name:'Overshot 5 3/4" S150',cat:'Overshot',ativo:'RN',od:'5 3/4"'},
+  {id:'ovs-rn-002',name:'Overshot 5 7/8" S70',cat:'Overshot',ativo:'RN',od:'5 7/8"'},
+  {id:'ovs-rn-003',name:'Overshot 4 9/16" S150',cat:'Overshot',ativo:'RN',od:'4 9/16"'},
+  {id:'ovs-rn-004',name:'Overshot 4 11/16" S70',cat:'Overshot',ativo:'RN',od:'4 11/16"'},
+  {id:'ovs-rn-005',name:'Overshot 3 3/4" S20',cat:'Overshot',ativo:'RN',od:'3 3/4"'},
+  {id:'jar-ba-001',name:'Jar Hidráulico Sup. 4 3/4"',cat:'Jar',ativo:'BA',od:'4 3/4"'},
+  {id:'jar-ba-002',name:'Jar Hidráulico Sup. 3 3/4"',cat:'Jar',ativo:'BA',od:'3 3/4"'},
+  {id:'jar-rn-001',name:'Jar Hidráulico Z 4 3/4"',cat:'Jar',ativo:'RN',od:'4 3/4"'},
+  {id:'jar-rn-002',name:'Jar Hidráulico Z 3 3/4"',cat:'Jar',ativo:'RN',od:'3 3/4"'},
+  {id:'acc-ba-001',name:'Acelerador 4 3/4"',cat:'Acelerador',ativo:'BA',od:'4 3/4"'},
+  {id:'acc-ba-002',name:'Acelerador 3 3/4"',cat:'Acelerador',ativo:'BA',od:'3 3/4"'},
+  {id:'acc-rn-001',name:'Acelerador de Jar 4 3/4"',cat:'Acelerador',ativo:'RN',od:'4 3/4"'},
+  {id:'bmp-ba-001',name:'Bumper Sub 4 3/4"',cat:'Bumper Sub',ativo:'BA',od:'4 3/4"'},
+  {id:'bmp-ba-002',name:'Bumper Sub 3 3/4"',cat:'Bumper Sub',ativo:'BA',od:'3 3/4"'},
+  {id:'jseg-ba-001',name:'Junta de Segurança 3 3/4"',cat:'Junta de Segurança',ativo:'BA',od:'3 3/4"'},
+  {id:'jseg-rn-001',name:'Junta de Segurança 4 3/4" CT',cat:'Junta de Segurança',ativo:'RN',od:'4 3/4"'},
+  {id:'brm-ba-001',name:'Broca Mill 5 7/8"',cat:'Mill',ativo:'BA',od:'5 7/8"'},
+  {id:'brm-ba-002',name:'Broca Mill 4 1/2"',cat:'Mill',ativo:'BA',od:'4 1/2"'},
+  {id:'stm-ba-001',name:'String Mill 4 3/4"',cat:'Mill',ativo:'BA',od:'4 3/4"'},
+  {id:'stm-ba-002',name:'String Mill 6"',cat:'Mill',ativo:'BA',od:'6"'},
+  {id:'thm-ba-001',name:'Thompson Mill 7"',cat:'Mill',ativo:'BA',od:'7"'},
+  {id:'thm-ba-002',name:'Thompson Mill 5 1/2"',cat:'Mill',ativo:'BA',od:'5 1/2"'},
+  {id:'jkm-ba-001',name:'Junk Mill 4 3/4"',cat:'Mill',ativo:'BA',od:'4 3/4"'},
+  {id:'brm-rn-001',name:'Broca Mill 5 3/4"',cat:'Mill',ativo:'RN',od:'5 3/4"'},
+  {id:'arp-ba-001',name:'Arpão Externo Casing 7"',cat:'Arpão/Spear',ativo:'BA',od:'7"'},
+  {id:'arp-ba-002',name:'Arpão Externo Casing 5 1/2"',cat:'Arpão/Spear',ativo:'BA',od:'5 1/2"'},
+  {id:'spr-ba-001',name:'Spear Tubing 2 5/16"',cat:'Arpão/Spear',ativo:'BA',od:'2 5/16"'},
+  {id:'arp-rn-001',name:'Arpão Externo Rev. 5 1/2"',cat:'Arpão/Spear',ativo:'RN'},
+  {id:'arp-rn-002',name:'Arpão Externo Rev. 7"',cat:'Arpão/Spear',ativo:'RN'},
+  {id:'dcl-ba-001',name:'Die Collar 5 1/4"',cat:'Die Collar/Taper',ativo:'BA',od:'5 1/4"'},
+  {id:'tpt-ba-001',name:'Taper Tap 2 3/4"-3 5/8"',cat:'Die Collar/Taper',ativo:'BA'},
+  {id:'tpt-rn-001',name:'Taper Tap 4 3/16"-5 5/8"',cat:'Die Collar/Taper',ativo:'RN'},
+  {id:'crt-ba-001',name:'Cortador Mecânico Int. 5 1/2"',cat:'Cortador',ativo:'BA'},
+  {id:'crt-ba-002',name:'Cortador Hidráulico Int. 7"',cat:'Cortador',ativo:'BA'},
+  {id:'crt-ba-003',name:'Cortador Mecânico Ext. 5 7/8"',cat:'Cortador',ativo:'BA'},
+  {id:'crt-rn-001',name:'Cortador Externo 5 7/8"',cat:'Cortador',ativo:'RN'},
+  {id:'sap-ba-001',name:'Sapata de Lavagem 4 1/2"',cat:'Outros',ativo:'BA'},
+  {id:'sap-ba-002',name:'Sapata de Lavagem 5 7/8"',cat:'Outros',ativo:'BA'},
+  {id:'sap-ba-003',name:'Sapata de Lavagem 6"',cat:'Outros',ativo:'BA'},
+  {id:'mag-rn-001',name:'Magneto 6"',cat:'Outros',ativo:'RN'},
+  {id:'est-rn-001',name:'Estampador 6"',cat:'Outros',ativo:'RN'},
+  {id:'cxo-ba',name:'Crossover/Redução (BA)',cat:'Outros',ativo:'BA'},
+  {id:'cxo-rn',name:'Crossover/Redução (RN)',cat:'Outros',ativo:'RN'},
+  {id:'custom',name:'Ferramenta Customizada',cat:'Outros',ativo:'AMBOS'},
+];
+const BDO_CATS=['Todos','Coluna','Comando','Overshot','Jar','Acelerador','Bumper Sub','Junta de Segurança','Mill','Arpão/Spear','Die Collar/Taper','Cortador','Outros'];
+const BDO_CONNS=['','EU','NU','EUE','NUE','BTC','LTC','2.3/8" IF','2.7/8" IF','3.1/2" IF','2.3/8" REG','2.7/8" REG','3.1/2" REG','Outro'];
+
+// ── Storage ────────────────────────────────────────────────────────
+const BDO_KEY='bdo_v1';
+const bdoLoad=()=>{try{return JSON.parse(localStorage.getItem(BDO_KEY))||[];}catch{return[];}};
+const bdoSave=d=>localStorage.setItem(BDO_KEY,JSON.stringify(d));
+const bdoAll=()=>bdoLoad();
+const bdoById=id=>bdoLoad().find(r=>r.id===id);
+const bdoUpsert=rec=>{const a=bdoLoad();const i=a.findIndex(r=>r.id===rec.id);if(i>=0)a[i]=rec;else a.unshift(rec);bdoSave(a);};
+const bdoDelete=id=>bdoSave(bdoLoad().filter(r=>r.id!==id));
+const bdoUid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const bdoToday=()=>new Date().toISOString().slice(0,10);
+const bdoFmtDate=s=>{if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;};
+const bdoGetUser=()=>localStorage.getItem('bdo_user')||'';
+const bdoSaveUser=n=>localStorage.setItem('bdo_user',n.trim());
+const bdoGetLastPoco=()=>localStorage.getItem('bdo_poco')||'';
+const bdoSaveLastPoco=p=>localStorage.setItem('bdo_poco',p);
+function bdoNextNum(poco){return bdoLoad().filter(r=>r.poco===poco).length+1;}
+
+// ── Profundidade ───────────────────────────────────────────────────
+function bdoCalcTotal(tools){
+  let t=0;
+  (tools||[]).forEach(tool=>{
+    if(tool.isColuna)t+=parseFloat(tool.comp||tool.totalM||0);
+    else t+=parseFloat(tool.comp||0);
+  });
+  return t;
+}
+function bdoCalcReal(tools,letDown){
+  const tot=bdoCalcTotal(tools);
+  return tot>0?Math.max(0,tot-(parseFloat(letDown)||0)):0;
+}
+function bdoDepthBarHTML(tools,letDown){
+  const tot=bdoCalcTotal(tools);
+  if(!tot)return`<div style="font-size:11px;color:var(--mut);text-align:center;padding:8px">Adicione ferramentas e comprimentos</div>`;
+  const ld=parseFloat(letDown)||0;
+  const real=Math.max(0,tot-ld);
+  const rows=(tools||[]).map(t=>{
+    let len=0;let extra='';
+    if(t.isColuna){len=parseFloat(t.comp||0);extra=t.qty?` (${t.qty} unid)`:'';}
+    else len=parseFloat(t.comp||0);
+    return`<div class="bdo-dep-tool"><span>${t.name}${extra}</span><span>${len>0?len.toFixed(2)+'m':'—'}</span></div>`;
+  }).join('');
+  return`<div class="bdo-depth-bar">
+    ${rows}
+    <div class="bdo-dep-sep"></div>
+    <div class="bdo-dep-row"><span class="bdo-dep-lbl">Total composição</span><span class="bdo-dep-val">${tot.toFixed(2)} m</span></div>
+    ${ld>0?`<div class="bdo-dep-row"><span class="bdo-dep-lbl">− Let Down</span><span class="bdo-dep-val" style="color:var(--red)">− ${ld.toFixed(2)} m</span></div>`:''}
+    <div class="bdo-dep-row real"><span class="bdo-dep-lbl">Tamanho do BHA</span><span class="bdo-dep-val">${real.toFixed(2)} m</span></div>
+  </div>`;
+}
+
+// ── Tipo helpers ───────────────────────────────────────────────────
+function bdoTipoInfo(id){return BDO_TIPOS.find(t=>t.id===id)||BDO_TIPOS[0];}
+function bdoTipoTag(id){const t=bdoTipoInfo(id);return`<span class="bdo-tipo-tag bdo-tipo-${id}">${t.icon} ${t.lbl}</span>`;}
+
+// ── Navegação interna ──────────────────────────────────────────────
+let _bdoSubView='list';
+let _bdoFormEditId=null; // null = novo
+
+function bdoShowSub(sub,barTitle,backFn){
+  ['list','form','detail'].forEach(s=>document.getElementById('bdo-sub-'+s).style.display=s===sub?'':'none');
+  _bdoSubView=sub;
+  document.getElementById('bdo-bar-title').textContent=barTitle||'BDO — Boletim de Descida';
+  document.getElementById('bdo-back-btn').textContent=sub==='list'?'← Início':'← BDO';
+}
+function bdoBack(){
+  if(_bdoSubView==='list'){show('home');}
+  else{bdoShowSub('list');bdoRenderList();}
+}
+function bdoInit(){bdoShowSub('list');bdoRenderList();}
+
+// ── Lista de poços ─────────────────────────────────────────────────
+function bdoRenderList(){
+  const all=bdoAll();
+  const ativos=all.filter(r=>r.status==='ATIVO');
+  const conc=all.filter(r=>r.status==='CONCLUIDO');
+  const wells={};
+  ativos.forEach(r=>{const k=r.poco||'(sem poço)';if(!wells[k])wells[k]=[];wells[k].push(r);});
+  const user=bdoGetUser();
+  let html=`<div style="padding:14px 16px 0">`;
+  html+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <div style="flex:1">
+      <div style="font-size:17px;font-weight:800;color:var(--grn)">BDO — Boletim de Descida</div>
+      ${user?`<div style="font-size:11px;color:var(--mut);margin-top:2px">👤 ${user}</div>`:''}
+    </div>
+    <button class="btn" style="width:auto;padding:10px 18px;margin:0" onclick="bdoStartForm()">+ Novo BHA</button>
+  </div>`;
+  const wNames=Object.keys(wells).sort();
+  if(!wNames.length){
+    html+=`<div class="empty"><div style="font-size:40px;margin-bottom:10px">🔧</div><div style="font-size:15px;font-weight:700;color:var(--mut)">Sem operações ativas</div><div style="font-size:12px;color:var(--mut);margin-top:6px">Toque em + Novo BHA para começar</div></div>`;
+  } else {
+    html+=wNames.map(w=>bdoWellGroupHTML(w,wells[w],false)).join('');
+  }
+  if(conc.length){
+    const cwells={};
+    conc.forEach(r=>{const k=r.poco||'(sem poço)';if(!cwells[k])cwells[k]=[];cwells[k].push(r);});
+    html+=`<div class="sec-title" style="margin-top:20px">Histórico — Concluídos</div>`;
+    html+=Object.keys(cwells).sort().map(w=>bdoWellGroupHTML(w,cwells[w],true)).join('');
+  }
+  html+=`</div>`;
+  document.getElementById('bdo-sub-list').innerHTML=html;
+  document.getElementById('bdo-sub-list').scrollTop=0;
+}
+
+function bdoWellGroupHTML(poco,records,concluded){
+  const safeP=poco.replace(/'/g,"\\'");
+  const ativos=records.filter(r=>r.status==='ATIVO').length;
+  const tiposUniq=[...new Set(records.map(r=>r.tipoOp).filter(Boolean))];
+  const cards=records.map(r=>{
+    const mt=r.tools?.find(t=>t.isMain&&!t.isColuna);
+    const real=bdoCalcReal(r.tools,r.letDown);
+    const ti=bdoTipoInfo(r.tipoOp||'PESCARIA');
+    const conc=r.status==='CONCLUIDO';
+    return`<div class="card" style="cursor:pointer;margin-bottom:8px" onclick="bdoOpenDetail('${r.id}')">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span class="bdo-num-badge">#${r.numOp||'?'}</span>
+        ${bdoTipoTag(r.tipoOp||'PESCARIA')}
+        ${conc?`<span class="tag" style="background:#e6f5ec;color:var(--grn);border-color:var(--bor);margin-left:auto">✓ OK</span>`:''}
+      </div>
+      <div style="font-weight:700;font-size:14px;margin-bottom:4px">${mt?mt.name:'Sem ferramenta principal'}</div>
+      <div style="font-size:11px;color:var(--mut);display:flex;flex-wrap:wrap;gap:8px">
+        <span>${bdoFmtDate(r.data)}</span>
+        ${r.sonda?`<span>Sonda ${r.sonda}</span>`:''}
+        ${r.turno?`<span class="tag ta" style="border:none">${r.turno}</span>`:''}
+        ${real>0?`<span>📏 ${real.toFixed(0)}m real</span>`:''}
+        ${r.profFundoCheq?`<span>⬇ ${r.profFundoCheq}m</span>`:''}
+        ${r.profAvancoRealiz?`<span style="color:#6b21a8">+${r.profAvancoRealiz}m av.</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  return`<div style="margin-bottom:20px">
+    <div class="bdo-well-hdr">
+      <div class="bdo-well-name">${poco}</div>
+      ${concluded?`<span class="tag tg">CONCLUÍDA</span>`:''}
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+      <span class="tag tb">${records.length} BHA${records.length!==1?'s':''}</span>
+      ${tiposUniq.map(t=>bdoTipoTag(t)).join('')}
+    </div>
+    ${cards}
+    ${!concluded&&ativos>0?`<button class="btnR" style="margin-top:4px" onclick="bdoConcluirPoço('${safeP}')">🏁 Finalizar Intervenção no Poço</button>`:''}
+  </div>`;
+}
+
+// ── FORMULÁRIO (3 passos) ──────────────────────────────────────────
+let BW={}; // BDO wizard state
+let BSTEP=0;
+const BSTEPS=[{lbl:'CABEÇALHO'},{lbl:'COMPOSIÇÃO'},{lbl:'DETALHES'}];
+
+const BDO_INSP=[
+  {id:'i1', lbl:'Registros fotográficos efetuados (ferramenta, filetamentos, corpo)'},
+  {id:'i2', lbl:'OD e comprimento medidos e conferidos com a datasheet'},
+  {id:'i3', lbl:'Filetamentos superiores e inferiores inspecionados visualmente'},
+  {id:'i4', lbl:'Ferramenta limpa, sem corrosão excessiva ou danos no corpo'},
+  {id:'i5', lbl:'Certificado de inspeção vigente disponível'},
+  {id:'i6', lbl:'Torque de montagem aplicado conforme especificação'},
+  {id:'i7', lbl:'Acessórios/adaptadores corretos conferidos (crossover, mandril)'},
+  {id:'i8', lbl:'Passagem interna (ID) verificada (mandril/calibrador)'},
+];
+
+function bwClVal(qid){return (BW.mainInsp&&BW.mainInsp.checklist&&BW.mainInsp.checklist[qid])||'';}
+function bwSetCl(qid,val){
+  if(!BW.mainInsp)BW.mainInsp={};
+  if(!BW.mainInsp.checklist)BW.mainInsp.checklist={};
+  BW.mainInsp.checklist[qid]=val;
+  const g=document.getElementById('bdo-cl-'+qid);
+  if(!g)return;
+  const btns=g.querySelectorAll('.bdo-cl-btn');
+  btns.forEach(b=>{b.classList.remove('sim','nao','na');});
+  if(val==='SIM')btns[0].classList.add('sim');
+  else if(val==='NÃO')btns[1].classList.add('nao');
+  else if(val==='N/A')btns[2].classList.add('na');
+}
+function bwPhotoGrid(photos){
+  return (photos||['','','','']).map((p,i)=>p
+    ?`<div class="bdo-photo-slot filled"><img src="${p}"><button class="bdo-photo-del" onclick="bwRemovePhoto(${i})">✕</button></div>`
+    :`<div class="bdo-photo-slot"><label class="bdo-photo-inner" style="cursor:pointer"><input type="file" accept="image/*" capture="environment" style="display:none" onchange="bwAddPhoto(${i},this)"><span style="font-size:28px">📷</span><span class="lbl">Foto ${i+1}</span></label></div>`
+  ).join('');
+}
+function bwAddPhoto(idx,input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=900;let w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      if(!BW.mainInsp.photos)BW.mainInsp.photos=['','','',''];
+      BW.mainInsp.photos[idx]=canvas.toDataURL('image/jpeg',0.75);
+      const grid=document.getElementById('bw-photo-grid');
+      if(grid)grid.innerHTML=bwPhotoGrid(BW.mainInsp.photos);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function bwRemovePhoto(idx){
+  if(!BW.mainInsp.photos)BW.mainInsp.photos=['','','',''];
+  BW.mainInsp.photos[idx]='';
+  const grid=document.getElementById('bw-photo-grid');
+  if(grid)grid.innerHTML=bwPhotoGrid(BW.mainInsp.photos);
+}
+function bwClBuildUI(cl){
+  return BDO_INSP.map((item,idx)=>{
+    const v=(cl&&cl[item.id])||'';
+    return`<div class="bdo-cl-item">
+      <div class="bdo-cl-lbl">${idx+1}. ${item.lbl}</div>
+      <div class="bdo-cl-btns" id="bdo-cl-${item.id}">
+        <button class="bdo-cl-btn js-sim${v==='SIM'?' sim':''}" onclick="bwSetCl('${item.id}','SIM')">✓ SIM</button>
+        <button class="bdo-cl-btn js-nao${v==='NÃO'?' nao':''}" onclick="bwSetCl('${item.id}','NÃO')">✕ NÃO</button>
+        <button class="bdo-cl-btn js-na${v==='N/A'?' na':''}" onclick="bwSetCl('${item.id}','N/A')">— N/A</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function bwClSummaryHTML(cl){
+  if(!cl||!Object.keys(cl).length)return`<span style="font-size:11px;color:var(--mut)">Checklist não preenchido</span>`;
+  const sim=Object.values(cl).filter(v=>v==='SIM').length;
+  const nao=Object.values(cl).filter(v=>v==='NÃO').length;
+  const na=Object.values(cl).filter(v=>v==='N/A').length;
+  const pend=BDO_INSP.length-sim-nao-na;
+  return`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+    <span class="tag tg">✓ ${sim} SIM</span>
+    ${nao?`<span class="tag tr">✕ ${nao} NÃO</span>`:''}
+    <span class="tag tm">— ${na} N/A</span>
+    ${pend?`<span class="tag ta">⏳ ${pend} pendentes</span>`:''}
+  </div>
+  ${BDO_INSP.map(item=>{
+    const v=cl[item.id]||'—';
+    const cls=v==='SIM'?'tg':v==='NÃO'?'tr':'tm';
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bor);font-size:11px">
+      <span style="flex:1;padding-right:8px">${item.lbl}</span>
+      <span class="tag ${cls}" style="flex-shrink:0">${v}</span>
+    </div>`;
+  }).join('')}`;
+}
+
+
+function bdoStartForm(editId){
+  _bdoFormEditId=editId||null;
+  if(editId){
+    const r=bdoById(editId);
+    BW=JSON.parse(JSON.stringify(r));
+  } else {
+    BW={
+      id:bdoUid(),data:bdoToday(),ativo:'BA',poco:bdoGetLastPoco(),
+      sonda:'',turno:'DIURNO',tipoOp:'PESCARIA',numOp:0,letDown:'',
+      especialista:bdoGetUser(),supervisor:'',
+      tools:[],
+      mainInsp:{od:'',id:'',comp:'',connSup:'',connInf:'',checklist:{},photos:['','','','']},
+      profFundoCheq:'',profAvancoRealiz:'',observacao:'',
+      status:'ATIVO'
+    };
+  }
+  BSTEP=0;
+  bdoShowSub('form','Novo BHA');
+  bdoRenderStep();
+}
+
+function bdoRenderStep(){
+  const dots=BSTEPS.map((_,i)=>`<div class="bdo-dot ${i<BSTEP?'done':i===BSTEP?'cur':''}"></div>`).join('');
+  document.getElementById('bdo-dots-row').innerHTML=dots;
+  document.getElementById('bdo-step-lbl').textContent=`PASSO ${BSTEP+1} DE ${BSTEPS.length} — ${BSTEPS[BSTEP].lbl}`;
+  if(BSTEP===0)bdoRenderStep0();
+  else if(BSTEP===1)bdoRenderStep1();
+  else bdoRenderStep2();
+  document.getElementById('bdo-sub-form').scrollTop=0;
+}
+
+// Passo 0 — Cabeçalho
+function bdoRenderStep0(){
+  document.getElementById('bdo-form-body').innerHTML=`
+    <div class="sec-title">Identificação</div>
+    <div class="card">
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Ativo</div>
+        <div style="display:flex;gap:8px">
+          <button id="tg-ba" class="btnO" style="${BW.ativo==='BA'?'background:var(--grn);color:#fff;':''}" onclick="bwSetAtivo('BA')" style="flex:1;margin:0">BAHIA</button>
+          <button id="tg-rn" class="btnO" style="${BW.ativo==='RN'?'background:var(--grn);color:#fff;':''}" onclick="bwSetAtivo('RN')" style="flex:1;margin:0">RN</button>
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Poço ★</div>
+        <input class="inp" id="bw-poco" value="${BW.poco}" placeholder="Ex.: 1-GTE-004-BA" autocapitalize="characters">
+      </div>
+      <div class="grid2" style="margin-bottom:10px">
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Sonda ★</div>
+          <input class="inp" id="bw-sonda" value="${BW.sonda}" placeholder="Ex.: S-03">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Data</div>
+          <input class="inp" id="bw-data" type="date" value="${BW.data}">
+        </div>
+      </div>
+      <div style="margin-bottom:4px">
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Turno</div>
+        <div style="display:flex;gap:8px">
+          <button class="btnO" style="${BW.turno==='DIURNO'?'background:var(--grn);color:#fff;':''};flex:1;margin:0" onclick="bwSetTurno('DIURNO')">☀ DIURNO</button>
+          <button class="btnO" style="${BW.turno==='NOTURNO'?'background:var(--grn);color:#fff;':''};flex:1;margin:0" onclick="bwSetTurno('NOTURNO')">🌙 NOTURNO</button>
+        </div>
+      </div>
+    </div>
+    <div class="sec-title">Tipo de Operação</div>
+    <div class="card">
+      <div class="bdo-tipo-grid" style="margin-bottom:12px">
+        ${BDO_TIPOS.map(t=>`<button class="bdo-tipo-btn ${BW.tipoOp===t.id?'ativo-'+t.id:''}" onclick="bwSetTipo('${t.id}',this)">
+          <span class="bdo-tipo-icon">${t.icon}</span><span>${t.lbl}</span>
+        </button>`).join('')}
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Let Down (m)</div>
+        <input class="inp" id="bw-letdown" type="number" step="0.1" value="${BW.letDown}" placeholder="Ex.: 6.0">
+        <div style="font-size:11px;color:var(--mut);margin-top:4px">Altura entre a plataforma da sonda e a boca do poço</div>
+      </div>
+    </div>
+    <div class="sec-title">Responsáveis</div>
+    <div class="card">
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Especialista ★</div>
+        <input class="inp" id="bw-esp" value="${BW.especialista}" placeholder="Nome do especialista" autocapitalize="words">
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Supervisor</div>
+        <input class="inp" id="bw-sup" value="${BW.supervisor}" placeholder="Nome do supervisor" autocapitalize="words">
+      </div>
+    </div>
+    <button class="btn" onclick="bwSaveStep0()">PRÓXIMO →</button>`;
+}
+
+function bwSetAtivo(v){
+  BW.ativo=v;
+  ['ba','rn'].forEach(x=>{
+    const b=document.getElementById('tg-'+x);
+    if(b){b.style.background=BW.ativo===x.toUpperCase()?'var(--grn)':'';b.style.color=BW.ativo===x.toUpperCase()?'#fff':'';}
+  });
+}
+function bwSetTurno(v){
+  BW.turno=v;
+  bdoRenderStep();
+}
+function bwSetTipo(v,btn){
+  BW.tipoOp=v;
+  document.querySelectorAll('.bdo-tipo-btn').forEach(b=>{
+    b.className='bdo-tipo-btn';
+  });
+  btn.className='bdo-tipo-btn ativo-'+v;
+}
+function bwSaveStep0(){
+  const poco=document.getElementById('bw-poco').value.trim();
+  const sonda=document.getElementById('bw-sonda').value.trim();
+  const esp=document.getElementById('bw-esp').value.trim();
+  if(!poco||!sonda||!esp){alert('Preencha os campos obrigatórios ★');return;}
+  BW.poco=poco;BW.sonda=sonda;
+  BW.data=document.getElementById('bw-data').value;
+  BW.letDown=document.getElementById('bw-letdown').value;
+  BW.especialista=esp;BW.supervisor=document.getElementById('bw-sup').value.trim();
+  if(!_bdoFormEditId)BW.numOp=bdoNextNum(poco);
+  bdoSaveUser(esp);bdoSaveLastPoco(poco);
+  BSTEP=1;bdoRenderStep();
+}
+
+// Passo 1 — Composição
+function bdoRenderStep1(){
+  document.getElementById('bdo-form-body').innerHTML=`
+    <div class="warn-box" style="font-size:12px">
+      💡 <b>Colunas:</b> adicione quantidade × comp. unitário — o total é calculado.<br>
+      ⭐ Marque a <b>ferramenta principal</b> — ela receberá os dados de inspeção no passo seguinte.
+    </div>
+    <div id="bw-tools-list">${bwToolsListHTML()}</div>
+    <button class="btnO" onclick="bdoOpenPicker()">+ Adicionar Ferramenta / Coluna</button>
+    <div id="bw-depth-bar">${bdoDepthBarHTML(BW.tools,BW.letDown)}</div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btnO" style="flex:1" onclick="BSTEP=0;bdoRenderStep()">← VOLTAR</button>
+      <button class="btn" style="flex:1;margin:0" onclick="bwSaveStep1()">PRÓXIMO →</button>
+    </div>`;
+}
+
+function bwToolsListHTML(){
+  if(!BW.tools.length)return`<div class="empty" style="padding:28px"><div style="font-size:32px">🔩</div><div style="font-size:13px;color:var(--mut)">Nenhuma ferramenta adicionada</div></div>`;
+  return BW.tools.map((t,i)=>{
+    let detail='';
+    if(t.isColuna){
+      detail=`<div style="display:grid;grid-template-columns:80px 1fr;gap:8px;margin-top:8px;align-items:center">
+        <div>
+          <div style="font-size:9px;color:var(--mut);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Qtd (unid)</div>
+          <input class="inp" type="number" min="1" value="${t.qty||''}" placeholder="0"
+            style="padding:8px 6px;text-align:center;font-size:15px;font-weight:700"
+            oninput="bwUpdQty(${i},this.value)">
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--mut);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Total (m)</div>
+          <input class="inp" type="number" step="0.01" value="${t.comp||''}" placeholder="0.00"
+            style="padding:8px 10px;font-size:15px;font-weight:700"
+            oninput="bwUpdColunaM(${i},this.value)">
+        </div>
+      </div>`;
+    } else if(!t.isMain){
+      detail=`<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+        <span style="font-size:11px;color:var(--mut)">Comprimento:</span>
+        <input class="inp" type="number" step="0.01" value="${t.comp||''}" placeholder="0.00"
+          style="width:80px;padding:7px 8px;text-align:right"
+          oninput="bwUpdComp(${i},this.value)">
+        <span style="font-size:11px;color:var(--mut)">m</span>
+      </div>`;
+    } else {
+      detail=`<div style="font-size:10px;color:var(--mut);margin-top:4px;font-style:italic">(comprimento preenchido nos Detalhes)</div>`;
+    }
+    return`<div class="bdo-tool-card ${t.isMain?'is-main':''} ${t.isColuna?'is-coluna':''}" style="margin-bottom:8px">
+      <div class="bdo-tool-hdr">
+        <div class="bdo-tool-pos">${i+1}</div>
+        <div class="bdo-tool-info">
+          <div class="bdo-tool-name">${t.name}</div>
+          <div class="bdo-tool-cat">${t.cat}${t.od?' · '+t.od:''}</div>
+        </div>
+        <div class="bdo-tool-acts">
+          ${!t.isColuna?`<button class="bdo-icon-btn main ${t.isMain?'on':''}" onclick="bwSetMain(${i})" title="Ferramenta principal">⭐</button>`:''}
+          ${i>0?`<button class="bdo-icon-btn" onclick="bwMoveTool(${i})" title="Mover acima">↑</button>`:''}
+          <button class="bdo-icon-btn del" onclick="bwRemoveTool(${i})">✕</button>
+        </div>
+      </div>
+      ${detail}
+    </div>`;
+  }).join('');
+}
+
+function bwUpdColunaM(idx,val){
+  BW.tools[idx].comp=val;
+  document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
+}
+function bwUpdQty(idx,val){
+  BW.tools[idx].qty=val;
+}
+function bwUpdComp(idx,val){
+  BW.tools[idx].comp=val;
+  document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
+}
+function bwSetMain(idx){
+  BW.tools.forEach((t,i)=>{if(!t.isColuna)t.isMain=(i===idx);});
+  document.getElementById('bw-tools-list').innerHTML=bwToolsListHTML();
+}
+function bwMoveTool(idx){
+  if(idx<=0)return;
+  [BW.tools[idx],BW.tools[idx-1]]=[BW.tools[idx-1],BW.tools[idx]];
+  document.getElementById('bw-tools-list').innerHTML=bwToolsListHTML();
+  document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
+}
+function bwRemoveTool(idx){
+  BW.tools.splice(idx,1);
+  document.getElementById('bw-tools-list').innerHTML=bwToolsListHTML();
+  document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
+}
+function bwSaveStep1(){
+  if(!BW.tools.length){alert('Adicione ao menos uma ferramenta');return;}
+  const nonColuna=BW.tools.filter(t=>!t.isColuna);
+  if(nonColuna.length>0&&!nonColuna.some(t=>t.isMain))nonColuna[0].isMain=true;
+  if(!BW.mainInsp)BW.mainInsp={od:'',id:'',comp:'',connSup:'',connInf:''};
+  BSTEP=2;bdoRenderStep();
+}
+
+// Passo 2 — Detalhes
+function bdoRenderStep2(){
+  const mt=BW.tools.find(t=>t.isMain&&!t.isColuna);
+  const mi=BW.mainInsp||{};
+  document.getElementById('bdo-form-body').innerHTML=`
+    ${mt?`
+    <div class="sec-title">Medições — ${mt.name}</div>
+    <div class="card">
+      <div class="grid2" style="margin-bottom:10px">
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">OD (pol)</div>
+          <input class="inp" id="bw-od" value="${mi.od||''}" placeholder='4 3/4 ou 4.75'>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">ID (pol)</div>
+          <input class="inp" id="bw-id" value="${mi.id||''}" placeholder='2 1/4 ou 2.25'>
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Comprimento (m)</div>
+        <input class="inp" id="bw-comp" type="number" step="0.01" value="${mi.comp||mt.comp||''}" placeholder="0.00" oninput="bwSyncComp(this.value)">
+      </div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Conexão Superior</div>
+          <select class="inp" id="bw-csup">${BDO_CONNS.map(c=>`<option value="${c}" ${mi.connSup===c?'selected':''}>${c||'—'}</option>`).join('')}</select>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Conexão Inferior</div>
+          <select class="inp" id="bw-cinf">${BDO_CONNS.map(c=>`<option value="${c}" ${mi.connInf===c?'selected':''}>${c||'—'}</option>`).join('')}</select>
+        </div>
+      </div>
+    </div>
+    <div class="sec-title">Checklist de Inspeção — Pré-descida</div>
+    <div class="card">${bwClBuildUI(mi.checklist||{})}</div>
+    <div class="sec-title">Fotos da Inspeção <span style="font-weight:400;color:var(--mut)">(até 4)</span></div>
+    <div class="card">
+      <div class="bdo-photo-grid" id="bw-photo-grid">${bwPhotoGrid(mi.photos||['','','',''])}</div>
+    </div>`
+    :`<div class="warn-box" style="font-size:12px">⚠️ Nenhuma ferramenta principal marcada. Volte e marque com ⭐.</div>`}
+    <div id="bw-depth-det">${bdoDepthBarHTML(BW.tools,BW.letDown)}</div>
+    <div class="sec-title">Resultado da Operação <span style="font-weight:400;color:var(--mut)">(opcional)</span></div>
+    <div class="card">
+      <div class="grid2" style="margin-bottom:4px">
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Fundo chegado (m)</div>
+          <input class="inp" id="bw-fundo" type="number" step="0.1" value="${BW.profFundoCheq||''}" placeholder="Ex.: 1850.0">
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--mut);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Avanço realizado (m)</div>
+          <input class="inp" id="bw-avanco" type="number" step="0.1" value="${BW.profAvancoRealiz||''}" placeholder="Ex.: 3.0">
+        </div>
+      </div>
+    </div>
+    <div class="sec-title">Observações <span style="font-weight:400;color:var(--mut)">(opcional)</span></div>
+    <div class="card">
+      <textarea class="inp" id="bw-obs" rows="3" placeholder="Anotações do especialista sobre este BHA…" style="resize:none">${BW.observacao||''}</textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btnO" style="flex:1" onclick="BSTEP=1;bdoRenderStep()">← VOLTAR</button>
+      <button class="btn btn-sec" style="flex:1;margin:0" onclick="bwSalvar()">✓ SALVAR BHA</button>
+    </div>`;
+}
+
+function bwSyncComp(val){
+  const mt=BW.tools.find(t=>t.isMain&&!t.isColuna);
+  if(mt){mt.comp=val;if(BW.mainInsp)BW.mainInsp.comp=val;}
+  const el=document.getElementById('bw-depth-det');
+  if(el)el.innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
+}
+
+function bwSalvar(){
+  const mt=BW.tools.find(t=>t.isMain&&!t.isColuna);
+  if(mt&&BW.mainInsp){
+    const comp=document.getElementById('bw-comp')?.value||'';
+    BW.mainInsp.od=document.getElementById('bw-od')?.value||'';
+    BW.mainInsp.id=document.getElementById('bw-id')?.value||'';
+    BW.mainInsp.comp=comp;
+    mt.comp=comp;
+    BW.mainInsp.connSup=document.getElementById('bw-csup')?.value||'';
+    BW.mainInsp.connInf=document.getElementById('bw-cinf')?.value||'';
+    // checklist já atualizado em tempo real pelo bwSetCl
+  }
+  BW.profFundoCheq=document.getElementById('bw-fundo')?.value||'';
+  BW.profAvancoRealiz=document.getElementById('bw-avanco')?.value||'';
+  BW.observacao=document.getElementById('bw-obs')?.value||'';
+  bdoUpsert(BW);
+  bdoShowSub('list');
+  bdoRenderList();
+  setTimeout(()=>{document.getElementById('bdo-sub-list').scrollTop=0;},100);
+}
+
+// ── Detalhe ────────────────────────────────────────────────────────
+function bdoOpenDetail(id){
+  bdoShowSub('detail','Detalhe BHA');
+  const r=bdoById(id);
+  if(!r){bdoShowSub('list');bdoRenderList();return;}
+  const mt=r.tools?.find(t=>t.isMain&&!t.isColuna);
+  const mi=r.mainInsp||{};
+  const ti=bdoTipoInfo(r.tipoOp||'PESCARIA');
+  const conc=r.status==='CONCLUIDO';
+  // ── cálculos ──
+  const totBHA  = bdoCalcTotal(r.tools);
+  const ld      = parseFloat(r.letDown)||0;
+  const profReal = Math.max(0,totBHA-ld);
+  const fundo   = parseFloat(r.profFundoCheq)||0;
+  const avanco  = parseFloat(r.profAvancoRealiz)||0;
+  const profFinal = (fundo>0&&avanco>0)?fundo+avanco:0;
+  let html=``;
+  if(conc)html+=`<div class="obs-box" style="background:#e6f5ec;border-color:var(--grn);margin-bottom:12px">✅ Operação concluída</div>`;
+  // ── RESUMO OPERACIONAL ──
+  html+=`<div class="bdo-resumo">
+    <div class="bdo-resumo-title">📊 Resumo Operacional — #${r.numOp||'?'} ${ti.icon} ${ti.lbl}</div>
+    <div class="bdo-resumo-grid">
+      <div class="bdo-resumo-cell">
+        <div class="bdo-resumo-lbl">Composição BHA</div>
+        <div class="bdo-resumo-val accent">${totBHA>0?totBHA.toFixed(2)+' m':'—'}</div>
+        ${ld>0?`<div class="bdo-resumo-sub">− ${ld.toFixed(2)}m Let Down</div>`:''}
+      </div>
+      <div class="bdo-resumo-cell">
+        <div class="bdo-resumo-lbl">Tamanho do BHA</div>
+        <div class="bdo-resumo-val accent">${profReal>0?profReal.toFixed(2)+' m':'—'}</div>
+        <div class="bdo-resumo-sub">composição − let down</div>
+      </div>
+      ${fundo>0?`<div class="bdo-resumo-cell">
+        <div class="bdo-resumo-lbl">Fundo Chegado</div>
+        <div class="bdo-resumo-val">${fundo.toFixed(2)} m</div>
+      </div>`:''}
+      ${avanco>0?`<div class="bdo-resumo-cell">
+        <div class="bdo-resumo-lbl">Avanço Realizado</div>
+        <div class="bdo-resumo-val" style="color:#a7f3d0">+ ${avanco.toFixed(2)} m</div>
+      </div>`:''}
+    </div>
+    ${profFinal>0?`<div class="bdo-resumo-full">
+      <span style="font-size:11px;font-weight:700;opacity:.85">Profundidade Final (fundo + avanço)</span>
+      <span style="font-size:18px;font-weight:800">${profFinal.toFixed(2)} m</span>
+    </div>`:''}
+  </div>`;
+  html+=`<div class="card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span class="bdo-num-badge">#${r.numOp||'?'}</span>
+      ${bdoTipoTag(r.tipoOp||'PESCARIA')}
+      <span class="tag ${conc?'tg':'ta'}" style="margin-left:auto">${conc?'CONCLUÍDO':'ATIVO'}</span>
+    </div>
+    <div class="grid2" style="gap:8px">
+      ${bdoInfoCell('Poço',r.poco)} ${bdoInfoCell('Ativo',r.ativo)}
+      ${bdoInfoCell('Sonda',r.sonda)} ${bdoInfoCell('Data',bdoFmtDate(r.data))}
+      ${bdoInfoCell('Turno',r.turno)} ${bdoInfoCell('Let Down',r.letDown?r.letDown+'m':'')}
+      ${bdoInfoCell('Especialista',r.especialista)} ${bdoInfoCell('Supervisor',r.supervisor)}
+    </div>
+  </div>`;
+  html+=`<div class="sec-title">Composição — ${r.tools?.length||0} ferramenta${(r.tools?.length||0)!==1?'s':''}</div>`;
+  (r.tools||[]).forEach((t,i)=>{
+    const isMain=t.isMain&&!t.isColuna;
+    html+=`<div class="bdo-tool-card ${isMain?'is-main':''} ${t.isColuna?'is-coluna':''}">
+      <div class="bdo-tool-hdr">
+        <div class="bdo-tool-pos">${i+1}</div>
+        <div class="bdo-tool-info">
+          <div class="bdo-tool-name">${t.name}</div>
+          <div class="bdo-tool-cat">${t.cat}${t.od?' · '+t.od:''}</div>
+        </div>
+        ${t.isColuna?`<span class="tag tb" style="font-size:10px">COLUNA</span>`:''}
+        ${isMain?`<span class="tag ta" style="font-size:10px">⭐ PRINCIPAL</span>`:''}
+      </div>
+      ${t.isColuna?`<div style="margin-top:6px;font-size:12px;color:var(--mut)">${t.qty||'—'} unid · <b style="color:var(--grn)">${parseFloat(t.comp||0).toFixed(2)} m</b></div>`:''}
+      ${isMain&&mi.od?`<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px">
+        ${mi.od?`<span class="tag tm">OD ${mi.od}"</span>`:''}
+        ${mi.id?`<span class="tag tm">ID ${mi.id}"</span>`:''}
+        ${mi.comp?`<span class="tag tm">${mi.comp}m</span>`:''}
+        ${mi.connSup?`<span class="tag tm">↑ ${mi.connSup}</span>`:''}
+        ${mi.connInf?`<span class="tag tm">↓ ${mi.connInf}</span>`:''}
+      </div>`:''}
+      ${!t.isColuna&&!isMain&&t.comp?`<div style="margin-top:4px;font-size:11px;color:var(--mut)">${parseFloat(t.comp).toFixed(2)} m</div>`:''}
+    </div>`;
+  });
+  html+=`<div class="sec-title">Profundidade — Breakdown</div>`;
+  html+=bdoDepthBarHTML(r.tools,r.letDown);
+  // checklist
+  if(mi.checklist&&Object.keys(mi.checklist).length){
+    html+=`<div class="sec-title">Checklist Pré-descida</div><div class="card">${bwClSummaryHTML(mi.checklist)}</div>`;
+  }
+  const detPhotos=(mi.photos||[]).filter(p=>p);
+  if(detPhotos.length){
+    html+=`<div class="sec-title">Fotos da Inspeção</div>`;
+    html+=`<div class="bdo-photo-grid">${detPhotos.map(p=>`<div class="bdo-photo-slot filled"><img src="${p}"></div>`).join('')}</div>`;
+  }
+  if(r.observacao){
+    html+=`<div class="sec-title">Observações</div><div class="bdo-obs-box">${r.observacao}</div>`;
+  }
+  html+=`<button class="bdo-export-btn" onclick="bdoExportBHA('${r.id}')">⬇ Exportar BHA (MHT com fotos)</button>`;
+  if(!conc){
+    html+=`<button class="btn btn-sec" style="margin-top:8px" onclick="bdoConcluirBHA('${r.id}')">✓ Concluir este BHA</button>`;
+    html+=`<button class="btnO" style="margin-top:8px" onclick="bdoStartForm('${r.id}')">✏️ Editar BHA</button>`;
+  }
+  html+=`<button class="btnR" style="margin-top:8px" onclick="bdoExcluirBHA('${r.id}')">🗑 Excluir BHA</button>`;
+  document.getElementById('bdo-detail-body').innerHTML=html;
+  document.getElementById('bdo-sub-detail').scrollTop=0;
+}
+
+function bdoExportBHA(id){
+  const r=bdoById(id);if(!r)return;
+  const mt=r.tools?.find(t=>t.isMain&&!t.isColuna);
+  const mi=r.mainInsp||{};
+  const ti=bdoTipoInfo(r.tipoOp||'PESCARIA');
+  const totBHA=bdoCalcTotal(r.tools);
+  const ld=parseFloat(r.letDown)||0;
+  const profReal=Math.max(0,totBHA-ld);
+  const fundo=parseFloat(r.profFundoCheq)||0;
+  const avanco=parseFloat(r.profAvancoRealiz)||0;
+  const profFinal=(fundo>0&&avanco>0)?fundo+avanco:0;
+  const photos=(mi.photos||[]).filter(p=>p);
+  const imgParts=[];const imgMap={};
+  photos.forEach(p=>{
+    if(!imgMap[p]){
+      const cid='img'+imgParts.length;imgMap[p]=cid;
+      const m=p.match(/^data:([^;]+);base64,(.+)$/s);
+      if(m)imgParts.push({cid,mime:m[1],data:m[2]});
+    }
+  });
+  const toolRows=(r.tools||[]).map((t,i)=>{
+    const isMain=t.isMain&&!t.isColuna;
+    let detail='';
+    if(t.isColuna)detail=`${t.qty||'—'} unid · ${parseFloat(t.comp||0).toFixed(2)} m`;
+    else if(isMain&&mi.comp)detail=`OD: ${mi.od||'—'}" | ID: ${mi.id||'—'}" | Comp: ${mi.comp}m | ↑${mi.connSup||'—'} ↓${mi.connInf||'—'}`;
+    else if(t.comp)detail=`${parseFloat(t.comp).toFixed(2)} m`;
+    return`<tr style="background:${i%2?'#f9fafb':'#fff'}">
+      <td style="padding:6px 10px;border:1px solid #e5e7eb;font-weight:700;text-align:center">${i+1}</td>
+      <td style="padding:6px 10px;border:1px solid #e5e7eb;font-weight:700">${t.name}${isMain?' ⭐':''}</td>
+      <td style="padding:6px 10px;border:1px solid #e5e7eb;color:#666">${t.cat}</td>
+      <td style="padding:6px 10px;border:1px solid #e5e7eb">${detail}</td>
+    </tr>`;
+  }).join('');
+  const clRows=(BDO_INSP||[]).map(item=>{
+    const v=(mi.checklist&&mi.checklist[item.id])||'—';
+    const c=v==='SIM'?'#16a34a':v==='NÃO'?'#dc2626':'#6b7280';
+    return`<tr><td style="padding:5px 10px;border:1px solid #e5e7eb;font-size:12px">${item.lbl}</td>
+      <td style="padding:5px 10px;border:1px solid #e5e7eb;font-weight:700;color:${c};text-align:center">${v}</td></tr>`;
+  }).join('');
+  const photoImgs=photos.map(p=>`<img src="cid:${imgMap[p]}" style="width:180px;height:180px;object-fit:cover;border-radius:8px;margin:4px">`).join('');
+  const htmlDoc=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>BHA #${r.numOp||'?'} — ${r.poco}</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:13px;color:#111;padding:24px;max-width:800px;margin:0 auto;}
+  h1{font-size:22px;color:#1a6b3a;margin:0 0 2px}
+  .sub{font-size:11px;color:#666;margin-bottom:20px;letter-spacing:1px}
+  .resumo{background:#1a6b3a;color:#fff;border-radius:10px;padding:16px;margin-bottom:20px}
+  .resumo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .resumo-cell{background:rgba(255,255,255,.15);border-radius:7px;padding:8px 12px}
+  .resumo-lbl{font-size:9px;font-weight:700;letter-spacing:1px;opacity:.75;text-transform:uppercase}
+  .resumo-val{font-size:20px;font-weight:800;margin-top:2px}
+  .resumo-full{background:rgba(255,255,255,.15);border-radius:7px;padding:8px 12px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+  .sec{font-size:10px;color:#1a6b3a;font-weight:800;letter-spacing:2px;text-transform:uppercase;border-bottom:2px solid #1a6b3a;padding-bottom:3px;margin:18px 0 10px}
+  table{border-collapse:collapse;width:100%;margin-bottom:12px}
+  th{background:#1a6b3a;color:#fff;padding:7px 10px;text-align:left;font-size:11px}
+  @media print{body{padding:0}}
+</style></head><body>
+<h1>BHA #${r.numOp||'?'} — ${r.poco}</h1>
+<div class="sub">PetroRecôncavo · Operações Especiais · ${ti.icon} ${ti.lbl} · ${bdoFmtDate(r.data)} · Especialista: ${r.especialista||'—'}</div>
+<div class="resumo">
+  <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;opacity:.8">📊 RESUMO OPERACIONAL</div>
+  <div class="resumo-grid">
+    <div class="resumo-cell"><div class="resumo-lbl">Composição BHA</div><div class="resumo-val">${totBHA>0?totBHA.toFixed(2)+' m':'—'}</div>${ld>0?`<div style="font-size:10px;opacity:.7">− ${ld.toFixed(2)}m Let Down</div>`:''}</div>
+    <div class="resumo-cell"><div class="resumo-lbl">Tamanho do BHA</div><div class="resumo-val">${profReal>0?profReal.toFixed(2)+' m':'—'}</div><div style="font-size:10px;opacity:.7">composição − let down</div></div>
+    ${fundo>0?`<div class="resumo-cell"><div class="resumo-lbl">Fundo Chegado</div><div class="resumo-val">${fundo.toFixed(2)} m</div></div>`:''}
+    ${avanco>0?`<div class="resumo-cell"><div class="resumo-lbl">Avanço Realizado</div><div class="resumo-val">+ ${avanco.toFixed(2)} m</div></div>`:''}
+  </div>
+  ${profFinal>0?`<div class="resumo-full"><span style="font-size:12px;font-weight:700">Profundidade Final (fundo + avanço)</span><span style="font-size:20px;font-weight:800">${profFinal.toFixed(2)} m</span></div>`:''}
+</div>
+<div class="sec">Identificação</div>
+<table><tr><th>Poço</th><th>Ativo</th><th>Sonda</th><th>Data</th><th>Turno</th><th>Let Down</th></tr>
+<tr><td>${r.poco||'—'}</td><td>${r.ativo||'—'}</td><td>${r.sonda||'—'}</td><td>${bdoFmtDate(r.data)}</td><td>${r.turno||'—'}</td><td>${r.letDown?r.letDown+'m':'—'}</td></tr></table>
+<table><tr><th>Especialista</th><th>Supervisor</th><th>Status</th></tr>
+<tr><td>${r.especialista||'—'}</td><td>${r.supervisor||'—'}</td><td>${r.status}</td></tr></table>
+<div class="sec">Composição do BHA</div>
+<table><tr><th>#</th><th>Ferramenta</th><th>Categoria</th><th>Detalhes / Comprimento</th></tr>${toolRows}</table>
+<div class="sec">Checklist de Inspeção Pré-descida</div>
+<table><tr><th>Item</th><th style="width:60px;text-align:center">Status</th></tr>${clRows}</table>
+${photos.length?`<div class="sec">Fotos da Inspeção</div><div style="display:flex;flex-wrap:wrap;gap:8px">${photoImgs}</div>`:''}
+${r.observacao?`<div class="sec">Observações</div><p style="font-style:italic;color:#555">${r.observacao}</p>`:''}
+<div style="margin-top:30px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px">
+  Exportado em ${new Date().toLocaleString('pt-BR')} · ManualTécnico PetroRecôncavo · v4
+</div>
+</body></html>`;
+  const boundary='----=_BHA_'+Date.now();
+  let mhtml=`MIME-Version: 1.0\r\nContent-Type: multipart/related; boundary="${boundary}"; type="text/html"\r\n\r\n`;
+  mhtml+=`--${boundary}\r\nContent-Type: text/html; charset="utf-8"\r\nContent-Transfer-Encoding: 8bit\r\n\r\n`;
+  mhtml+=htmlDoc+'\r\n';
+  imgParts.forEach(({cid,mime,data})=>{
+    const wrapped=data.replace(/(.{76})/g,'$1\r\n');
+    mhtml+=`--${boundary}\r\nContent-Type: ${mime}\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <${cid}>\r\nContent-Location: ${cid}\r\n\r\n${wrapped}\r\n`;
+  });
+  mhtml+=`--${boundary}--`;
+  const blob=new Blob([mhtml],{type:'message/rfc822'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`BHA_${r.numOp||'1'}_${(r.poco||'poco').replace(/[\s/]/g,'_')}_${(r.data||'').replace(/-/g,'')}.mht`;
+  a.click();
+}
+function bdoInfoCell(lbl,val){
+  return`<div><div style="font-size:9px;color:var(--mut);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:2px">${lbl}</div><div style="font-size:13px;font-weight:600">${val||'—'}</div></div>`;
+}
+
+// ── Ações ──────────────────────────────────────────────────────────
+function bdoConcluirBHA(id){
+  if(!confirm('Concluir este BHA? Ele irá para o histórico.'))return;
+  const r=bdoById(id);r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();
+  bdoUpsert(r);bdoShowSub('list');bdoRenderList();
+}
+function bdoConcluirPoço(poco){
+  const all=bdoLoad();
+  const ativos=all.filter(r=>r.poco===poco&&r.status==='ATIVO');
+  if(!confirm(`Finalizar intervenção no poço ${poco}?\n${ativos.length} BHA(s) ativo(s) serão concluídos.`))return;
+  all.forEach(r=>{if(r.poco===poco&&r.status==='ATIVO'){r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();}});
+  bdoSave(all);bdoRenderList();
+}
+function bdoExcluirBHA(id){
+  if(!confirm('Excluir este BHA? Não pode ser desfeito.'))return;
+  bdoDelete(id);bdoShowSub('list');bdoRenderList();
+}
+
+// ── Seletor de ferramentas ─────────────────────────────────────────
+let _bdoPickerCat='Todos';
+function bdoOpenPicker(){
+  _bdoPickerCat='Todos';
+  document.getElementById('bdo-picker-search').value='';
+  document.getElementById('bdo-picker-filters').innerHTML=BDO_CATS.map(c=>
+    `<button onclick="bdoSetPickerCat(this,'${c}')" style="padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;background:${c===_bdoPickerCat?'var(--grn)':'var(--card2)'};color:${c===_bdoPickerCat?'#fff':'var(--mut)'};border:1.5px solid ${c===_bdoPickerCat?'var(--grn)':'var(--bor)'};white-space:nowrap;flex-shrink:0;cursor:pointer;margin-right:4px">${c}</button>`
+  ).join('');
+  bdoRenderPicker();
+  document.getElementById('bdo-picker').style.display='block';
+}
+function bdoClosePicker(){document.getElementById('bdo-picker').style.display='none';}
+function bdoSetPickerCat(btn,cat){
+  _bdoPickerCat=cat;
+  document.getElementById('bdo-picker-filters').querySelectorAll('button').forEach(b=>{
+    const isCur=b.textContent===cat;
+    b.style.background=isCur?'var(--grn)':'var(--card2)';
+    b.style.color=isCur?'#fff':'var(--mut)';
+    b.style.borderColor=isCur?'var(--grn)':'var(--bor)';
+  });
+  bdoRenderPicker();
+}
+function bdoRenderPicker(){
+  const q=document.getElementById('bdo-picker-search').value.toLowerCase();
+  const items=BDO_CATALOG.filter(t=>{
+    if(_bdoPickerCat!=='Todos'&&t.cat!==_bdoPickerCat)return false;
+    if(t.ativo!=='AMBOS'&&t.ativo!==BW.ativo)return false;
+    if(q&&!t.name.toLowerCase().includes(q)&&!t.cat.toLowerCase().includes(q))return false;
+    return true;
+  });
+  document.getElementById('bdo-picker-list').innerHTML=items.length
+    ?items.map(t=>`<div class="bdo-picker-item" onclick="bdoAddTool('${t.id}')">
+        <div class="bdo-picker-item-info">
+          <div class="bdo-picker-item-name">${t.name}</div>
+          <div class="bdo-picker-item-sub">${t.cat}${t.od?' · '+t.od:''}${t.cat==='Coluna'?' · 📦 qtd+comp.':''}</div>
+        </div>
+        <span style="font-size:22px;color:var(--grn)">+</span>
+      </div>`).join('')
+    :`<div class="empty" style="padding:30px"><div style="font-size:30px">🔍</div><div style="font-size:12px;color:var(--mut)">Não encontrado</div></div>`;
+}
+function bdoAddTool(cid){
+  const cat=BDO_CATALOG.find(t=>t.id===cid);if(!cat)return;
+  const isColuna=cat.cat==='Coluna';
+  const isCustom=cid==='custom';
+  const name=isCustom?(prompt('Nome da ferramenta:')||'Ferramenta Customizada'):cat.name;
+  const nonColunaCount=BW.tools.filter(t=>!t.isColuna).length;
+  BW.tools.push({
+    id:bdoUid(),name,cat:cat.cat,od:cat.od||'',
+    isMain:!isColuna&&nonColunaCount===0,
+    isColuna,
+    qty:isColuna?'':undefined,
+    comp:''
+  });
+  bdoClosePicker();
+  document.getElementById('bw-tools-list').innerHTML=bwToolsListHTML();
+  document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
+}
 </script>
 </body>
 </html>
