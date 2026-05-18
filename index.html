@@ -123,6 +123,10 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
 .bdo-picker-item-info{flex:1;}
 .bdo-picker-item-name{font-weight:700;font-size:13px;}
 .bdo-picker-item-sub{font-size:10px;color:var(--mut);margin-top:1px;}
+ 
+/* BDO intervenção concluída */
+.bdo-relato-box{background:#e6f5ec;border:1px solid var(--grn2);border-left:3px solid var(--grn);border-radius:8px;padding:10px 14px;font-size:12px;color:#1a5c2e;line-height:1.6;margin-top:8px;}
+.bdo-fin-badge{display:inline-flex;align-items:center;gap:5px;background:var(--grn);color:#fff;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:.5px;}
 .bdo-obs-box{background:var(--grn3);border:1px solid var(--bor);border-left:3px solid var(--grn);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--mut);font-style:italic;line-height:1.5;}
  
  
@@ -334,6 +338,33 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
   <!-- sub: detalhe -->
   <div id="bdo-sub-detail" style="display:none;padding-bottom:80px">
     <div id="bdo-detail-body" style="padding:16px"></div>
+  </div>
+</div>
+ 
+ 
+<!-- BDO: Mini confirm modal -->
+<div id="bdo-confirm-modal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)bdoConfirmClose()">
+  <div style="background:#fff;border-radius:14px;padding:24px;width:100%;max-width:340px">
+    <div id="bdo-confirm-title" style="font-size:17px;font-weight:800;margin-bottom:8px"></div>
+    <div id="bdo-confirm-msg" style="font-size:13px;color:var(--mut);margin-bottom:20px;line-height:1.5"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btnO" style="flex:1;margin:0" onclick="bdoConfirmClose()">CANCELAR</button>
+      <button id="bdo-confirm-ok" class="btn" style="flex:1;margin:0">CONFIRMAR</button>
+    </div>
+  </div>
+</div>
+<!-- BDO: Modal finalizar intervenção -->
+<div id="bdo-fin-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);align-items:flex-end;justify-content:center" onclick="if(event.target===this)bdoFinModal(false)">
+  <div style="background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:600px;padding:20px 20px 32px;animation:slideUp .25s ease">
+    <div style="width:40px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 16px"></div>
+    <div style="font-size:18px;font-weight:800;color:var(--grn);margin-bottom:4px">🏁 Finalizar Intervenção</div>
+    <div id="bdo-fin-poco-lbl" style="font-size:12px;color:var(--mut);margin-bottom:16px"></div>
+    <div style="font-size:11px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Relato da Operação</div>
+    <textarea id="bdo-fin-relato" rows="5" class="inp" placeholder="Descreva como foi a operação como um todo: resultado obtido, dificuldades, eficiência, próximos passos…" style="resize:none;font-size:14px;line-height:1.6"></textarea>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btnO" style="flex:1;margin:0" onclick="bdoFinModal(false)">CANCELAR</button>
+      <button class="btn" style="flex:1;margin:0;background:var(--grn)" onclick="bdoFinConfirm()">✓ FINALIZAR</button>
+    </div>
   </div>
 </div>
 <!-- BDO: Seletor de ferramentas -->
@@ -1205,11 +1236,16 @@ function bdoRenderList(){
   } else {
     html+=wNames.map(w=>bdoWellGroupHTML(w,wells[w],false)).join('');
   }
-  if(conc.length){
-    const cwells={};
-    conc.forEach(r=>{const k=r.poco||'(sem poço)';if(!cwells[k])cwells[k]=[];cwells[k].push(r);});
-    html+=`<div class="sec-title" style="margin-top:20px">Histórico — Concluídos</div>`;
-    html+=Object.keys(cwells).sort().map(w=>bdoWellGroupHTML(w,cwells[w],true)).join('');
+  // group all records by well for history
+  const allWells={};
+  bdoAll().forEach(r=>{const k=r.poco||'(sem poço)';if(!allWells[k])allWells[k]=[];allWells[k].push(r);});
+  const concludedWells=Object.keys(allWells).filter(w=>{
+    const wd=bdoGetWellData(w);
+    return wd.finalizadoEm && !wells[w]; // has finalization record and not already in active
+  });
+  if(concludedWells.length){
+    html+=`<div class="sec-title" style="margin-top:20px">Histórico — Intervenções Concluídas</div>`;
+    html+=concludedWells.sort().map(w=>bdoWellGroupHTML(w,allWells[w],true)).join('');
   }
   html+=`</div>`;
   document.getElementById('bdo-sub-list').innerHTML=html;
@@ -1252,7 +1288,18 @@ function bdoWellGroupHTML(poco,records,concluded){
       ${tiposUniq.map(t=>bdoTipoTag(t)).join('')}
     </div>
     ${cards}
-    ${!concluded&&ativos>0?`<button class="btnR" style="margin-top:4px" onclick="bdoConcluirPoço('${safeP}')">🏁 Finalizar Intervenção no Poço</button>`:''}
+    ${(()=>{
+      if(concluded){
+        const wd=bdoGetWellData(poco);
+        return wd.relato?`<div class="bdo-relato-box">
+          <div style="font-size:10px;font-weight:800;color:var(--grn);letter-spacing:.5px;margin-bottom:5px">📝 RELATO DA OPERAÇÃO</div>
+          <div>${wd.relato}</div>
+          <div style="font-size:10px;color:var(--mut);margin-top:6px">Finalizado por ${wd.finalizadoPor||'—'} · ${wd.finalizadoEm?new Date(wd.finalizadoEm).toLocaleString('pt-BR'):''}</div>
+        </div>`:'';
+      }
+      if(ativos>0) return `<button class="btnR" style="margin-top:4px" onclick="bdoConcluirPoço('${safeP}')">🏁 Finalizar Intervenção no Poço</button>`;
+      return '';
+    })()}
   </div>`;
 }
  
@@ -1879,20 +1926,63 @@ function bdoInfoCell(lbl,val){
  
 // ── Ações ──────────────────────────────────────────────────────────
 function bdoConcluirBHA(id){
-  if(!confirm('Concluir este BHA? Ele irá para o histórico.'))return;
-  const r=bdoById(id);r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();
-  bdoUpsert(r);bdoShowSub('list');bdoRenderList();
+  bdoConfirm('Concluir BHA?','Este BHA irá para o histórico do poço. A intervenção continua ativa.','✓ CONCLUIR','',()=>{
+    const r=bdoById(id);r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();
+    bdoUpsert(r);bdoShowSub('list');bdoRenderList();
+  });
 }
+ 
+let _bdoConfirmCb=null;
+function bdoConfirm(title,msg,btnLbl,btnCls,cb){
+  _bdoConfirmCb=cb;
+  document.getElementById('bdo-confirm-title').textContent=title;
+  document.getElementById('bdo-confirm-msg').textContent=msg;
+  const ok=document.getElementById('bdo-confirm-ok');
+  ok.textContent=btnLbl;
+  ok.className='btn '+(btnCls||'');
+  ok.onclick=()=>{bdoConfirmClose();_bdoConfirmCb&&_bdoConfirmCb();};
+  document.getElementById('bdo-confirm-modal').style.display='flex';
+}
+function bdoConfirmClose(){
+  document.getElementById('bdo-confirm-modal').style.display='none';
+  _bdoConfirmCb=null;
+}
+let _bdoFinPoco='';
 function bdoConcluirPoço(poco){
+  _bdoFinPoco=poco;
   const all=bdoLoad();
   const ativos=all.filter(r=>r.poco===poco&&r.status==='ATIVO');
-  if(!confirm(`Finalizar intervenção no poço ${poco}?\n${ativos.length} BHA(s) ativo(s) serão concluídos.`))return;
-  all.forEach(r=>{if(r.poco===poco&&r.status==='ATIVO'){r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();}});
-  bdoSave(all);bdoRenderList();
+  // check if well already has intervention record
+  const wData=bdoGetWellData(poco);
+  document.getElementById('bdo-fin-poco-lbl').textContent=`Poço: ${poco} · ${ativos.length} BHA(s) ativo(s) serão concluídos`;
+  document.getElementById('bdo-fin-relato').value=wData.relato||'';
+  bdoFinModal(true);
 }
+function bdoFinModal(show){
+  const el=document.getElementById('bdo-fin-modal');
+  el.style.display=show?'flex':'none';
+  if(show)setTimeout(()=>document.getElementById('bdo-fin-relato').focus(),300);
+}
+function bdoFinConfirm(){
+  const poco=_bdoFinPoco;
+  const relato=document.getElementById('bdo-fin-relato').value.trim();
+  const all=bdoLoad();
+  all.forEach(r=>{if(r.poco===poco&&r.status==='ATIVO'){r.status='CONCLUIDO';r.updatedAt=new Date().toISOString();}});
+  bdoSave(all);
+  // save well-level data
+  bdoSaveWellData(poco,{relato,finalizadoEm:new Date().toISOString(),finalizadoPor:bdoGetUser()});
+  bdoFinModal(false);
+  bdoRenderList();
+}
+// well-level storage (separate from BHA records)
+const BDO_WELL_KEY='bdo_wells_v1';
+function bdoGetWellData(poco){try{const d=JSON.parse(localStorage.getItem(BDO_WELL_KEY)||'{}');return d[poco]||{};}catch{return{};}}
+function bdoSaveWellData(poco,data){try{const d=JSON.parse(localStorage.getItem(BDO_WELL_KEY)||'{}');d[poco]={...d[poco],...data};localStorage.setItem(BDO_WELL_KEY,JSON.stringify(d));}catch{}}
+ 
 function bdoExcluirBHA(id){
-  if(!confirm('Excluir este BHA? Não pode ser desfeito.'))return;
-  bdoDelete(id);bdoShowSub('list');bdoRenderList();
+  bdoConfirm('Excluir BHA?','Esta ação não pode ser desfeita.','🗑 EXCLUIR','btnR',()=>{
+    bdoDelete(id);bdoShowSub('list');bdoRenderList();
+  });
 }
  
 // ── Seletor de ferramentas ─────────────────────────────────────────
