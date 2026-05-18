@@ -1950,8 +1950,9 @@ function bdoConfirmClose(){
   _bdoConfirmCb=null;
 }
 function bdoConfirmOk(){
+  const cb=_bdoConfirmCb;
   bdoConfirmClose();
-  _bdoConfirmCb&&_bdoConfirmCb();
+  cb&&cb();
 }
 let _bdoFinPoco='';
 function bdoConcluirPoço(poco){
