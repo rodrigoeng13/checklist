@@ -65,7 +65,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
 .row{display:flex;justify-content:space-between;align-items:center}
 .conv-result{background:var(--grn3);border:1.5px solid var(--grn);border-radius:10px;padding:14px 16px;margin-top:12px;text-align:center}
 .sec-title{font-size:11px;color:var(--grn);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:16px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--grn4)}
- 
+
 /* ── BDO ─────────────────────────────────────────── */
 .bdo-tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .bdo-tipo-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;border-radius:10px;border:2px solid var(--bor);background:var(--card);color:var(--mut);font-weight:700;font-size:11px;cursor:pointer;text-align:center;line-height:1.3;}
@@ -123,13 +123,13 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
 .bdo-picker-item-info{flex:1;}
 .bdo-picker-item-name{font-weight:700;font-size:13px;}
 .bdo-picker-item-sub{font-size:10px;color:var(--mut);margin-top:1px;}
- 
+
 /* BDO intervenção concluída */
 .bdo-relato-box{background:#e6f5ec;border:1px solid var(--grn2);border-left:3px solid var(--grn);border-radius:8px;padding:10px 14px;font-size:12px;color:#1a5c2e;line-height:1.6;margin-top:8px;}
 .bdo-fin-badge{display:inline-flex;align-items:center;gap:5px;background:var(--grn);color:#fff;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:.5px;}
 .bdo-obs-box{background:var(--grn3);border:1px solid var(--bor);border-left:3px solid var(--grn);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--mut);font-style:italic;line-height:1.5;}
- 
- 
+
+
 /* BDO fotos inspeção */
 .bdo-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
 .bdo-photo-slot{aspect-ratio:1;border-radius:10px;border:2px dashed var(--bor);overflow:hidden;position:relative;background:var(--grn3);}
@@ -151,7 +151,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
 .bdo-cl-btn.sim{background:var(--grn2);color:#fff;}
 .bdo-cl-btn.nao{background:var(--red);color:#fff;}
 .bdo-cl-btn.na{background:#ccc;color:#555;}
- 
+
 /* BDO resumo operacional */
 .bdo-resumo{background:var(--grn);border-radius:12px;padding:14px 16px;margin-bottom:12px;color:#fff;}
 .bdo-resumo-title{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.8;margin-bottom:10px;}
@@ -162,11 +162,11 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
 .bdo-resumo-val.accent{font-size:22px;}
 .bdo-resumo-sub{font-size:10px;opacity:.7;margin-top:2px;}
 .bdo-resumo-full{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;}
- 
+
 </style>
 </head>
 <body>
- 
+
 <!-- ═══ HOME ═══ -->
 <div id="home" class="screen active">
   <div class="bar bar-logo">
@@ -221,7 +221,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
       <div style="margin-top:10px" class="tag ta">ABRIR →</div>
     </button>
   </div>
- 
+
   <!-- WIP Modules -->
   <div style="padding:0 16px;margin-top:4px;font-size:11px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">Em desenvolvimento</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px">
@@ -263,15 +263,15 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     </div>
   </div>
   <div style="padding:12px 16px;font-size:11px;color:var(--mut);text-align:center">v1.0 · Operações Especiais · 2026</div>
- 
+
 </div>
- 
+
 <!-- ═══ CAPACIDADE ═══ -->
 <div id="cap" class="screen">
   <div class="bar"><button class="back" onclick="show('home')">← Início</button><div class="bar-title">Capacidade</div></div>
   <div class="sec" id="cap-main"></div>
 </div>
- 
+
 <!-- ═══ REFERÊNCIA ═══ -->
 <div id="ref" class="screen">
   <div class="bar"><button class="back" onclick="show('home')">← Início</button><div class="bar-title">Ref. Tubular</div></div>
@@ -281,13 +281,13 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     <div id="ref-list"></div>
   </div>
 </div>
- 
+
 <!-- ═══ GABARITO ═══ -->
 <div id="gab" class="screen">
   <div class="bar"><button class="back" onclick="show('home')">← Início</button><div class="bar-title">Gabarito de Corte</div></div>
   <div class="sec" id="gab-list"></div>
 </div>
- 
+
 <!-- ═══ PACKERS ═══ -->
 <div id="pkr" class="screen">
   <div class="bar"><button class="back" onclick="show('home')">← Início</button><div class="bar-title">Packers</div></div>
@@ -296,7 +296,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     <div id="pkr-list"></div>
   </div>
 </div>
- 
+
 <!-- ═══ CALCULADORA ═══ -->
 <div id="calc" class="screen">
   <div class="bar"><button class="back" onclick="show('home')">← Início</button><div class="bar-title">Calculadora de Campo</div></div>
@@ -311,7 +311,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     <div id="calc-body"></div>
   </div>
 </div>
- 
+
 <!-- ═══ PERCUSSÃO ═══ -->
 <div id="perc" class="screen">
   <div class="bar"><button class="back" onclick="show('home')">← Início</button><div class="bar-title">Ferramentas de Percussão</div></div>
@@ -320,7 +320,7 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     <div id="perc-list"></div>
   </div>
 </div>
- 
+
 <!-- ═══ BDO ═══ -->
 <div id="bdo" class="screen">
   <div class="bar" id="bdo-bar">
@@ -340,8 +340,8 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     <div id="bdo-detail-body" style="padding:16px"></div>
   </div>
 </div>
- 
- 
+
+
 <!-- BDO: Mini confirm modal -->
 <div id="bdo-confirm-modal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)bdoConfirmClose()">
   <div style="background:#fff;border-radius:14px;padding:24px;width:100%;max-width:340px">
@@ -385,12 +385,12 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
     </div>
   </div>
 </div>
- 
+
 <script>
 const sq=x=>x*x;
 const C=id=>+(sq(id)/313.6).toFixed(6);
 const fN=n=>n!=null?Number(n).toLocaleString("pt-BR"):"—";
- 
+
 // ─── DADOS TUBULARES ──────────────────────────────────────────────
 const TD=[
   {cat:"Tubo",size:'2 3/8"',od:2.375,w:"4.0 (NU)",id:2.041,drift:1.947,grades:[
@@ -454,7 +454,7 @@ const TD=[
   {cat:"Rev.",size:'13 3/8"',od:13.375,w:"54.5",id:12.615,drift:12.459,grades:[]},
   {cat:"Rev.",size:'13 3/8"',od:13.375,w:"61.0",id:12.515,drift:12.359,grades:[]},
 ];
- 
+
 const GABARITO=[
   {equip:"JET CUTTER CONV.",col:'2 3/8" SIMPLES',pn:"100000352",maxOD:'1-11/16"',maxODd:"1.6875",maxODmm:"42.86",nota:"",gab:'1-13/16"',gabd:"1.8125",gabmm:"46.04"},
   {equip:"JET CUTTER SUPER",col:'2 3/8" DUOLINE',pn:"102012507",maxOD:'1-11/16"',maxODd:"1.6875",maxODmm:"42.86",nota:"Barra peso, CCL",gab:'1-13/16"',gabd:"1.8125",gabmm:"46.04"},
@@ -464,7 +464,7 @@ const GABARITO=[
   {equip:"TUBING PUNCHER",col:"—",pn:"—",maxOD:'1-11/16"',maxODd:"1.6875",maxODmm:"42.86",nota:"Barra peso, CCL",gab:'1-13/16"',gabd:"1.8125",gabmm:"46.04"},
   {equip:"STRING SHOT",col:"—",pn:"—",maxOD:'1-11/16"',maxODd:"1.6875",maxODmm:"42.86",nota:"Barra peso, CCL",gab:'1-13/16"',gabd:"1.8125",gabmm:"46.04"},
 ];
- 
+
 const PACKERS=[
   {m:"AD-1 Antigo",t:"Mecânico",a:"Rotação Esquerda",r:true,h:true,
    rv:[{s:'5 1/2"',od:"4.641",id:'1.978"',an:"40.000 lbs",ro:'2 3/8" EU',co:"0.85 m"},{s:'7"',od:"6.078",id:'2.116"',an:"40.000 lbs",ro:'2 7/8" EU',co:"1.06 m"}],
@@ -507,7 +507,7 @@ const PACKERS=[
    rv:[{s:'7"',od:'5 5/8" (OD topo)',id:"—",an:"—",ro:'3 13/16" / 3 3/16"',co:"—"}],
    as:["Instalacao com setting tool."],ds:["NAO RECUPERAVEL. Requer fresagem."],ob:"Permanente. Baker."},
 ];
- 
+
 // ─── FERRAMENTAS DE PERCUSSÃO ──────────────────────────────────────
 const PERC=[
   {m:"Fishing Jar Hidraulico D420",fab:"Innovex / Logan Fishing Tools",tipo:"Jar Hidraulico Tracao Direta",icone:"🔨",
@@ -564,7 +564,7 @@ const PERC=[
      {titulo:"Manutencao",itens:["Lavar completamente por dentro e por fora apos cada uso.","Examinar aneis de vedacao do knocker periodicamente.","Pecas sobressalentes: 8 Aneis Anti-Extrusao, 8 Protetores, 16 Vedantes de Knocker."]},
    ]},
 ];
- 
+
 // ─── CALCULADORA ──────────────────────────────────────────────────
 const CALCS={
   comp:[
@@ -604,14 +604,14 @@ const CALCS={
     {n:"Temperatura: °F → °C",u1:"°F",u2:"°C",f:v=>(v-32)*5/9,fi:v=>v*9/5+32,rev:"°C → °F",dica:"Fórmula: °C = (°F - 32) × 5/9. Fundo típico onshore Bahia: 80-120°C. Afeta viscosidade do fluido do jar."},
   ],
 };
- 
+
 // ─── ESTADO ───────────────────────────────────────────────────────
 let capLines=[],capState={adding:false,mode:'simples',step:0,cat:'',sz:'',item:null,inner:null,len:''};
 let refCat='Todos',refSel=null,refTab='dim',_refOD='';
 let pkrSel=null,pkrTab='dim';
 let calcTabName='comp',calcConv=null,calcVal='',calcDir=1;
 let percSel=null,percTab='ops';
- 
+
 // ─── NAVEGAÇÃO ────────────────────────────────────────────────────
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -624,7 +624,7 @@ function show(id){
   if(id==='calc'){calcConv=null;calcVal='';renderCalc();}
   if(id==='perc'){document.getElementById('perc-search').value='';percRender();}
 }
- 
+
 // ─── CAPACIDADE ───────────────────────────────────────────────────
 function capRender(){
   const el=document.getElementById('cap-main');
@@ -787,7 +787,7 @@ function capAdd(){
 }
 function capDel(id){capLines=capLines.filter(l=>l.id!==id);capRender();}
 function capClear(){capLines=[];capRender();}
- 
+
 // ─── REFERÊNCIA ───────────────────────────────────────────────────
 function renderRefCats(){
   const cats=['Todos',...new Set(TD.map(t=>t.cat))];
@@ -862,7 +862,7 @@ function renderRefDetail(){
   </div>${tc}`;
 }
 function refClose(){refSel=null;_refOD='';document.querySelector('#ref .bar').innerHTML=`<button class="back" onclick="show('home')">← Início</button><div class="bar-title">Ref. Tubular</div>`;refRender();}
- 
+
 // ─── GABARITO ─────────────────────────────────────────────────────
 function renderGab(){
   document.getElementById('gab-list').innerHTML=GABARITO.map(g=>`<div class="card">
@@ -884,7 +884,7 @@ function renderGab(){
       </div>
     </div></div>`).join('');
 }
- 
+
 // ─── PACKERS ──────────────────────────────────────────────────────
 function pkrRender(){
   if(pkrSel){renderPkrDetail();return;}
@@ -930,7 +930,7 @@ function renderPkrDetail(){
   </div><div class="tabs">${[['dim','Dimensões'],['asst','Assentamento'],['desasst','Desassentamento']].map(([k,v])=>`<button class="tab ${pkrTab===k?'active':''}" onclick="pkrTab='${k}';renderPkrDetail()">${v}</button>`).join('')}</div>${tc}`;
 }
 function pkrClose(){pkrSel=null;document.querySelector('#pkr .bar').innerHTML=`<button class="back" onclick="show('home')">← Início</button><div class="bar-title">Packers</div>`;document.getElementById('pkr-search').value='';pkrRender();}
- 
+
 // ─── CALCULADORA ──────────────────────────────────────────────────
 function calcTab(t){calcTabName=t;calcConv=null;calcVal='';calcDir=1;renderCalc();}
 function renderCalc(){
@@ -991,7 +991,7 @@ function calcInput(v){
   }
 }
 function calcSelect(i){calcConv=CALCS[calcTabName][i];calcVal='';calcDir=1;renderCalc();}
- 
+
 // ─── FERRAMENTAS DE PERCUSSÃO ──────────────────────────────────────
 function percRender(){
   if(percSel){renderPercDetail();return;}
@@ -1063,14 +1063,14 @@ function renderPercDetail(){
   </div><div class="tabs">${[['ops','Operação'],['tab','Tabelas']].map(([k,v])=>`<button class="tab ${percTab===k?'active':''}" onclick="percTab='${k}';renderPercDetail()">${v}</button>`).join('')}</div>${tc}`;
 }
 function percClose(){percSel=null;document.querySelector('#perc .bar').innerHTML=`<button class="back" onclick="show('home')">← Início</button><div class="bar-title">Ferramentas de Percussão</div>`;document.getElementById('perc-search').value='';percRender();}
- 
+
 // ─── INIT ─────────────────────────────────────────────────────────
 renderRefCats();refRender();pkrRender();percRender();
- 
+
 // ══════════════════════════════════════════════════════════════════
 //  BDO — Boletim de Descida de BHA
 // ══════════════════════════════════════════════════════════════════
- 
+
 // ── Constantes ────────────────────────────────────────────────────
 const BDO_TIPOS=[
   {id:'PESCARIA',     lbl:'Pescaria',              icon:'🎣'},
@@ -1143,7 +1143,7 @@ const BDO_CATALOG=[
 ];
 const BDO_CATS=['Todos','Coluna','Comando','Overshot','Jar','Acelerador','Bumper Sub','Junta de Segurança','Mill','Arpão/Spear','Die Collar/Taper','Cortador','Outros'];
 const BDO_CONNS=['','EU','NU','EUE','NUE','BTC','LTC','2.3/8" IF','2.7/8" IF','3.1/2" IF','2.3/8" REG','2.7/8" REG','3.1/2" REG','Outro'];
- 
+
 // ── Storage ────────────────────────────────────────────────────────
 const BDO_KEY='bdo_v1';
 const bdoLoad=()=>{try{return JSON.parse(localStorage.getItem(BDO_KEY))||[];}catch{return[];}};
@@ -1160,7 +1160,7 @@ const bdoSaveUser=n=>localStorage.setItem('bdo_user',n.trim());
 const bdoGetLastPoco=()=>localStorage.getItem('bdo_poco')||'';
 const bdoSaveLastPoco=p=>localStorage.setItem('bdo_poco',p);
 function bdoNextNum(poco){return bdoLoad().filter(r=>r.poco===poco).length+1;}
- 
+
 // ── Profundidade ───────────────────────────────────────────────────
 function bdoCalcTotal(tools){
   let t=0;
@@ -1193,15 +1193,15 @@ function bdoDepthBarHTML(tools,letDown){
     <div class="bdo-dep-row real"><span class="bdo-dep-lbl">Tamanho do BHA</span><span class="bdo-dep-val">${real.toFixed(2)} m</span></div>
   </div>`;
 }
- 
+
 // ── Tipo helpers ───────────────────────────────────────────────────
 function bdoTipoInfo(id){return BDO_TIPOS.find(t=>t.id===id)||BDO_TIPOS[0];}
 function bdoTipoTag(id){const t=bdoTipoInfo(id);return`<span class="bdo-tipo-tag bdo-tipo-${id}">${t.icon} ${t.lbl}</span>`;}
- 
+
 // ── Navegação interna ──────────────────────────────────────────────
 let _bdoSubView='list';
 let _bdoFormEditId=null; // null = novo
- 
+
 function bdoShowSub(sub,barTitle,backFn){
   ['list','form','detail'].forEach(s=>document.getElementById('bdo-sub-'+s).style.display=s===sub?'':'none');
   _bdoSubView=sub;
@@ -1213,7 +1213,7 @@ function bdoBack(){
   else{bdoShowSub('list');bdoRenderList();}
 }
 function bdoInit(){bdoShowSub('list');bdoRenderList();}
- 
+
 // ── Lista de poços ─────────────────────────────────────────────────
 function bdoRenderList(){
   const all=bdoAll();
@@ -1251,7 +1251,7 @@ function bdoRenderList(){
   document.getElementById('bdo-sub-list').innerHTML=html;
   document.getElementById('bdo-sub-list').scrollTop=0;
 }
- 
+
 function bdoWellGroupHTML(poco,records,concluded){
   const safeP=poco.replace(/'/g,"\\'");
   const ativos=records.filter(r=>r.status==='ATIVO').length;
@@ -1302,12 +1302,12 @@ function bdoWellGroupHTML(poco,records,concluded){
     })()}
   </div>`;
 }
- 
+
 // ── FORMULÁRIO (3 passos) ──────────────────────────────────────────
 let BW={}; // BDO wizard state
 let BSTEP=0;
 const BSTEPS=[{lbl:'CABEÇALHO'},{lbl:'COMPOSIÇÃO'},{lbl:'DETALHES'}];
- 
+
 const BDO_INSP=[
   {id:'i1', lbl:'Registros fotográficos efetuados (ferramenta, filetamentos, corpo)'},
   {id:'i2', lbl:'OD e comprimento medidos e conferidos com a datasheet'},
@@ -1318,7 +1318,7 @@ const BDO_INSP=[
   {id:'i7', lbl:'Acessórios/adaptadores corretos conferidos (crossover, mandril)'},
   {id:'i8', lbl:'Passagem interna (ID) verificada (mandril/calibrador)'},
 ];
- 
+
 function bwClVal(qid){return (BW.mainInsp&&BW.mainInsp.checklist&&BW.mainInsp.checklist[qid])||'';}
 function bwSetCl(qid,val){
   if(!BW.mainInsp)BW.mainInsp={};
@@ -1398,8 +1398,8 @@ function bwClSummaryHTML(cl){
     </div>`;
   }).join('')}`;
 }
- 
- 
+
+
 function bdoStartForm(editId){
   _bdoFormEditId=editId||null;
   if(editId){
@@ -1420,7 +1420,7 @@ function bdoStartForm(editId){
   bdoShowSub('form','Novo BHA');
   bdoRenderStep();
 }
- 
+
 function bdoRenderStep(){
   const dots=BSTEPS.map((_,i)=>`<div class="bdo-dot ${i<BSTEP?'done':i===BSTEP?'cur':''}"></div>`).join('');
   document.getElementById('bdo-dots-row').innerHTML=dots;
@@ -1430,7 +1430,7 @@ function bdoRenderStep(){
   else bdoRenderStep2();
   document.getElementById('bdo-sub-form').scrollTop=0;
 }
- 
+
 // Passo 0 — Cabeçalho
 function bdoRenderStep0(){
   document.getElementById('bdo-form-body').innerHTML=`
@@ -1491,7 +1491,7 @@ function bdoRenderStep0(){
     </div>
     <button class="btn" onclick="bwSaveStep0()">PRÓXIMO →</button>`;
 }
- 
+
 function bwSetAtivo(v){
   BW.ativo=v;
   ['ba','rn'].forEach(x=>{
@@ -1523,7 +1523,7 @@ function bwSaveStep0(){
   bdoSaveUser(esp);bdoSaveLastPoco(poco);
   BSTEP=1;bdoRenderStep();
 }
- 
+
 // Passo 1 — Composição
 function bdoRenderStep1(){
   document.getElementById('bdo-form-body').innerHTML=`
@@ -1539,7 +1539,7 @@ function bdoRenderStep1(){
       <button class="btn" style="flex:1;margin:0" onclick="bwSaveStep1()">PRÓXIMO →</button>
     </div>`;
 }
- 
+
 function bwToolsListHTML(){
   if(!BW.tools.length)return`<div class="empty" style="padding:28px"><div style="font-size:32px">🔩</div><div style="font-size:13px;color:var(--mut)">Nenhuma ferramenta adicionada</div></div>`;
   return BW.tools.map((t,i)=>{
@@ -1587,7 +1587,7 @@ function bwToolsListHTML(){
     </div>`;
   }).join('');
 }
- 
+
 function bwUpdColunaM(idx,val){
   BW.tools[idx].comp=val;
   document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
@@ -1621,7 +1621,7 @@ function bwSaveStep1(){
   if(!BW.mainInsp)BW.mainInsp={od:'',id:'',comp:'',connSup:'',connInf:''};
   BSTEP=2;bdoRenderStep();
 }
- 
+
 // Passo 2 — Detalhes
 function bdoRenderStep2(){
   const mt=BW.tools.find(t=>t.isMain&&!t.isColuna);
@@ -1685,14 +1685,14 @@ function bdoRenderStep2(){
       <button class="btn btn-sec" style="flex:1;margin:0" onclick="bwSalvar()">✓ SALVAR BHA</button>
     </div>`;
 }
- 
+
 function bwSyncComp(val){
   const mt=BW.tools.find(t=>t.isMain&&!t.isColuna);
   if(mt){mt.comp=val;if(BW.mainInsp)BW.mainInsp.comp=val;}
   const el=document.getElementById('bw-depth-det');
   if(el)el.innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
 }
- 
+
 function bwSalvar(){
   const mt=BW.tools.find(t=>t.isMain&&!t.isColuna);
   if(mt&&BW.mainInsp){
@@ -1713,7 +1713,7 @@ function bwSalvar(){
   bdoRenderList();
   setTimeout(()=>{document.getElementById('bdo-sub-list').scrollTop=0;},100);
 }
- 
+
 // ── Detalhe ────────────────────────────────────────────────────────
 function bdoOpenDetail(id){
   bdoShowSub('detail','Detalhe BHA');
@@ -1820,7 +1820,7 @@ function bdoOpenDetail(id){
   document.getElementById('bdo-detail-body').innerHTML=html;
   document.getElementById('bdo-sub-detail').scrollTop=0;
 }
- 
+
 function bdoExportBHA(id){
   const r=bdoById(id);if(!r)return;
   const mt=r.tools?.find(t=>t.isMain&&!t.isColuna);
@@ -1923,7 +1923,7 @@ ${r.observacao?`<div class="sec">Observações</div><p style="font-style:italic;
 function bdoInfoCell(lbl,val){
   return`<div><div style="font-size:9px;color:var(--mut);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:2px">${lbl}</div><div style="font-size:13px;font-weight:600">${val||'—'}</div></div>`;
 }
- 
+
 // ── Ações ──────────────────────────────────────────────────────────
 function bdoConcluirBHA(id){
   bdoConfirm('Concluir BHA?','Este BHA irá para o histórico do poço. A intervenção continua ativa.','✓ CONCLUIR','',()=>{
@@ -1931,7 +1931,7 @@ function bdoConcluirBHA(id){
     bdoUpsert(r);bdoShowSub('list');bdoRenderList();
   });
 }
- 
+
 let _bdoConfirmCb=null;
 function bdoConfirm(title,msg,btnLbl,btnCls,cb){
   _bdoConfirmCb=cb;
@@ -1978,13 +1978,13 @@ function bdoFinConfirm(){
 const BDO_WELL_KEY='bdo_wells_v1';
 function bdoGetWellData(poco){try{const d=JSON.parse(localStorage.getItem(BDO_WELL_KEY)||'{}');return d[poco]||{};}catch{return{};}}
 function bdoSaveWellData(poco,data){try{const d=JSON.parse(localStorage.getItem(BDO_WELL_KEY)||'{}');d[poco]={...d[poco],...data};localStorage.setItem(BDO_WELL_KEY,JSON.stringify(d));}catch{}}
- 
+
 function bdoExcluirBHA(id){
   bdoConfirm('Excluir BHA?','Esta ação não pode ser desfeita.','🗑 EXCLUIR','btnR',()=>{
     bdoDelete(id);bdoShowSub('list');bdoRenderList();
   });
 }
- 
+
 // ── Seletor de ferramentas ─────────────────────────────────────────
 let _bdoPickerCat='Todos';
 function bdoOpenPicker(){
