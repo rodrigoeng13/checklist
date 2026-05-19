@@ -1232,12 +1232,6 @@ function bdoRenderList(){
     </div>
     <button class="btn" style="width:auto;padding:10px 18px;margin:0" onclick="bdoStartForm()">+ Novo BHA</button>
   </div>`;
-  const wNames=Object.keys(wells).sort();
-  if(!wNames.length){
-    html+=`<div class="empty"><div style="font-size:40px;margin-bottom:10px">🔧</div><div style="font-size:15px;font-weight:700;color:var(--mut)">Sem operações ativas</div><div style="font-size:12px;color:var(--mut);margin-top:6px">Toque em + Novo BHA para começar</div></div>`;
-  } else {
-    html+=wNames.map(w=>bdoWellGroupHTML(w,wells[w],false)).join('');
-  }
   // group all records by well for history
   if(!activeWells.length){
     html+=`<div class="empty"><div style="font-size:40px;margin-bottom:10px">🔧</div><div style="font-size:15px;font-weight:700;color:var(--mut)">Sem operações ativas</div><div style="font-size:12px;color:var(--mut);margin-top:6px">Toque em + Novo BHA para começar</div></div>`;
