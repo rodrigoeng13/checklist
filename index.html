@@ -876,6 +876,24 @@ function show(id){
   if(id==='calc'){calcConv=null;calcVal='';renderCalc();}
   if(id==='perc'){document.getElementById('perc-search').value='';percRender();}
   if(id==='ctrl'){ctrlTab(_ctrlActiveTab);}
+  if(id==='bdo'){
+    try{
+      if(typeof syncBtnUpdate==='function') syncBtnUpdate();
+      if(typeof gsOn==='function' && gsOn()){
+        bdoSyncBar('⏳ Sincronizando…');
+        gsFullSync()
+          .then(function(){
+            bdoRenderList();
+            bdoSyncBar('✅ Atualizado','#1a7a3c');
+            setTimeout(function(){bdoSyncBar('');},2000);
+          })
+          .catch(function(){
+            bdoSyncBar('⚠ Offline — dados locais','#d97706');
+            setTimeout(function(){bdoSyncBar('');},3000);
+          });
+      }
+    }catch(e){}
+  }
 }
  
 // ─── CAPACIDADE ───────────────────────────────────────────────────
@@ -2956,32 +2974,13 @@ function repCopy(mode){
   // ── Hook em bdoSave: ponto único de escrita ──────────────────────
   // Aguarda o DOM+JS estarem prontos antes de fazer o patch
   window.addEventListener('load', function(){
-    // Hook em bdoSave: toda escrita local sobe para a Sheet em background
+    // Hook em bdoSave: toda escrita sobe para a Sheet em background
     var _origSave = bdoSave;
     bdoSave = function(d){
       _origSave(d);
       if(!gsOn()) return;
       gsPost({entity:'bdo',action:'replace'},{records:d})
         .catch(function(e){ console.warn('[GSheets] sync falhou:',e); });
-    };
-
-    // Patch seguro em bdoInit: sync silencioso ao abrir o BDO
-    var _origBdoInit = bdoInit;
-    bdoInit = function(){
-      _origBdoInit();
-      syncBtnUpdate();
-      if(!gsOn()) return;
-      bdoSyncBar('⏳ Sincronizando…');
-      gsFullSync()
-        .then(function(){
-          _origBdoInit();
-          bdoSyncBar('✅ Atualizado','#1a7a3c');
-          setTimeout(function(){ bdoSyncBar(''); }, 2000);
-        })
-        .catch(function(){
-          bdoSyncBar('⚠ Offline — dados locais','#d97706');
-          setTimeout(function(){ bdoSyncBar(''); }, 3000);
-        });
     };
   });
 })();
