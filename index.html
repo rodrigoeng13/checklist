@@ -220,6 +220,12 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
       <div class="mod-sub">Boletim de Descida · Poços ativos</div>
       <div style="margin-top:10px" class="tag ta">ABRIR →</div>
     </button>
+    <button class="mod-btn" style="border-color:#a0c4a0;background:linear-gradient(135deg,#f0fff4,#fff)" onclick="ctrlOpen('estoque');show('ctrl')">
+      <div class="mod-icon">🗂</div>
+      <div class="mod-title">Controle Ferramentas</div>
+      <div class="mod-sub">Estoque · Mapa · Report</div>
+      <div style="margin-top:10px" class="tag tg">ABRIR →</div>
+    </button>
   </div>
  
   <!-- WIP Modules -->
@@ -326,7 +332,9 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
   <div class="bar" id="bdo-bar">
     <button class="back" id="bdo-back-btn" onclick="bdoBack()">← Início</button>
     <div class="bar-title" id="bdo-bar-title">BDO — Boletim de Descida</div>
+    <button onclick="bdoShowConfig()" id="bdo-sync-btn" style="margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">☁ Sync</button>
   </div>
+  <div id="bdo-sync-bar" style="display:none;padding:6px 16px;font-size:11px;font-weight:600;text-align:center"></div>
   <!-- sub: lista -->
   <div id="bdo-sub-list" style="padding-bottom:80px"></div>
   <!-- sub: form wizard -->
@@ -386,6 +394,250 @@ body{background:var(--bg);color:var(--txt);font-family:-apple-system,system-ui,s
   </div>
 </div>
  
+<!-- ═══ CONTROLE DE FERRAMENTAS (MESTRE) ═══ -->
+<div id="ctrl" class="screen">
+  <div class="bar">
+    <button class="back" onclick="show('home')">‹ Início</button>
+    <span class="bar-title" id="ctrl-bar-title">🗂 Controle de Ferramentas</span>
+    <!-- ações contextuais -->
+    <div id="ctrl-bar-actions" style="display:flex;gap:6px;margin-left:auto"></div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div style="background:var(--card);border-bottom:1px solid var(--bor);display:flex;position:sticky;top:46px;z-index:9">
+    <button id="ctrl-tab-estoque" onclick="ctrlTab('estoque')" style="flex:1;padding:10px 4px;border:none;font-size:12px;font-weight:700;cursor:pointer;border-bottom:3px solid var(--grn);color:var(--grn);background:var(--card)">📦 Estoque</button>
+    <button id="ctrl-tab-mapa"    onclick="ctrlTab('mapa')"    style="flex:1;padding:10px 4px;border:none;font-size:12px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--mut);background:var(--card)">🗓 Mapa</button>
+    <button id="ctrl-tab-report"  onclick="ctrlTab('report')"  style="flex:1;padding:10px 4px;border:none;font-size:12px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--mut);background:var(--card)">📤 Report</button>
+  </div>
+
+  <!-- ─── TAB: ESTOQUE ─── -->
+  <div id="ctrl-estoque">
+    <div id="inv-kpis" class="sec" style="margin-bottom:2px"></div>
+    <div style="padding:0 16px 6px"><div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px" id="inv-ativo-tabs"></div></div>
+    <div style="padding:0 16px 8px"><div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px" id="inv-loc-chips"></div></div>
+    <div style="padding:0 16px 10px"><input class="inp" id="inv-search" placeholder="🔍  Buscar tipo, TAG ou PN…" oninput="invRender()" style="font-size:14px"></div>
+    <div id="inv-list" style="padding:0 16px 100px"></div>
+    <button onclick="invOpenForm(null)" style="position:fixed;bottom:20px;right:16px;width:56px;height:56px;border-radius:28px;background:var(--grn);color:#fff;border:none;font-size:28px;cursor:pointer;box-shadow:0 4px 16px #1a7a3c55;display:flex;align-items:center;justify-content:center;z-index:8">+</button>
+  </div>
+
+  <!-- ─── TAB: MAPA 52 SEMANAS ─── -->
+  <div id="ctrl-mapa" style="display:none">
+    <div id="mant-kpis" class="sec" style="margin-bottom:4px"></div>
+    <div style="padding:0 16px 6px"><div style="display:flex;gap:6px" id="mant-tabs"></div></div>
+    <div style="padding:0 16px 10px">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:6px">CALENDÁRIO 52 SEMANAS</div>
+      <div style="overflow-x:auto;padding-bottom:4px">
+        <div id="mant-heatmap" style="display:flex;gap:3px;min-width:max-content"></div>
+        <div id="mant-heatmap-labels" style="display:flex;gap:3px;min-width:max-content;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:10px;color:var(--mut)">
+        <span><span style="display:inline-block;width:10px;height:10px;background:#c0392b;border-radius:2px;margin-right:3px"></span>Vencido</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#d97706;border-radius:2px;margin-right:3px"></span>≤14 dias</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#27ae60;border-radius:2px;margin-right:3px"></span>&gt;14 dias</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#e0e0e0;border-radius:2px;margin-right:3px"></span>Livre</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border:2px solid #1565c0;border-radius:2px;margin-right:3px"></span>Semana atual</span>
+      </div>
+    </div>
+    <div id="mant-week-detail" style="padding:0 16px 8px;display:none">
+      <div class="card" style="border-left:3px solid var(--grn)">
+        <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:6px" id="mant-week-label"></div>
+        <div id="mant-week-items"></div>
+      </div>
+    </div>
+    <div style="padding:0 16px 4px"><div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:6px">AGENDA DE MANUTENÇÃO</div></div>
+    <div id="mant-list" style="padding:0 16px 100px"></div>
+    <button onclick="mantOpenAgenda()" style="position:fixed;bottom:20px;right:16px;background:var(--red);color:#fff;border:none;border-radius:28px;padding:14px 18px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px #c0392b55;z-index:8">+ Agendar</button>
+  </div>
+
+  <!-- ─── TAB: REPORT SEMANAL ─── -->
+  <div id="ctrl-report" style="display:none">
+    <div class="sec" style="padding-bottom:20px">
+      <div class="card" style="background:var(--grn);border-color:var(--grn)">
+        <div style="color:#fff;font-size:12px;font-weight:700;letter-spacing:.8px;margin-bottom:4px">REPORT DE CONTROLE DE FERRAMENTAS</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div id="rep-header-txt" style="color:#a8d5b5;font-size:12px"></div>
+          <button onclick="repGenerate()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer">↻ Atualizar</button>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span class="tag tg" style="font-size:12px">ATIVO BA</span>
+          <span style="font-size:12px;color:var(--mut)">Bahia</span>
+        </div>
+        <div id="rep-ba-auto" style="font-size:12px;color:var(--txt);line-height:1.8;margin-bottom:10px"></div>
+        <div style="font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:600">💬 Observações BA</div>
+        <textarea class="inp" id="rep-ba-obs" rows="4" placeholder="Manutenção necessária, inspeções, pendências, transferências…" style="resize:none;font-size:13px"></textarea>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span class="tag tb" style="font-size:12px">ATIVO RN</span>
+          <span style="font-size:12px;color:var(--mut)">Potiguar</span>
+        </div>
+        <div id="rep-rn-auto" style="font-size:12px;color:var(--txt);line-height:1.8;margin-bottom:10px"></div>
+        <div style="font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:600">💬 Observações RN</div>
+        <textarea class="inp" id="rep-rn-obs" rows="4" placeholder="Manutenção necessária, inspeções, pendências, transferências…" style="resize:none;font-size:13px"></textarea>
+      </div>
+      <div class="card">
+        <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">OBSERVAÇÕES GERAIS</div>
+        <textarea class="inp" id="rep-geral-obs" rows="3" placeholder="Compras necessárias, empréstimos entre ativos, itens com baixa…" style="resize:none;font-size:13px"></textarea>
+      </div>
+      <div class="card" id="rep-preview-card" style="display:none">
+        <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">PRÉVIA</div>
+        <pre id="rep-preview" style="font-size:11px;white-space:pre-wrap;color:var(--txt);font-family:monospace;line-height:1.5"></pre>
+      </div>
+      <button class="btn" onclick="repCopy('wa')" style="background:#25d366;margin-top:4px">📱 Copiar para WhatsApp</button>
+      <button class="btn" onclick="repCopy('email')" style="background:#1565c0;margin-top:8px">📧 Copiar para E-mail</button>
+      <button class="btnO" onclick="repTogglePreview()" style="margin-top:8px" id="rep-preview-btn">👁 Ver prévia</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTROLE: MODAL AGENDAR MANUTENÇÃO ═══ -->
+<div id="mant-modal" style="display:none;position:fixed;inset:0;background:#0007;z-index:100;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 40px;width:100%;max-width:500px">
+    <div style="font-size:14px;font-weight:800;margin-bottom:14px;color:var(--txt)">🔧 Agendar Manutenção</div>
+    <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Ferramenta *</div>
+    <select class="inp" id="mant-sel-tool" style="margin-bottom:10px"></select>
+    <div class="grid2" style="margin-bottom:10px">
+      <div>
+        <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Prazo de retorno</div>
+        <input class="inp" type="date" id="mant-sel-prazo">
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Tipo</div>
+        <select class="inp" id="mant-sel-tipo">
+          <option value="Preventiva">Preventiva</option>
+          <option value="Corretiva">Corretiva</option>
+          <option value="Calibração">Calibração</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Observação</div>
+    <textarea class="inp" id="mant-sel-obs" rows="2" placeholder="Serviço, fornecedor, motivo…" style="resize:none;font-size:14px;margin-bottom:14px"></textarea>
+    <button class="btn" onclick="mantSaveAgenda()">💾 Confirmar</button>
+    <button class="btnO" onclick="mantCloseModal()" style="margin-top:8px">Cancelar</button>
+  </div>
+</div>
+
+
+<!-- ═══ ESTOQUE: FORMULÁRIO ═══ -->
+<div id="inv-form" class="screen">
+  <div class="bar">
+    <button class="back" onclick="show('ctrl')">‹ Ferramentas</button>
+    <span class="bar-title" id="inv-form-title">Nova Ferramenta</span>
+  </div>
+  <div class="sec" style="padding-bottom:120px">
+    <div class="card">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">IDENTIFICAÇÃO</div>
+      <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Tipo / Descrição *</div>
+      <input class="inp" id="inv-f-tipo" placeholder="ex: Fishing Jar 4.3/4&quot; x 3.1/2&quot; IF" style="margin-bottom:10px">
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--mut);margin-bottom:4px">TAG da Ferramenta</div>
+          <input class="inp" id="inv-f-tag" placeholder="ex: JAR-001">
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Part Number (PN)</div>
+          <input class="inp" id="inv-f-pn" placeholder="ex: 611-475">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">CLASSIFICAÇÃO</div>
+      <div class="grid2" style="margin-bottom:10px">
+        <div>
+          <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Ativo</div>
+          <select class="inp" id="inv-f-ativo">
+            <option value="BA">Bahia (BA)</option>
+            <option value="RN">Potiguar (RN)</option>
+            <option value="Ambos">Ambos</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Estado</div>
+          <select class="inp" id="inv-f-estado">
+            <option value="Novo">Novo</option>
+            <option value="Almoxarifado">Almoxarifado</option>
+            <option value="Usado">Usado</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Localização *</div>
+        <select class="inp" id="inv-f-loc" onchange="invFormLocChange()">
+          <option value="Galpão">Galpão</option>
+          <option value="Prancha">Prancha</option>
+          <option value="Ativo BA">Ativo BA — em campo</option>
+          <option value="Ativo RN">Ativo RN — em campo</option>
+          <option value="Poço">Poço</option>
+          <option value="Manutenção">Manutenção</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" id="inv-f-poco-card" style="display:none">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">LOCALIZAÇÃO NO CAMPO</div>
+      <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Nome do Poço</div>
+      <input class="inp" id="inv-f-poco" placeholder="ex: CL-147-BA">
+    </div>
+    <div class="card" id="inv-f-man-card" style="display:none">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">MANUTENÇÃO</div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Prazo de Retorno</div>
+          <input class="inp" type="date" id="inv-f-prazo">
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--mut);margin-bottom:4px">Tipo</div>
+          <select class="inp" id="inv-f-tipoman">
+            <option value="Preventiva">Preventiva</option>
+            <option value="Corretiva">Corretiva</option>
+            <option value="Calibração">Calibração</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.8px;margin-bottom:8px">OBSERVAÇÕES</div>
+      <textarea class="inp" id="inv-f-obs" rows="3" placeholder="Notas, empréstimos, condição…" style="resize:none;font-size:14px"></textarea>
+    </div>
+    <input type="hidden" id="inv-f-id">
+    <button class="btn" onclick="invSaveForm()" style="margin-top:4px">💾 Salvar Ferramenta</button>
+    <button class="btnR" id="inv-f-del" onclick="invDeleteCurrent()" style="display:none">🗑 Excluir Ferramenta</button>
+  </div>
+</div>
+
+
+<!-- ═══ BDO: CONFIG GSHEETS ═══ -->
+<div id="bdo-config-modal" style="display:none;position:fixed;inset:0;background:#0008;z-index:200;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 44px;width:100%;max-width:500px">
+    <div style="font-size:15px;font-weight:800;margin-bottom:6px">☁ Sincronização Google Sheets</div>
+    <div style="font-size:12px;color:var(--mut);margin-bottom:14px;line-height:1.5">Cole a URL do Apps Script implantado na sua planilha.<br>Dados ficam compartilhados entre todos os usuários.</div>
+    <div id="bdo-cfg-status" style="font-size:12px;margin-bottom:12px;padding:8px 12px;border-radius:8px;background:#fef9e7;color:#d97706">⚠ Sem conexão — usando localStorage local.</div>
+    <div style="font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:600">URL do Apps Script *</div>
+    <textarea class="inp" id="bdo-cfg-url" rows="3" placeholder="https://script.google.com/macros/s/AKfy.../exec" style="resize:none;font-size:12px;font-family:monospace;margin-bottom:10px"></textarea>
+    <details style="margin-bottom:14px">
+      <summary style="font-size:12px;color:var(--grn);cursor:pointer;font-weight:700">📖 Como obter a URL (passo a passo)</summary>
+      <div style="font-size:11px;color:var(--mut);margin-top:8px;line-height:1.8;padding-left:8px">
+        1. Acesse <b>script.google.com</b> → Novo projeto<br>
+        2. Cole o código do arquivo <b>BDO_GSheets.gs</b> e salve<br>
+        3. Clique em <b>Implantar → Nova implantação</b><br>
+        4. Tipo: <b>Aplicativo da Web</b><br>
+        5. "Executar como": <b>Eu</b><br>
+        6. "Quem tem acesso": <b>Qualquer pessoa</b><br>
+        7. Autorize → copie a URL → cole acima
+      </div>
+    </details>
+    <button class="btn" onclick="bdoTestConn()" style="margin-bottom:8px">🔌 Testar conexão</button>
+    <button class="btn" onclick="bdoCfgSave()" style="background:#1565c0;margin-bottom:8px">💾 Salvar e conectar</button>
+    <button class="btn" onclick="bdoPush()" style="background:#5a7a65;margin-bottom:8px">⬆ Enviar dados locais → Sheet</button>
+    <button class="btn" onclick="bdoPull()" style="background:#d97706;margin-bottom:8px">⬇ Baixar Sheet → local</button>
+    <button class="btnO" onclick="bdoCfgDisconnect()" style="margin-bottom:8px">🔌 Desconectar</button>
+    <button class="btnO" onclick="document.getElementById('bdo-config-modal').style.display='none'">Fechar</button>
+  </div>
+</div>
+
 <script>
 const sq=x=>x*x;
 const C=id=>+(sq(id)/313.6).toFixed(6);
@@ -623,6 +875,7 @@ function show(id){
   if(id==='cap')capRender();
   if(id==='calc'){calcConv=null;calcVal='';renderCalc();}
   if(id==='perc'){document.getElementById('perc-search').value='';percRender();}
+  if(id==='ctrl'){ctrlTab(_ctrlActiveTab);}
 }
  
 // ─── CAPACIDADE ───────────────────────────────────────────────────
@@ -1147,11 +1400,11 @@ const BDO_CONNS=['','EU','NU','EUE','NUE','BTC','LTC','2.3/8" IF','2.7/8" IF','3
 // ── Storage ────────────────────────────────────────────────────────
 const BDO_KEY='bdo_v1';
 const bdoLoad=()=>{try{return JSON.parse(localStorage.getItem(BDO_KEY))||[];}catch{return[];}};
-const bdoSave=d=>localStorage.setItem(BDO_KEY,JSON.stringify(d));
+var bdoSave=d=>localStorage.setItem(BDO_KEY,JSON.stringify(d));
 const bdoAll=()=>bdoLoad();
 const bdoById=id=>bdoLoad().find(r=>r.id===id);
-const bdoUpsert=rec=>{const a=bdoLoad();const i=a.findIndex(r=>r.id===rec.id);if(i>=0)a[i]=rec;else a.unshift(rec);bdoSave(a);};
-const bdoDelete=id=>bdoSave(bdoLoad().filter(r=>r.id!==id));
+var bdoUpsert=rec=>{const a=bdoLoad();const i=a.findIndex(r=>r.id===rec.id);if(i>=0)a[i]=rec;else a.unshift(rec);bdoSave(a);};
+var bdoDelete=id=>bdoSave(bdoLoad().filter(r=>r.id!==id));
 const bdoUid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
 const bdoToday=()=>new Date().toISOString().slice(0,10);
 const bdoFmtDate=s=>{if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`;};
@@ -2043,6 +2296,690 @@ function bdoAddTool(cid){
   document.getElementById('bw-tools-list').innerHTML=bwToolsListHTML();
   document.getElementById('bw-depth-bar').innerHTML=bdoDepthBarHTML(BW.tools,BW.letDown);
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// MÓDULO: ESTOQUE DE FERRAMENTAS
+// ═══════════════════════════════════════════════════════════════════
+const INV_KEY='inv_tools_v1';
+let _invAtivo='Todos', _invLoc='Todos';
+
+function invUID(){return 'T'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function invGet(){try{return JSON.parse(localStorage.getItem(INV_KEY)||'[]');}catch{return[];}}
+function invSet(a){localStorage.setItem(INV_KEY,JSON.stringify(a));}
+
+
+// ── Seed data (carga inicial das planilhas BA + RN) ───────────────
+const INV_SEED = [{"id":"T0001","tipo":"Broca Mill OD 5.7/8\" x 3.1/2\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0002","tipo":"Broca Mill OD 4.1/2\" x 2.7/8\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0003","tipo":"Broca Mill OD 4.5/8\" x 2.7/8\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0004","tipo":"Broca Mill OD 4.5/8\" x 2.7/8\" REG Round Nose","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0005","tipo":"Broca Mill OD 4.3/4\" x 2.7/8\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0006","tipo":"Broca Mill OD 4.3/4\" x 2.7/8\" REG Round Nose","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0007","tipo":"Casing Roller p/ Casing 5.1/2\" x 2.3/8\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"1 un. — emprestado p/ RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0008","tipo":"Casing Roller p/ Casing 7\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0009","tipo":"Pilot Mill 4.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0010","tipo":"String Mill 4.1/2\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0011","tipo":"String Mill 4.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0012","tipo":"String Mill 4.5/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0013","tipo":"String Mill 4.7/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0014","tipo":"String Mill 6\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0015","tipo":"Thompson Mill Agressivo 2\" - 4.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0016","tipo":"Thompson Mill Agressivo 2.3/8\" - 4.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0017","tipo":"Thompson 4.9/16\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0018","tipo":"Thompson 4.5/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0019","tipo":"Thompson p/ Casing 7\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0020","tipo":"Thompson p/ Casing 5.1/2\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0021","tipo":"Taper Mill Agressivo 2.3/16\" - 4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0022","tipo":"Junk Mill 4.1/2\" com face 4.3/4\" x 2.7/8\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0023","tipo":"Junk Mill 4.3/4\" x 2.7/8\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0024","tipo":"Junk Mill 6.1/8\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0025","tipo":"Junk Mill 5.15/16\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0026","tipo":"Junk Mill 5.1/16\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0027","tipo":"Arpão p/ Casing 7\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0028","tipo":"Arpão p/ Casing 5.1/2\" x 2.3/8\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0029","tipo":"Arpão Interno OD 3.1/2\" x 3.1/2\" EU Box","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0030","tipo":"Arpão Interno OD 4.1/2\" x 4.1/2\" HD Box","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0031","tipo":"Die Collar OD 5.1/4\" x 3.1/2\" REG, range 3.5/8\" - 4.5/16\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0032","tipo":"Die Collar OD 4.1/2\" x 2.3/8\" IF, range 2.5/8\" - 3.5/8\" (com tungstênio na face)","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0033","tipo":"Spear p/ casing 5.1/2\", OD 5\" c/ garra 4.805\"","tag":"","pn":"9682","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0034","tipo":"Spear p/ tubing, OD 2.5/16\" c/ garra 2.938\"","tag":"","pn":"1230","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0035","tipo":"Spear p/ tubing, OD 2.5/16\" c/ garra 2.438\"","tag":"","pn":"1230","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0036","tipo":"Spear p/ tubing, OD 1.7/8\" c/ garra 1.992\"","tag":"","pn":"1348","ativo":"BA","estado":"Usado","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"1 un. — emprestado p/ RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0037","tipo":"Scrugrab 4.1/2\" OD x 2.3/8\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0038","tipo":"Scrugrab 5.1/2\" OD x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0039","tipo":"Taper Tap 2.3/4\" - 3.5/8\" x 350mm, OD 4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0040","tipo":"Taper Tap 3.11/16\" - 4.3/4\" x 420mm, OD 4.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0041","tipo":"Taper Tap 1.9/16\" - 3.3/8\" x 740mm, OD 4.1/16\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0042","tipo":"Taper Tap 1.5/8\" - 2.3/4\" x 400mm, OD 4.1/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0043","tipo":"Taper Tap 3.1/4\" - 3.5/8\" x 390mm, OD 3.5/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0044","tipo":"Sapata 4.1/2\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"11 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0045","tipo":"Sapata 4.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0046","tipo":"Sapata 4.3/4\" denteada com arame","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0047","tipo":"Sapata 4.5/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0048","tipo":"Sapata 5.1/2\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0049","tipo":"Sapata 5.7/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0050","tipo":"Sapata 6\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"7 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0051","tipo":"Sapata 6.1/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0052","tipo":"Sapata Arpão 4.1/2\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0053","tipo":"Sapata Arpão 5.1/2\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0054","tipo":"Crossover Mill 4.1/2\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0055","tipo":"Crossover 4.5/8\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0056","tipo":"Crossover 4.3/4\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0057","tipo":"Crossover Mill 4.3/4\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0058","tipo":"Crossover 5.1/2\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0059","tipo":"Crossover Mill 5.1/2\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0060","tipo":"Crossover 5.7/8\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0061","tipo":"Crossover Mill 6\" HD","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0062","tipo":"Cortador Mecânico Interno p/ Casing 5.1/2\", OD 4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0063","tipo":"Cortador Hidráulico Interno p/ Casing 5.1/2\", 3.5/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0064","tipo":"Cortador Hidráulico Interno p/ Casing 7\", 5.9/16\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0065","tipo":"Cortador Mecânico Externo p/ Tubing 1.9\" - 2.7/8\", OD 4.11/16\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0066","tipo":"Cortador Mecânico Externo p/ Tubing 2.3/8\" - 3.1/2\", OD 5.7/8\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0067","tipo":"Junta de Segurança p/ Drill Pipe 3.3/4\" x 2.3/8\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0068","tipo":"Estampador OD 6\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0069","tipo":"Estampador OD 4.3/4\" x 2.7/8\" EU","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0070","tipo":"Estampador OD 4.1/2\" x 2.7/8\" EU","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0071","tipo":"Magneto OD 4.1/2\" x 2.7/8\" REG","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0072","tipo":"Superior Hydraulic Fishing Jar 4.3/4\" x 3.1/2\" IF; ID: 2.1/4\"","tag":"","pn":"611-475","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. operacional — 2 manutenidos em Abril","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0073","tipo":"Superior Energizer 4.3/4\" x 3.1/2\" IF; ID: 2.1/4\"","tag":"","pn":"614-475","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — operado poucas vezes, estado de novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0074","tipo":"Fishing Bumper Sub 4.3/4\" x 3.1/2\" IF; ID: 2.1/4\"","tag":"","pn":"604-475","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0075","tipo":"Superior Hydraulic Fishing Jar 3.3/4\" x 2.3/8\" IF; ID: 1.1/2\"","tag":"","pn":"611-375","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. (2 novos, 1 usado)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0076","tipo":"Superior Energizer 3.3/4\" x 2.3/8\" IF; ID: 1.1/2\"","tag":"","pn":"614-375","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — estado de novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0077","tipo":"Fishing Bumper Sub 3.3/4\" x 2.3/8\" IF; ID: 1.1/2\"","tag":"","pn":"604-375","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — estado de novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0078","tipo":"Overshot S150 4.9/16\" x 3.1/2\" EU","tag":"","pn":"C-5151","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0079","tipo":"Overshot S150 4.9/16\" x 2.3/8\" IF","tag":"","pn":"C-5151","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0080","tipo":"Overshot S150 4.9/16\" x 2.7/8\" IF","tag":"","pn":"C-5151","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0081","tipo":"Extension Sub 36\" p/ Overshot 4.9/16\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0082","tipo":"Spiral Grapple OD 3.3/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (1 novo, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0083","tipo":"Spiral Grapple OD 3.7/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (1 novo, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0084","tipo":"Spiral Grapple OD 3.1/2\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. novos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0085","tipo":"Spiral Grapple OD 3.5/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0086","tipo":"Spiral Grapple OD 3.1/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0087","tipo":"Spiral Grapple OD 3.21/32\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"7 un. novos — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0088","tipo":"Spiral Grapple Control — Overshot S150 4.9/16\"","tag":"","pn":"B-4340","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"10 un. (4 novos, 6 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0089","tipo":"Basket Grapple OD 2.7/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"12 un. (3 novos, 9 usados) — 6 desgastadas separadas","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0090","tipo":"Basket Grapple OD 2.7/8\" com limitador — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. novos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0091","tipo":"Basket Grapple OD 2.5/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un. (4 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0092","tipo":"Basket Grapple OD 3.1/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"7 un. (4 novos, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0093","tipo":"Basket Grapple OD 3.1/16\" com limitador — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"8 un. (2 novos, 6 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0094","tipo":"Basket Grapple OD 2.3/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (2 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0095","tipo":"Basket Grapple OD 2.13/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0096","tipo":"Basket Grapple OD 2.3/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0097","tipo":"Basket Grapple OD 2.5/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0098","tipo":"Basket Grapple OD 2.5/8\" com limitador — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0099","tipo":"Basket Grapple OD 2.19/32\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0100","tipo":"Basket Grapple OD 3.1/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0101","tipo":"Basket Grapple OD 1.5/8\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0102","tipo":"Basket Grapple OD 1.13/16\" — Overshot S150 4.9/16\"","tag":"","pn":"B-4339","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. (1 novo, 1 usado)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0103","tipo":"Basket Grapple Control — Overshot S150 4.9/16\"","tag":"","pn":"B-4340","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (2 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0104","tipo":"Mill Control Packer 3.1/8\" — Overshot S150 4.9/16\"","tag":"","pn":"L-6665-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0105","tipo":"Mill Control Packer 2.13/16\" — Overshot S150 4.9/16\"","tag":"","pn":"L-6665-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0106","tipo":"Mill Control Packer 2.3/8\" — Overshot S150 4.9/16\"","tag":"","pn":"L-6665-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0107","tipo":"Mill Control Packer 2.7/8\" — Overshot S150 4.9/16\"","tag":"","pn":"L-6665-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0108","tipo":"Overshot S150 4.11/16\" x 2.3/8\" IF","tag":"","pn":"9109","ativo":"BA","estado":"Usado","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"1 un. — emprestado ao RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0109","tipo":"Spiral Grapple OD 3.1/2\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0110","tipo":"Spiral Grapple OD 3.21/32\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0111","tipo":"Spiral Grapple Control — Overshot S150 4.11/16\"","tag":"","pn":"6674","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0112","tipo":"Basket Grapple OD 2.3/4\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0113","tipo":"Basket Grapple OD 3.1/16\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0114","tipo":"Basket Grapple OD 2.13/16\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0115","tipo":"Basket Grapple OD 2.7/8\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0116","tipo":"Basket Grapple OD 2.15/16\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. — 1 emprestado ao RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0117","tipo":"Basket Grapple OD 2.5/8\" com limitador — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0118","tipo":"Basket Grapple OD 3.220\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0119","tipo":"Basket Grapple OD 3\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — 1 emprestado ao RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0120","tipo":"Basket Grapple OD 1\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0121","tipo":"Basket Grapple OD 7/8\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0122","tipo":"Basket Grapple OD 3/4\" — Overshot S150 4.11/16\"","tag":"","pn":"6662","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0123","tipo":"Overshot S150 5.3/4\" x 3.1/2\" IF (6112)","tag":"","pn":"8975","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. — 1 emprestado ao Potiguar","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0124","tipo":"Bowl Overshot 5.3/4\"","tag":"","pn":"8977","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. novos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0125","tipo":"Guide Mill Overshot 5.3/4\"","tag":"","pn":"6121","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0126","tipo":"Extension Sub 36\" p/ Overshot 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"1 un. — extensão emprestada ao Potiguar","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0127","tipo":"Spiral Grapple OD 4.3/4\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0128","tipo":"Spiral Grapple OD 4.5/8\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0129","tipo":"Spiral Grapple Control — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6113","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0130","tipo":"Basket Grapple OD 4\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0131","tipo":"Basket Grapple OD 3.3/4\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0132","tipo":"Basket Grapple OD 3.1/16\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0133","tipo":"Basket Grapple OD 3.1/16\" com limitador — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0134","tipo":"Basket Grapple OD 3.21/32\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0135","tipo":"Basket Grapple OD 3.1/2\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0136","tipo":"Basket Grapple OD 2.5/8\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — estado operacional de novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0137","tipo":"Basket Grapple OD 2.7/8\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un. (2 novos, 4 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0138","tipo":"Basket Grapple OD 2.7/8\" com limitador — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0139","tipo":"Basket Grapple OD 2.3/8\" — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6112","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0140","tipo":"Basket Grapple Control — Overshot S150 5.3/4\" (6112)","tag":"","pn":"6113","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0141","tipo":"Mill Control Packer 2.3/8\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0142","tipo":"Mill Control Packer 2.19/32\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0143","tipo":"Mill Control Packer 2.7/8\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0144","tipo":"Mill Control Packer 3.1/2\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0145","tipo":"Mill Control Packer 3.3/32\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0146","tipo":"Mill Control Packer 3.1/16\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0147","tipo":"Mill Control Packer 3.5/8\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0148","tipo":"Mill Control Packer 3.7/8\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0149","tipo":"Mill Control Packer 4.1/4\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0150","tipo":"Mill Control Packer 4\" — Overshot S150 5.3/4\"","tag":"","pn":"6114-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0151","tipo":"Overshot S150 5.3/4\" x 3.1/2\" IF (11828)","tag":"","pn":"C-11823","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — usado algumas vezes, estado de novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0152","tipo":"Extension Sub 36\" p/ Overshot 5.3/4\" (11828)","tag":"","pn":"","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0153","tipo":"Spiral Grapple OD 4.3/4\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0154","tipo":"Spiral Grapple OD 5\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0155","tipo":"Spiral Grapple OD 5.1/8\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (1 novo, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0156","tipo":"Spiral Grapple Control — Overshot S150 5.3/4\" (11828)","tag":"","pn":"A-11829","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"8 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0157","tipo":"Basket Grapple OD 4\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0158","tipo":"Basket Grapple OD 4.5/8\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0159","tipo":"Basket Grapple OD 4.3/16\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0160","tipo":"Basket Grapple OD 4.1/2\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0161","tipo":"Basket Grapple OD 3.1/2\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un. (2 novos, 4 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0162","tipo":"Basket Grapple OD 2.3/8\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0163","tipo":"Basket Grapple OD 2.7/8\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0164","tipo":"Basket Grapple OD 3.3/4\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11828","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0165","tipo":"Basket Grapple Control — Overshot S150 5.3/4\" (11828)","tag":"","pn":"B-11829","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0166","tipo":"Mill Control Packer 2.7/8\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0167","tipo":"Mill Control Packer 3\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0168","tipo":"Mill Control Packer 3.21/32\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0169","tipo":"Mill Control Packer 4\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0170","tipo":"Mill Control Packer 4.3/16\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0171","tipo":"Mill Control Packer 4.1/2\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0172","tipo":"Mill Control Packer 4.5/8\" — Overshot S150 5.3/4\" (11828)","tag":"","pn":"11826-R","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0173","tipo":"Overshot S70 4.5/8\" x 2.7/8\" IF","tag":"","pn":"11290","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0174","tipo":"Basket Grapple OD 2.5/8\" — Overshot S70 4.5/8\"","tag":"","pn":"11292","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0175","tipo":"Basket Grapple OD 2.3/8\" — Overshot S70 4.5/8\"","tag":"","pn":"11292","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0176","tipo":"Basket Grapple OD 2.7/8\" — Overshot S70 4.5/8\"","tag":"","pn":"11292","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0177","tipo":"Basket Grapple OD 3.1/16\" — Overshot S70 4.5/8\"","tag":"","pn":"11292","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0178","tipo":"Basket Grapple OD 2.1/2\" — Overshot S70 4.5/8\"","tag":"","pn":"11292","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0179","tipo":"Basket Grapple Control — Overshot S70 4.5/8\"","tag":"","pn":"11294","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0180","tipo":"Overshot S70 4.11/16\" x 2.3/8\" IF","tag":"","pn":"10543","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0181","tipo":"Basket Grapple OD 3.21/32\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. (2 novos, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0182","tipo":"Basket Grapple OD 3.1/2\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0183","tipo":"Basket Grapple OD 2.7/8\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un. (4 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0184","tipo":"Basket Grapple OD 3.1/16\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"7 un. (4 novos, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0185","tipo":"Basket Grapple OD 3.1/4\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0186","tipo":"Basket Grapple OD 3.5/8\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"8 un. (2 novos, 6 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0187","tipo":"Basket Grapple OD 2.3/8\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (2 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0188","tipo":"Basket Grapple OD 2.5/8\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0189","tipo":"Basket Grapple OD 2.13/16\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0190","tipo":"Basket Grapple OD 3.3/32\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Novo","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"2 un. — emprestada p/ RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0191","tipo":"Basket Grapple OD 3\" — Overshot S70 4.11/16\"","tag":"","pn":"10546","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0192","tipo":"Basket Grapple Control — Overshot S70 4.11/16\"","tag":"","pn":"10547","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. (2 novos, 1 usado)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0193","tipo":"Overshot S70 5.7/8\" x 3.1/2\" IF","tag":"","pn":"10560","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0194","tipo":"Top Sub Overshot 5.7/8\" 4.1/2\" EU","tag":"","pn":"10561","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0195","tipo":"Basket Grapple OD 3.7/8\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0196","tipo":"Basket Grapple OD 3.3/4\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0197","tipo":"Basket Grapple OD 4\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0198","tipo":"Basket Grapple OD 4.5/8\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — garra desgastada","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0199","tipo":"Basket Grapple OD 4.1/16\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0200","tipo":"Basket Grapple OD 4.1/8\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0201","tipo":"Basket Grapple OD 4.1/4\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0202","tipo":"Basket Grapple OD 4.3/4\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0203","tipo":"Basket Grapple OD 3.21/32\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0204","tipo":"Basket Grapple OD 3.1/2\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0205","tipo":"Basket Grapple OD 3.1/16\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0206","tipo":"Basket Grapple OD 2.7/8\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0207","tipo":"Basket Grapple OD 2.5/8\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0208","tipo":"Basket Grapple OD 2.3/8\" — Overshot S70 5.7/8\"","tag":"","pn":"10563","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0209","tipo":"Basket Grapple Control — Overshot S70 5.7/8\"","tag":"","pn":"10564","ativo":"BA","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. (2 novos, 1 usado)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0210","tipo":"Overshot Wide Catch 5.3/4\" x 3.1/2\" IF","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0211","tipo":"Extension Sub 48\" p/ Overshot Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0212","tipo":"Spiral Grapple nominal 4.3/4\" (range 4.781\"-4.469\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0213","tipo":"Spiral Grapple nominal 4.1/4\" (range 4.281\"-3.969\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0214","tipo":"Spiral Grapple nominal 4.1/2\" (range 4.531\"-4.219\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0215","tipo":"Basket Grapple nominal 4\" (range 4.031\"-3.719\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0216","tipo":"Basket Grapple nominal 3.3/4\" (range 3.781\"-3.469\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0217","tipo":"Basket Grapple nominal 3.3/16\" (range 3.219\"-2.906\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0218","tipo":"Basket Grapple nominal 2.7/8\" (range 2.906\"-2.594\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0219","tipo":"Basket Grapple nominal 2.5/8\" (range 2.656\"-2.334\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0220","tipo":"Basket Grapple nominal 2.3/8\" (range 2.406\"-2.094\") — Wide Catch 5.3/4\"","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0221","tipo":"Short Catch Releasing Overshot 2.25/32\" OD x 3/4\"","tag":"","pn":"18305","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0222","tipo":"Short Catch Overshot Bowen S20 3.1/4\" OD x 2.3/8\" EU","tag":"","pn":"22270","ativo":"BA","estado":"Novo","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"1 un. — emprestado p/ RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0223","tipo":"Short Catch Overshot S10 Bowen 2.5/16\" x 3/4\" SFS","tag":"","pn":"11480","ativo":"BA","estado":"Novo","loc":"Ativo RN","poco":"","prazo":"","tipoMan":"","obs":"1 un. — emprestado p/ RN","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0224","tipo":"Short Catch Overshot S10 Bowen 1.29/32\" x 3/4\"","tag":"","pn":"9340","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0225","tipo":"Overshot O'Bannon 1.7/8\" x 3/4 (Simples Agarramento)","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0226","tipo":"Overshot O'Bannon 2.1/8\" x 3/4 (Duplo Agarramento)","tag":"","pn":"","ativo":"BA","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0227","tipo":"Thompson 6.1/8\" x 3.1/2\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — emprestado da BA","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0228","tipo":"Thompson 4.1/2\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0229","tipo":"Junk Mill 4.3/4\" x 2.7/8\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0230","tipo":"Junk Mill 3.3/4\" x 2.3/8\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0231","tipo":"Junk Mill 6\" x 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0232","tipo":"String Mill 4\" x 2.7/8\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0233","tipo":"String Mill 4.1/2\" x 2.3/8\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0234","tipo":"String Mill 4.1/8\" x 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0235","tipo":"Master Mill 5.1/8\" x 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0236","tipo":"Broca Mill 6\" x 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0237","tipo":"Broca Mill 5.1/2\" x 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0238","tipo":"Broca Mill 4.3/4\" x 2.3/8\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0239","tipo":"Crossover 6\" x 3.1/2\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0240","tipo":"Crossover 5.1/2\" x 2.7/8\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0241","tipo":"Crossover 4.3/4\" x 2.3/8\" REG","tag":"","pn":"","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. novos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0242","tipo":"Crossover 4.1/2\" x 2.3/8\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0243","tipo":"Sapata 6\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0244","tipo":"Sapata Arpão 6\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0245","tipo":"Sapata denteada 6\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0246","tipo":"Sapata 5.1/2\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"7 un. — 5 sem tungstênio","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0247","tipo":"Sapata Arpão 5.1/2\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0248","tipo":"Sapata 4.1/2\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0249","tipo":"Sapata denteada 4.1/2\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0250","tipo":"Sapata 4.3/4\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0251","tipo":"Die Collar OD 5.1/2\" x 2.7/8\" EU","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0252","tipo":"Taper Tap OD 6.1/8\" x 3.1/2\" IF, range 5.1/2\" x 4.1/4\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0253","tipo":"Taper Tap OD 3.3/4\" x 2.3/8\" IF, range 2.9/16\" x 1.5/8\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0254","tipo":"Taper Tap OD 3.3/4\" x 2.3/8\" IF, range 2.5/16\" x 1.7/16\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0255","tipo":"Taper Tap OD 5\" x 2.3/8\" IF, range 3.1/2\" x 2\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0256","tipo":"Spear para Tubing 2.7/8\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0257","tipo":"Arpão 2.3/8\" EU","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0258","tipo":"Arpão 4.1/2\" x 2.3/8\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0259","tipo":"Arpão 6.1/4\" x 3.1/2\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0260","tipo":"Magneto de Coluna 6\" 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0261","tipo":"Sub Cesta 4\" x 2.3/8\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0262","tipo":"Sub Cesta 4.7/8\" x 3.1/2\" REG","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0263","tipo":"Casing Roller p/ Casing 5.1/2\" x 2.3/8\" IF","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0264","tipo":"Estampador 6\" x 2.7/8\" EU","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0265","tipo":"Estampador 4.1/2\" x 2.7/8\" EU","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0266","tipo":"Cortador Externo Mecânico OD 4.11/16\"","tag":"","pn":"410-466","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0267","tipo":"Superior Hydraulic Fishing Jar 4.3/4\" x 3.1/2\" IF; ID: 2.1/4\"","tag":"","pn":"611-475","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0268","tipo":"Z Type Hydraulic Jars 4.3/4\" x 3.1/2\" IF; ID: 2\"","tag":"","pn":"605-012","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. novos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0269","tipo":"Superior Energizer 4.3/4\" x 3.1/2\" IF; ID: 2\"","tag":"","pn":"606-011","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0270","tipo":"Fishing Bumper Sub 4.3/4\" x 3.1/2\" IF; ID: 2.1/4\"","tag":"","pn":"604-475","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. (1 novo, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0271","tipo":"Superior Hydraulic Fishing Jar 3.3/4\" x 2.3/8\" IF; ID: 1.1/2\"","tag":"","pn":"611-375","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0272","tipo":"Z Type Hydraulic Jars 3.3/4\" x 2.3/8\" IF; ID: 1.1/2\"","tag":"","pn":"614-375","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0273","tipo":"Overshot S150 4.9/16\"","tag":"","pn":"C-5151","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0274","tipo":"Extension Sub 36\" p/ Overshot 4.9/16\"","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0275","tipo":"Spiral Grapple OD 3.3/8\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0276","tipo":"Spiral Grapple OD 3.7/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0277","tipo":"Spiral Grapple OD 3.1/2\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0278","tipo":"Spiral Grapple OD 3.5/8\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0279","tipo":"Spiral Grapple OD 3.11/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0280","tipo":"Spiral Grapple OD 3.21/32\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0281","tipo":"Spiral Grapple Control — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4340","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0282","tipo":"Basket Grapple OD 2.7/8\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"11 un. — 6 desgastadas separadas","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0283","tipo":"Basket Grapple OD 3.1/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0284","tipo":"Basket Grapple OD 3.1/16\" com limitador — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0285","tipo":"Basket Grapple OD 2.3/8\" com topador — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0286","tipo":"Basket Grapple OD 2.3/8\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0287","tipo":"Basket Grapple OD 2.15/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0288","tipo":"Basket Grapple OD 2.13/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0289","tipo":"Basket Grapple OD 2.3/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0290","tipo":"Basket Grapple OD 2.5/8\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0291","tipo":"Basket Grapple OD 2.19/32\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0292","tipo":"Basket Grapple OD 3.1/4\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0293","tipo":"Basket Grapple OD 3.1/8\" — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4339","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0294","tipo":"Basket Grapple Control — Overshot S150 4.9/16\" RN","tag":"","pn":"B-4340","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0295","tipo":"Mill Control Packer 3.1/4\" — Overshot S150 4.9/16\" RN","tag":"","pn":"L-6665-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0296","tipo":"Mill Control Packer 3.1/16\" — Overshot S150 4.9/16\" RN","tag":"","pn":"L-6665-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0297","tipo":"Mill Control Packer 2.1/2\" — Overshot S150 4.9/16\" RN","tag":"","pn":"L-6665-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0298","tipo":"Overshot S150 5.3/4\" x 3.1/2\" IF (6112) — RN","tag":"","pn":"8975","ativo":"RN","estado":"Usado","loc":"Poço","poco":"","prazo":"","tipoMan":"","obs":"2 un. — 1 da BA; 1 preso no poço BE-27","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0299","tipo":"Guide Overshot 5.3/4\" x 4.9/16\" — RN","tag":"","pn":"A-11830","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0300","tipo":"Extension Sub 36\" p/ Overshot 5.3/4\" — RN","tag":"","pn":"","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un. — extensão da BA","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0301","tipo":"Spiral Grapple OD 4.1/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0302","tipo":"Spiral Grapple Control — Overshot S150 5.3/4\" RN","tag":"","pn":"6113","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0303","tipo":"Basket Grapple OD 2.3/4\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0304","tipo":"Basket Grapple OD 2.7/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0305","tipo":"Basket Grapple OD 2.19/32\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0306","tipo":"Basket Grapple OD 2.3/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0307","tipo":"Basket Grapple OD 2.5/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0308","tipo":"Basket Grapple OD 3.1/2\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0309","tipo":"Basket Grapple OD 3.21/32\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. — estado operacional de novo","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0310","tipo":"Basket Grapple OD 3.3/4\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0311","tipo":"Basket Grapple OD 4\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0312","tipo":"Basket Grapple OD 4.3/16\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0313","tipo":"Basket Grapple OD 3.1/4\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0314","tipo":"Basket Grapple OD 3.3/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0315","tipo":"Basket Grapple OD 3.1/16\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0316","tipo":"Basket Grapple OD 3.3/32\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0317","tipo":"Basket Grapple OD 3\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0318","tipo":"Basket Grapple OD 3.7/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0319","tipo":"Basket Grapple OD 3.5/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0320","tipo":"Basket Grapple OD 4.1/8\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6112","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0321","tipo":"Mill Control Packer 4.1/4\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6114-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0322","tipo":"Mill Control Packer 4\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6114-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0323","tipo":"Mill Control Packer 4.3/16\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6114-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0324","tipo":"Mill Control Packer 3.1/16\" — Overshot S150 5.3/4\" RN","tag":"","pn":"6114-R","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0325","tipo":"Overshot S70 4.11/16\" x 2.3/8\" IF — RN","tag":"","pn":"10543","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0326","tipo":"Basket Grapple OD 3.21/32\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. (2 novos, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0327","tipo":"Basket Grapple OD 3.1/2\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0328","tipo":"Basket Grapple OD 2.7/8\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"6 un. (4 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0329","tipo":"Basket Grapple OD 3.1/16\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"7 un. (4 novos, 3 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0330","tipo":"Basket Grapple OD 3.5/8\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"8 un. (2 novos, 6 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0331","tipo":"Basket Grapple OD 2.3/8\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"4 un. (2 novos, 2 usados)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0332","tipo":"Basket Grapple OD 2.5/8\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un. — Suprimentos","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0333","tipo":"Basket Grapple OD 2.13/16\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"5 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0334","tipo":"Basket Grapple OD 3.3/32\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Novo","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"2 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0335","tipo":"Basket Grapple OD 3\" — Overshot S70 4.11/16\" RN","tag":"","pn":"10546","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"1 un.","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"},{"id":"T0336","tipo":"Basket Grapple Control — Overshot S70 4.11/16\" RN","tag":"","pn":"10547","ativo":"RN","estado":"Usado","loc":"Galpão","poco":"","prazo":"","tipoMan":"","obs":"3 un. (2 novos, 1 usado)","criado":"2025-05-22T00:00:00.000Z","atualizado":"2025-05-22T00:00:00.000Z"}];
+function invLoadSeed(){
+  var existing=invGet();
+  if(existing.length===0){
+    invSet(INV_SEED);
+  }
+}
+
+function invInit(){
+  invLoadSeed();
+  _invAtivo='Todos';_invLoc='Todos';
+  var s=document.getElementById('inv-search');if(s)s.value='';
+  invRender();
+}
+
+function invLocStyle(loc){
+  var m={'Ativo BA':{bg:'#e6f5ec',c:'#1a7a3c',b:'#c5deca'},'Ativo RN':{bg:'#e8f0fe',c:'#1565c0',b:'#b3c9f0'},
+    'Galpão':{bg:'#f5f5f5',c:'#5a7a65',b:'#ccc'},'Prancha':{bg:'#fef9e7',c:'#d97706',b:'#f5d98a'},
+    'Poço':{bg:'#e0f7fa',c:'#00838f',b:'#80deea'},'Manutenção':{bg:'#fdecea',c:'#c0392b',b:'#f0b8b3'}};
+  return m[loc]||{bg:'#f5f5f5',c:'#333',b:'#ccc'};
+}
+
+function invRenderKPIs(all){
+  var tot=all.length,
+      disp=all.filter(function(t){return t.loc==='Galpão'||t.loc==='Prancha';}).length,
+      campo=all.filter(function(t){return t.loc==='Ativo BA'||t.loc==='Ativo RN';}).length,
+      poco=all.filter(function(t){return t.loc==='Poço';}).length,
+      man=all.filter(function(t){return t.loc==='Manutenção';}).length;
+  var today=new Date();today.setHours(0,0,0,0);
+  var venc=all.filter(function(t){return t.loc==='Manutenção'&&t.prazo&&new Date(t.prazo)<today;}).length;
+  var kpis=[[tot,'Total','#1a7a3c'],[disp,'Disponível','#5a7a65'],[campo,'Em Campo','#1565c0'],[poco,'Poço','#00838f'],[man,'Manut.',venc?'#c0392b':'#d97706']];
+  document.getElementById('inv-kpis').innerHTML='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:4px">'+
+    kpis.map(function(k){
+      return '<div style="background:#fff;border:1px solid var(--bor);border-radius:10px;padding:8px 4px;text-align:center">'+
+        '<div style="font-size:20px;font-weight:900;color:'+k[2]+';line-height:1">'+k[0]+(k[1]==='Manut.'&&venc?'<span style="font-size:9px;color:#c0392b"> ⚠</span>':'')+'</div>'+
+        '<div style="font-size:9px;color:var(--mut);font-weight:700;margin-top:2px;letter-spacing:.4px">'+k[1]+'</div></div>';
+    }).join('')+'</div>';
+}
+
+function invRenderTabs(){
+  var tabs=['Todos','BA','RN'];
+  document.getElementById('inv-ativo-tabs').innerHTML=tabs.map(function(a){
+    var active=a===_invAtivo;
+    return '<button onclick="invSetAtivo(\''+a+'\')" style="white-space:nowrap;flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:'+(active?'var(--grn)':'var(--card2)')+';color:'+(active?'#fff':'var(--mut)')+';border:1.5px solid '+(active?'var(--grn)':'var(--bor)')+';cursor:pointer">'+(a==='Todos'?'🗂 Todos':a)+'</button>';
+  }).join('');
+}
+function invSetAtivo(a){_invAtivo=a;invRender();}
+
+function invRenderChips(){
+  var chips=[{v:'Todos',l:'Todos'},{v:'Disponível',l:'🏗 Disponível'},{v:'Em Campo',l:'📡 Em Campo'},{v:'Poço',l:'🕳 Poço'},{v:'Manutenção',l:'🔧 Manut.'}];
+  document.getElementById('inv-loc-chips').innerHTML=chips.map(function(ch){
+    var active=ch.v===_invLoc;
+    var s=invLocStyle(ch.v==='Disponível'?'Galpão':ch.v==='Em Campo'?'Ativo BA':ch.v==='Todos'?'Galpão':ch.v);
+    return '<button onclick="invSetLoc(\''+ch.v+'\')" style="white-space:nowrap;flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;background:'+(active?s.c:'var(--card2)')+';color:'+(active?'#fff':'var(--mut)')+';border:1.5px solid '+(active?s.c:'var(--bor)')+';cursor:pointer">'+ch.l+'</button>';
+  }).join('');
+}
+function invSetLoc(l){_invLoc=l;invRender();}
+
+function invLocBadge(t){
+  var s=invLocStyle(t.loc);
+  var label=t.loc==='Poço'&&t.poco?'Poço · '+t.poco:t.loc;
+  return '<span style="display:inline-block;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;background:'+s.bg+';color:'+s.c+';border:1px solid '+s.b+'">'+label+'</span>';
+}
+function invEstadoBadge(e){
+  if(e==='Novo')return '<span class="tag tg" style="font-size:10px">Novo</span>';
+  if(e==='Almoxarifado')return '<span class="tag tm" style="font-size:10px">Almox.</span>';
+  return '<span class="tag ta" style="font-size:10px">Usado</span>';
+}
+
+function invRender(){
+  var all=invGet();
+  invRenderKPIs(all);invRenderTabs();invRenderChips();
+  var q=(document.getElementById('inv-search')?document.getElementById('inv-search').value:'').toLowerCase();
+  var filtered=all.filter(function(t){
+    if(_invAtivo!=='Todos'&&t.ativo!==_invAtivo&&t.ativo!=='Ambos')return false;
+    if(_invLoc==='Disponível'&&t.loc!=='Galpão'&&t.loc!=='Prancha')return false;
+    if(_invLoc==='Em Campo'&&t.loc!=='Ativo BA'&&t.loc!=='Ativo RN')return false;
+    if(_invLoc==='Poço'&&t.loc!=='Poço')return false;
+    if(_invLoc==='Manutenção'&&t.loc!=='Manutenção')return false;
+    if(q){var h=(t.tipo+t.tag+t.pn+(t.obs||'')+(t.poco||'')).toLowerCase();if(!h.includes(q))return false;}
+    return true;
+  });
+  var el=document.getElementById('inv-list');
+  if(!filtered.length){
+    el.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--mut)"><div style="font-size:40px;margin-bottom:10px">📭</div><div style="font-size:14px;font-weight:600">Nenhuma ferramenta encontrada</div><div style="font-size:12px;margin-top:6px">Toque em + para cadastrar</div></div>';
+    return;
+  }
+  var groups={};
+  filtered.forEach(function(t){var g=t.loc;if(!groups[g])groups[g]=[];groups[g].push(t);});
+  var ORDER=['Ativo BA','Ativo RN','Prancha','Galpão','Poço','Manutenção'];
+  var sortedG=Object.keys(groups).sort(function(a,b){return ORDER.indexOf(a)-ORDER.indexOf(b);});
+  var today=new Date();today.setHours(0,0,0,0);
+  el.innerHTML=sortedG.map(function(g){
+    var s=invLocStyle(g);var items=groups[g];
+    return '<div style="margin-bottom:16px">'+
+      '<div style="font-size:10px;font-weight:800;letter-spacing:1px;color:'+s.c+';margin-bottom:8px;padding:4px 8px;background:'+s.bg+';border-radius:6px;display:inline-block;border:1px solid '+s.b+'">'+g.toUpperCase()+' · '+items.length+' '+(items.length===1?'ferramenta':'ferramentas')+'</div>'+
+      items.map(function(t){
+        var isVenc=t.loc==='Manutenção'&&t.prazo&&new Date(t.prazo)<today;
+        var dias=t.loc==='Manutenção'&&t.prazo?Math.ceil((new Date(t.prazo)-today)/86400000):null;
+        var manInfo='';
+        if(t.loc==='Manutenção'&&t.prazo){
+          var cor=isVenc?'#c0392b':dias<=7?'#d97706':'#1a7a3c';
+          var label=isVenc?'⚠ PRAZO VENCIDO: ':dias<=7?'⏳ Retorno em '+dias+'d · ':'✅ Retorno: ';
+          manInfo='<div style="font-size:11px;margin-top:5px;font-weight:700;color:'+cor+'">'+label+new Date(t.prazo).toLocaleDateString('pt-BR')+(t.tipoMan?' · '+t.tipoMan:'')+'</div>';
+        }
+        return '<div class="card" onclick="invOpenForm(\''+t.id+'\')" style="cursor:pointer;margin-bottom:8px;'+(isVenc?'border-left:3px solid #c0392b':'')+'">' +
+          '<div style="display:flex;align-items:flex-start;gap:10px">' +
+          '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:14px;font-weight:700;margin-bottom:5px;line-height:1.3">'+(t.tipo||'—')+'</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">'+invLocBadge(t)+invEstadoBadge(t.estado)+(t.ativo&&t.ativo!=='Ambos'?'<span class="tag '+(t.ativo==='BA'?'tg':'tb')+'" style="font-size:10px">'+t.ativo+'</span>':'')+'</div>'+
+          '<div style="display:flex;gap:12px;font-size:11px;color:var(--mut)">'+(t.tag?'<span>🏷 <b>'+t.tag+'</b></span>':'')+(t.pn?'<span>PN: '+t.pn+'</span>':'')+'</div>'+
+          (t.obs?'<div style="font-size:11px;color:var(--mut);margin-top:5px;font-style:italic">'+t.obs+'</div>':'')+manInfo+
+          '</div><div style="color:var(--mut);font-size:18px;padding-top:2px">›</div></div></div>';
+      }).join('')+'</div>';
+  }).join('');
+}
+
+function invFormLocChange(){
+  var loc=document.getElementById('inv-f-loc').value;
+  document.getElementById('inv-f-poco-card').style.display=loc==='Poço'?'block':'none';
+  document.getElementById('inv-f-man-card').style.display=loc==='Manutenção'?'block':'none';
+}
+
+function invOpenForm(id){
+  var delBtn=document.getElementById('inv-f-del');
+  if(!id){
+    document.getElementById('inv-form-title').textContent='Nova Ferramenta';
+    document.getElementById('inv-f-id').value='';
+    ['inv-f-tipo','inv-f-tag','inv-f-pn','inv-f-poco','inv-f-prazo','inv-f-obs'].forEach(function(x){document.getElementById(x).value='';});
+    document.getElementById('inv-f-ativo').value='BA';
+    document.getElementById('inv-f-estado').value='Novo';
+    document.getElementById('inv-f-loc').value='Galpão';
+    document.getElementById('inv-f-tipoman').value='Preventiva';
+    delBtn.style.display='none';
+  } else {
+    var t=invGet().find(function(x){return x.id===id;});if(!t)return;
+    document.getElementById('inv-form-title').textContent='Editar Ferramenta';
+    document.getElementById('inv-f-id').value=t.id;
+    document.getElementById('inv-f-tipo').value=t.tipo||'';
+    document.getElementById('inv-f-tag').value=t.tag||'';
+    document.getElementById('inv-f-pn').value=t.pn||'';
+    document.getElementById('inv-f-ativo').value=t.ativo||'BA';
+    document.getElementById('inv-f-estado').value=t.estado||'Usado';
+    document.getElementById('inv-f-loc').value=t.loc||'Galpão';
+    document.getElementById('inv-f-poco').value=t.poco||'';
+    document.getElementById('inv-f-prazo').value=t.prazo||'';
+    document.getElementById('inv-f-tipoman').value=t.tipoMan||'Preventiva';
+    document.getElementById('inv-f-obs').value=t.obs||'';
+    delBtn.style.display='block';
+  }
+  invFormLocChange();show('inv-form');
+}
+
+function invSaveForm(){
+  var tipo=document.getElementById('inv-f-tipo').value.trim();
+  if(!tipo){alert('Informe o tipo/descrição da ferramenta.');return;}
+  var loc=document.getElementById('inv-f-loc').value;
+  var tools=invGet();
+  var id=document.getElementById('inv-f-id').value||invUID();
+  var now=new Date().toISOString();
+  var data={id:id,tipo:tipo,
+    tag:document.getElementById('inv-f-tag').value.trim(),
+    pn:document.getElementById('inv-f-pn').value.trim(),
+    ativo:document.getElementById('inv-f-ativo').value,
+    estado:document.getElementById('inv-f-estado').value,
+    loc:loc,
+    poco:loc==='Poço'?document.getElementById('inv-f-poco').value.trim():'',
+    prazo:loc==='Manutenção'?document.getElementById('inv-f-prazo').value:'',
+    tipoMan:loc==='Manutenção'?document.getElementById('inv-f-tipoman').value:'',
+    obs:document.getElementById('inv-f-obs').value.trim(),
+    atualizado:now};
+  var idx=tools.findIndex(function(x){return x.id===id;});
+  if(idx>=0){data.criado=tools[idx].criado||now;tools[idx]=data;}
+  else{data.criado=now;tools.push(data);}
+  invSet(tools);show('inv');invRender();
+}
+
+function invDeleteCurrent(){
+  var id=document.getElementById('inv-f-id').value;if(!id)return;
+  if(!confirm('Excluir esta ferramenta do estoque?'))return;
+  invSet(invGet().filter(function(t){return t.id!==id;}));
+  show('inv');invRender();
+}
+
+function invExport(){
+  var tools=invGet();
+  if(!tools.length){alert('Nenhuma ferramenta cadastrada.');return;}
+  var cols=['ID','Tipo','TAG','PN','Ativo','Estado','Localizacao','Poco','Prazo','TipoManutencao','Obs','CriadoEm','AtualizadoEm'];
+  var rows=tools.map(function(t){
+    return [t.id,t.tipo,t.tag,t.pn,t.ativo,t.estado,t.loc,t.poco,t.prazo,t.tipoMan,t.obs,t.criado,t.atualizado]
+      .map(function(v){return '"'+(String(v||'').replace(/"/g,'""'))+'"';}).join(';');
+  });
+  var csv='\uFEFF'+cols.join(';')+'\n'+rows.join('\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Estoque_Ferramentas_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+function invImportFile(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var text=e.target.result;
+      var lines=text.replace(/\r/g,'').split('\n').filter(function(l){return l.trim();});
+      if(lines.length<2){alert('CSV vazio ou inválido.');return;}
+      var sep=lines[0].includes(';')?';':',';
+      function parseRow(row){
+        var res=[],cur='',inQ=false;
+        for(var i=0;i<row.length;i++){
+          var c=row[i];
+          if(c==='"'){inQ=!inQ;continue;}
+          if(c===sep&&!inQ){res.push(cur.trim());cur='';continue;}
+          cur+=c;
+        }
+        res.push(cur.trim());return res;
+      }
+      var headers=parseRow(lines[0]).map(function(h){return h.replace(/\uFEFF/g,'').toLowerCase();});
+      function fi(n){return headers.indexOf(n.toLowerCase());}
+      var iId=fi('id'),iTipo=fi('tipo'),iTag=fi('tag'),iPn=fi('pn');
+      var iAtivo=fi('ativo'),iEstado=fi('estado'),iLoc=fi('localizacao');
+      var iPoco=fi('poco'),iPrazo=fi('prazo'),iTMan=fi('tipomanutencao');
+      var iObs=fi('obs'),iCr=fi('criadoem'),iAt=fi('atualizadoem');
+      if(iTipo<0||iLoc<0){alert('CSV inválido: colunas Tipo e Localizacao são obrigatórias.');return;}
+      var LOCS=['Ativo BA','Ativo RN','Galpão','Prancha','Poço','Manutenção'];
+      var added=0,updated=0,skipped=0;
+      var tools=invGet();
+      for(var i=1;i<lines.length;i++){
+        var row=parseRow(lines[i]);
+        if(row.every(function(c){return !c;}))continue;
+        var tipo=row[iTipo]||'';
+        var loc=row[iLoc]||'';
+        if(!tipo){skipped++;continue;}
+        if(loc&&LOCS.indexOf(loc)<0){skipped++;continue;}
+        var id=(iId>=0&&row[iId])?row[iId]:invUID();
+        var now=new Date().toISOString();
+        var obj={id:id,tipo:tipo,
+          tag:iTag>=0?row[iTag]:'',pn:iPn>=0?row[iPn]:'',
+          ativo:iAtivo>=0?row[iAtivo]:'BA',estado:iEstado>=0?row[iEstado]:'Usado',
+          loc:loc||'Galpão',poco:iPoco>=0?row[iPoco]:'',prazo:iPrazo>=0?row[iPrazo]:'',
+          tipoMan:iTMan>=0?row[iTMan]:'',obs:iObs>=0?row[iObs]:'',
+          criado:iCr>=0&&row[iCr]?row[iCr]:now,
+          atualizado:iAt>=0&&row[iAt]?row[iAt]:now};
+        var idx=tools.findIndex(function(t){return t.id===id;});
+        if(idx>=0){tools[idx]=obj;updated++;}else{tools.push(obj);added++;}
+      }
+      invSet(tools);invRender();
+      alert('Importação concluída!\n'+added+' adicionadas · '+updated+' atualizadas · '+skipped+' ignoradas');
+    }catch(err){alert('Erro ao processar CSV: '+err.message);}
+    input.value='';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// CONTROLE DE FERRAMENTAS — MESTRE (Estoque + Mapa + Report)
+// ═══════════════════════════════════════════════════════════════════
+var _ctrlActiveTab='estoque';
+
+function ctrlOpen(tab){
+  _ctrlActiveTab=tab||'estoque';
+}
+
+function ctrlTab(tab){
+  _ctrlActiveTab=tab;
+  var tabs=['estoque','mapa','report'];
+  tabs.forEach(function(t){
+    var btn=document.getElementById('ctrl-tab-'+t);
+    var pane=document.getElementById('ctrl-'+t);
+    var active=t===tab;
+    if(btn){btn.style.borderBottom=active?'3px solid var(--grn)':'3px solid transparent';
+             btn.style.color=active?'var(--grn)':'var(--mut)';}
+    if(pane)pane.style.display=active?'block':'none';
+  });
+  // Render conteúdo da aba
+  if(tab==='estoque')invRender();
+  if(tab==='mapa'){mantRender();document.getElementById('mant-week-detail').style.display='none';}
+  if(tab==='report')repGenerate();
+  window.scrollTo(0,0);
+}
+
+// ── MAPA 52 SEMANAS ────────────────────────────────────────────────
+var _mantAtivo='Todos';
+
+function mantGetWeek(d){
+  var jan1=new Date(d.getFullYear(),0,1);
+  return Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+}
+function mantWeekStart(year,week){
+  var d=new Date(year,0,1+(week-1)*7);
+  d.setDate(d.getDate()-d.getDay());
+  return d;
+}
+
+function mantRender(){
+  var all=invGet();
+  var today=new Date();today.setHours(0,0,0,0);
+  var filt=_mantAtivo==='Todos'?all:all.filter(function(t){return t.ativo===_mantAtivo||t.ativo==='Ambos';});
+  var inMant=filt.filter(function(t){return t.loc==='Manutenção';});
+
+  // KPIs
+  var venc=inMant.filter(function(t){return t.prazo&&new Date(t.prazo)<today;}).length;
+  var em14=inMant.filter(function(t){if(!t.prazo)return false;var d=new Date(t.prazo);return d>=today&&(d-today)/86400000<=14;}).length;
+  var em30=inMant.filter(function(t){if(!t.prazo)return false;var d=new Date(t.prazo);return d>=today&&(d-today)/86400000<=30&&(d-today)/86400000>14;}).length;
+  var semData=inMant.filter(function(t){return !t.prazo;}).length;
+  document.getElementById('mant-kpis').innerHTML=
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px">'+
+    [[venc,'Vencidas','#c0392b'],[em14,'≤14d','#d97706'],[em30,'≤30d','#1a7a3c'],[semData,'Sem data','#5a7a65']].map(function(k){
+      return '<div style="background:#fff;border:1px solid var(--bor);border-radius:10px;padding:8px 4px;text-align:center">'+
+        '<div style="font-size:20px;font-weight:900;color:'+k[2]+';line-height:1">'+k[0]+'</div>'+
+        '<div style="font-size:9px;color:var(--mut);font-weight:700;margin-top:2px">'+k[1]+'</div></div>';
+    }).join('')+'</div>';
+
+  // Tabs ativo
+  document.getElementById('mant-tabs').innerHTML=['Todos','BA','RN'].map(function(a){
+    var active=a===_mantAtivo;
+    return '<button onclick="mantSetAtivo(\''+a+'\')" style="white-space:nowrap;flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:'+(active?'var(--grn)':'var(--card2)')+';color:'+(active?'#fff':'var(--mut)')+';border:1.5px solid '+(active?'var(--grn)':'var(--bor)')+';cursor:pointer">'+(a==='Todos'?'🗂 Todos':a)+'</button>';
+  }).join('');
+
+  // Heatmap 52 semanas (semana atual no centro)
+  var todayWk=mantGetWeek(today);
+  var todayYr=today.getFullYear();
+  var weeks=[];
+  for(var w=-4;w<48;w++){var d=new Date(today);d.setDate(d.getDate()+w*7);weeks.push({yr:d.getFullYear(),wk:mantGetWeek(d),dt:new Date(d)});}
+  var wkMap={};
+  inMant.forEach(function(t){
+    if(!t.prazo)return;
+    var pd=new Date(t.prazo);pd.setHours(0,0,0,0);
+    var k=pd.getFullYear()+'-'+mantGetWeek(pd);
+    if(!wkMap[k])wkMap[k]=[];wkMap[k].push(t);
+  });
+  var months=['J','F','M','A','M','J','J','A','S','O','N','D'];
+  document.getElementById('mant-heatmap').innerHTML=weeks.map(function(w){
+    var k=w.yr+'-'+w.wk;var ts=wkMap[k]||[];
+    var isCur=w.wk===todayWk&&w.yr===todayYr;
+    var isPast=w.dt<today;
+    var bg=ts.length===0?'#e0e0e0':isPast&&ts.some(function(t){return t.prazo&&new Date(t.prazo)<today;})?'#c0392b':(w.dt-today)/86400000<=14?'#d97706':'#27ae60';
+    return '<div onclick="mantShowWeek(\''+k+'\')" style="width:20px;height:20px;border-radius:3px;background:'+bg+';border:2px solid '+(isCur?'#1565c0':'transparent')+';cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center" title="S'+w.wk+'/'+w.yr+(ts.length?' — '+ts.length+' ferra.':'')+'">'+
+      (ts.length?'<span style="font-size:7px;color:#fff;font-weight:900">'+ts.length+'</span>':'')+'</div>';
+  }).join('');
+  document.getElementById('mant-heatmap-labels').innerHTML=weeks.map(function(w,i){
+    var first=i===0||weeks[i-1].dt.getMonth()!==w.dt.getMonth();
+    return '<div style="width:20px;flex-shrink:0;font-size:8px;color:var(--mut);text-align:center">'+(first?months[w.dt.getMonth()]:'')+'</div>';
+  }).join('');
+
+  // Lista por urgência
+  var el=document.getElementById('mant-list');
+  if(!inMant.length){
+    el.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--mut)"><div style="font-size:36px">✅</div><div style="font-size:13px;margin-top:8px;font-weight:600">Nenhuma ferramenta em manutenção</div><div style="font-size:11px;margin-top:4px">Toque em + Agendar para enviar uma ferramenta</div></div>';
+    return;
+  }
+  var groups=[
+    {l:'⚠️ PRAZO VENCIDO',c:'#c0392b',bg:'#fdecea',items:inMant.filter(function(t){return t.prazo&&new Date(t.prazo)<today;})},
+    {l:'⏳ RETORNO ≤14 DIAS',c:'#d97706',bg:'#fef9e7',items:inMant.filter(function(t){if(!t.prazo)return false;var d=new Date(t.prazo);return d>=today&&(d-today)/86400000<=14;})},
+    {l:'📅 RETORNO ≤30 DIAS',c:'#1a7a3c',bg:'#e6f5ec',items:inMant.filter(function(t){if(!t.prazo)return false;var d=new Date(t.prazo);return d>=today&&(d-today)/86400000>14&&(d-today)/86400000<=30;})},
+    {l:'🗓 AGENDADO >30 DIAS',c:'#1565c0',bg:'#e8f0fe',items:inMant.filter(function(t){if(!t.prazo)return false;return new Date(t.prazo)>=today&&(new Date(t.prazo)-today)/86400000>30;})},
+    {l:'📋 SEM DATA DEFINIDA',c:'#5a7a65',bg:'#f5f5f5',items:inMant.filter(function(t){return !t.prazo;})},
+  ];
+  el.innerHTML=groups.filter(function(g){return g.items.length>0;}).map(function(g){
+    return '<div style="margin-bottom:14px">'+
+      '<div style="font-size:10px;font-weight:800;letter-spacing:.8px;color:'+g.c+';margin-bottom:8px;padding:4px 8px;background:'+g.bg+';border-radius:6px;display:inline-block">'+g.l+' ('+g.items.length+')</div>'+
+      g.items.map(function(t){
+        var prazoStr=t.prazo?new Date(t.prazo).toLocaleDateString('pt-BR'):'—';
+        var dias=t.prazo?Math.ceil((new Date(t.prazo)-today)/86400000):null;
+        var diasStr=dias!==null?(dias<0?'Venceu '+Math.abs(dias)+'d atrás':dias===0?'Hoje':'Retorno em '+dias+'d'):'Sem prazo';
+        return '<div class="card" onclick="invOpenForm(\''+t.id+'\')" style="cursor:pointer;margin-bottom:8px;border-left:3px solid '+g.c+'">'+
+          '<div style="display:flex;align-items:flex-start;gap:10px">'+
+          '<div style="flex:1;min-width:0">'+
+          '<div style="font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.3">'+t.tipo+'</div>'+
+          '<div style="display:flex;flex-wrap:wrap;gap:5px">'+
+          '<span class="tag '+(t.ativo==='BA'?'tg':'tb')+'" style="font-size:10px">'+t.ativo+'</span>'+
+          (t.tipoMan?'<span class="tag tm" style="font-size:10px">'+t.tipoMan+'</span>':'')+
+          (t.pn?'<span style="font-size:11px;color:var(--mut)">PN: '+t.pn+'</span>':'')+
+          '</div>'+
+          '<div style="font-size:11px;margin-top:5px;font-weight:700;color:'+g.c+'">'+diasStr+' · '+prazoStr+'</div>'+
+          (t.obs?'<div style="font-size:11px;color:var(--mut);margin-top:3px;font-style:italic">'+t.obs+'</div>':'')+
+          '</div><div style="color:var(--mut);font-size:16px">›</div></div></div>';
+      }).join('')+'</div>';
+  }).join('');
+}
+function mantSetAtivo(a){_mantAtivo=a;mantRender();}
+
+function mantShowWeek(key){
+  var all=invGet();
+  var tools=all.filter(function(t){
+    if(!t.prazo||t.loc!=='Manutenção')return false;
+    var pd=new Date(t.prazo);
+    return pd.getFullYear()+'-'+mantGetWeek(pd)===key;
+  });
+  var today=new Date();today.setHours(0,0,0,0);
+  var parts=key.split('-');
+  var ws=mantWeekStart(parseInt(parts[0]),parseInt(parts[1]));
+  document.getElementById('mant-week-label').textContent='SEMANA '+parts[1]+' · '+ws.toLocaleDateString('pt-BR',{month:'short',year:'numeric'}).toUpperCase();
+  document.getElementById('mant-week-items').innerHTML=tools.length?tools.map(function(t){
+    var dias=t.prazo?Math.ceil((new Date(t.prazo)-today)/86400000):null;
+    var cor=dias!==null&&dias<0?'#c0392b':dias<=14?'#d97706':'#1a7a3c';
+    return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bor)">'+
+      '<span class="tag '+(t.ativo==='BA'?'tg':'tb')+'" style="font-size:10px">'+t.ativo+'</span>'+
+      '<div style="flex:1;font-size:12px">'+t.tipo+'</div>'+
+      '<div style="font-size:11px;font-weight:700;color:'+cor+'">'+new Date(t.prazo).toLocaleDateString('pt-BR')+'</div></div>';
+  }).join(''):'<div style="font-size:12px;color:var(--mut);padding:8px 0">Nenhuma manutenção esta semana.</div>';
+  var det=document.getElementById('mant-week-detail');
+  det.style.display='block';
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function mantOpenAgenda(){
+  var all=invGet();
+  var sel=document.getElementById('mant-sel-tool');
+  sel.innerHTML=all.map(function(t){return '<option value="'+t.id+'">'+t.ativo+' · '+t.tipo.substring(0,55)+'</option>';}).join('');
+  var d=new Date();d.setDate(d.getDate()+14);
+  document.getElementById('mant-sel-prazo').value=d.toISOString().slice(0,10);
+  document.getElementById('mant-sel-obs').value='';
+  document.getElementById('mant-sel-tipo').value='Preventiva';
+  var m=document.getElementById('mant-modal');m.style.display='flex';
+}
+function mantCloseModal(){document.getElementById('mant-modal').style.display='none';}
+function mantSaveAgenda(){
+  var id=document.getElementById('mant-sel-tool').value;
+  var prazo=document.getElementById('mant-sel-prazo').value;
+  var tipo=document.getElementById('mant-sel-tipo').value;
+  var obs=document.getElementById('mant-sel-obs').value.trim();
+  if(!id){alert('Selecione uma ferramenta.');return;}
+  var tools=invGet();
+  var idx=tools.findIndex(function(t){return t.id===id;});
+  if(idx<0)return;
+  tools[idx].loc='Manutenção';tools[idx].prazo=prazo;tools[idx].tipoMan=tipo;
+  if(obs)tools[idx].obs=obs;
+  tools[idx].atualizado=new Date().toISOString();
+  invSet(tools);mantCloseModal();mantRender();
+}
+
+// ── REPORT SEMANAL ─────────────────────────────────────────────────
+var _repShowPreview=false;
+
+function repWeekNum(d){var j=new Date(d.getFullYear(),0,1);return Math.ceil(((d-j)/86400000+j.getDay()+1)/7);}
+
+function repSection(tools,ativo){
+  var today=new Date();today.setHours(0,0,0,0);
+  var ft=tools.filter(function(t){return t.ativo===ativo||t.ativo==='Ambos';});
+  var venc=ft.filter(function(t){return t.loc==='Manutenção'&&t.prazo&&new Date(t.prazo)<today;});
+  var mant=ft.filter(function(t){return t.loc==='Manutenção'&&(!t.prazo||new Date(t.prazo)>=today);});
+  var poco=ft.filter(function(t){return t.loc==='Poço';});
+  var disp=ft.filter(function(t){return t.loc==='Galpão'||t.loc==='Prancha';});
+  var campo=ft.filter(function(t){return t.loc==='Ativo BA'||t.loc==='Ativo RN';});
+  var lines=[];
+  lines.push('📦 Total: '+ft.length+' itens  |  ✅ Disponível: '+disp.length+'  |  📡 Em campo: '+campo.length);
+  if(poco.length){
+    lines.push('🕳 No poço ('+poco.length+'):');
+    poco.forEach(function(t){lines.push('   • '+t.tipo.substring(0,60)+(t.poco?' — '+t.poco:''));});
+  }
+  if(venc.length){
+    lines.push('⚠️ MANUTENÇÃO VENCIDA ('+venc.length+'):');
+    venc.forEach(function(t){lines.push('   • '+t.tipo.substring(0,55)+' — venceu '+new Date(t.prazo).toLocaleDateString('pt-BR'));});
+  }
+  if(mant.length){
+    lines.push('🔧 Em manutenção ('+mant.length+'):');
+    mant.forEach(function(t){
+      var ps=t.prazo?'retorno '+new Date(t.prazo).toLocaleDateString('pt-BR'):'sem data';
+      lines.push('   • '+t.tipo.substring(0,55)+' — '+ps+(t.tipoMan?' ('+t.tipoMan+')':''));
+    });
+  }
+  return lines;
+}
+
+function repGenerate(){
+  var today=new Date();
+  document.getElementById('rep-header-txt').textContent='Semana '+repWeekNum(today)+' · '+today.toLocaleDateString('pt-BR');
+  var tools=invGet();
+  function toHtml(lines){
+    return lines.map(function(l){
+      var isAlert=l.includes('⚠️');var isItem=l.startsWith('   •');
+      return '<div style="color:'+(isAlert?'#c0392b':'var(--txt)')+';padding:'+(isItem?'1px 0 1px 10px':'3px 0')+'">'+(isItem?l:'<b>'+l+'</b>')+'</div>';
+    }).join('');
+  }
+  document.getElementById('rep-ba-auto').innerHTML=toHtml(repSection(tools,'BA'));
+  document.getElementById('rep-rn-auto').innerHTML=toHtml(repSection(tools,'RN'));
+  if(_repShowPreview)repBuildPreview();
+}
+
+function repBuildText(){
+  var today=new Date();var tools=invGet();
+  var baObs=document.getElementById('rep-ba-obs').value.trim();
+  var rnObs=document.getElementById('rep-rn-obs').value.trim();
+  var gObs=document.getElementById('rep-geral-obs').value.trim();
+  function block(at,lbl,obs){
+    return '━━━ '+lbl+' ━━━\n'+repSection(tools,at).join('\n')+(obs?'\n\n💬 Observações:\n'+obs:'')+'\n';
+  }
+  var txt='📋 REPORT SEMANAL — FERRAMENTAS\n';
+  txt+='Operações Especiais · PetroRecôncavo\n';
+  txt+='Semana '+repWeekNum(today)+' · '+today.toLocaleDateString('pt-BR')+'\n';
+  txt+='─────────────────────────────\n\n';
+  txt+=block('BA','ATIVO BAHIA (BA)',baObs)+'\n';
+  txt+=block('RN','ATIVO POTIGUAR (RN)',rnObs);
+  if(gObs)txt+='\n━━━ OBSERVAÇÕES GERAIS ━━━\n'+gObs+'\n';
+  txt+='\n─────────────────────────────\n';
+  txt+='Gerado em: '+today.toLocaleString('pt-BR');
+  return txt;
+}
+function repBuildPreview(){document.getElementById('rep-preview').textContent=repBuildText();}
+function repTogglePreview(){
+  _repShowPreview=!_repShowPreview;
+  document.getElementById('rep-preview-card').style.display=_repShowPreview?'block':'none';
+  document.getElementById('rep-preview-btn').textContent=_repShowPreview?'✕ Fechar prévia':'👁 Ver prévia';
+  if(_repShowPreview)repBuildPreview();
+}
+function repCopy(mode){
+  var txt=repBuildText();
+  if(mode==='email')txt=txt.replace(/━/g,'—').replace(/•/g,'-');
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){alert('✅ Copiado! Cole no '+(mode==='wa'?'WhatsApp':'e-mail')+'.');});}
+  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('✅ Copiado!');}
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// BDO — Google Sheets Sync
+// ═══════════════════════════════════════════════════════════════════
+(function(){
+  var GS_URL_KEY = 'bdo_gs_url';
+  var GS_ON_KEY  = 'bdo_gs_on';
+
+  function gsUrl(){ return localStorage.getItem(GS_URL_KEY)||''; }
+  function gsOn(){  return localStorage.getItem(GS_ON_KEY)==='1' && !!gsUrl(); }
+
+  // ── HTTP helper ─────────────────────────────────────────────────
+  function gsGet(params){
+    var qs=Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k]);}).join('&');
+    return fetch(gsUrl()+'?'+qs).then(function(r){return r.json();});
+  }
+  function gsPost(params,body){
+    var qs=Object.keys(params).map(function(k){return k+'='+encodeURIComponent(params[k]);}).join('&');
+    return fetch(gsUrl()+'?'+qs,{method:'POST',body:JSON.stringify(body)}).then(function(r){return r.json();});
+  }
+
+  // ── UI helpers ──────────────────────────────────────────────────
+  window.bdoSyncBar=function(msg,color){
+    var bar=document.getElementById('bdo-sync-bar');if(!bar)return;
+    if(!msg){bar.style.display='none';return;}
+    bar.style.display='block';
+    bar.style.background=color||'#e8f0fe';
+    bar.style.color=color?'#fff':'#1565c0';
+    bar.textContent=msg;
+  };
+  function syncBtnUpdate(){
+    var btn=document.getElementById('bdo-sync-btn');if(!btn)return;
+    btn.textContent=gsOn()?'☁ Conectado':'☁ Sync';
+    btn.style.background=gsOn()?'rgba(255,255,255,.3)':'rgba(255,255,255,.1)';
+  }
+  function cfgStatusUpdate(){
+    var el=document.getElementById('bdo-cfg-status');if(!el)return;
+    if(gsOn()){el.style.background='#e6f5ec';el.style.color='#1a7a3c';el.textContent='✅ Conectado ao Google Sheets';}
+    else{el.style.background='#fef9e7';el.style.color='#d97706';el.textContent='⚠ Sem conexão — dados somente no localStorage';}
+  }
+
+  // ── Modal ───────────────────────────────────────────────────────
+  window.bdoShowConfig=function(){
+    var inp=document.getElementById('bdo-cfg-url');if(inp)inp.value=gsUrl();
+    cfgStatusUpdate();syncBtnUpdate();
+    document.getElementById('bdo-config-modal').style.display='flex';
+  };
+
+  window.bdoTestConn=function(){
+    var url=document.getElementById('bdo-cfg-url').value.trim();
+    if(!url){alert('Cole a URL do Apps Script primeiro.');return;}
+    var el=document.getElementById('bdo-cfg-status');
+    el.style.background='#e8f0fe';el.style.color='#1565c0';el.textContent='⏳ Testando conexão…';
+    fetch(url+'?entity=bdo&action=list')
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d.ok!==false){el.style.background='#e6f5ec';el.style.color='#1a7a3c';el.textContent='✅ Conexão OK! '+(Array.isArray(d.data)?d.data.length+' BDOs na planilha':'');}
+        else{el.style.background='#fdecea';el.style.color='#c0392b';el.textContent='❌ Erro: '+(d.error||'Resposta inválida');}
+      })
+      .catch(function(e){el.style.background='#fdecea';el.style.color='#c0392b';el.textContent='❌ Falha: '+e;});
+  };
+
+  window.bdoCfgSave=function(){
+    var url=document.getElementById('bdo-cfg-url').value.trim();
+    if(!url){alert('Cole a URL do Apps Script primeiro.');return;}
+    localStorage.setItem(GS_URL_KEY,url);
+    localStorage.setItem(GS_ON_KEY,'1');
+    cfgStatusUpdate();syncBtnUpdate();
+    document.getElementById('bdo-config-modal').style.display='none';
+    bdoSyncBar('⏳ Sincronizando…');
+    gsFullSync().then(function(){
+      bdoSyncBar('✅ Sincronizado com o Google Sheets','#1a7a3c');
+      setTimeout(function(){bdoSyncBar('');},3000);
+      bdoInit();
+    }).catch(function(e){bdoSyncBar('❌ Erro: '+e,'#c0392b');});
+  };
+
+  window.bdoCfgDisconnect=function(){
+    if(!confirm('Desconectar do Google Sheets?'))return;
+    localStorage.removeItem(GS_ON_KEY);
+    cfgStatusUpdate();syncBtnUpdate();
+    document.getElementById('bdo-config-modal').style.display='none';
+  };
+
+  // ── Sync operations ─────────────────────────────────────────────
+  function gsFullSync(){
+    return gsGet({entity:'bdo',action:'list'}).then(function(res){
+      if(!res.ok)throw res.error;
+      var sheet=Array.isArray(res.data)?res.data:[];
+      var local=bdoLoad();
+      // Merge: itens locais que não estão na sheet sobem
+      var merged=sheet.slice();
+      local.forEach(function(l){if(!merged.find(function(s){return s.id===l.id;}))merged.unshift(l);});
+      bdoSave(merged);
+      return gsPost({entity:'bdo',action:'replace'},{records:merged});
+    });
+  }
+
+  window.bdoPush=function(){
+    var recs=bdoLoad();
+    bdoSyncBar('⏳ Enviando '+recs.length+' BDOs para o Sheets…','#1565c0');
+    gsPost({entity:'bdo',action:'replace'},{records:recs})
+      .then(function(r){
+        if(!r.ok)throw r.error;
+        bdoSyncBar('✅ '+recs.length+' BDOs enviados!','#1a7a3c');
+        setTimeout(function(){bdoSyncBar('');},3000);
+      }).catch(function(e){bdoSyncBar('❌ '+e,'#c0392b');});
+  };
+
+  window.bdoPull=function(){
+    bdoSyncBar('⏳ Baixando dados do Sheets…','#1565c0');
+    gsGet({entity:'bdo',action:'list'}).then(function(r){
+      if(!r.ok)throw r.error;
+      var data=Array.isArray(r.data)?r.data:[];
+      bdoSave(data);
+      bdoSyncBar('✅ '+data.length+' BDOs carregados!','#1a7a3c');
+      setTimeout(function(){bdoSyncBar('');},3000);
+      bdoInit();
+    }).catch(function(e){bdoSyncBar('❌ '+e,'#c0392b');});
+  };
+
+  // ── Hook em bdoSave: ponto único de escrita ──────────────────────
+  // Aguarda o DOM+JS estarem prontos antes de fazer o patch
+  window.addEventListener('load', function(){
+    var _origSave = bdoSave;
+    bdoSave = function(d){
+      _origSave(d);
+      if(!gsOn())return;
+      // Sync em background — replace completo (simples e confiável)
+      gsPost({entity:'bdo',action:'replace'},{records:d})
+        .catch(function(e){console.warn('[GSheets] sync falhou:',e);});
+    };
+
+    // Sync silencioso ao abrir o BDO
+    var _origShow = window.show;
+    window.show = function(id){
+      _origShow(id);
+      if(id==='bdo'){
+        syncBtnUpdate();
+        if(gsOn()){
+          bdoSyncBar('⏳ Sincronizando…');
+          gsFullSync().then(function(){
+            bdoSyncBar('✅ Atualizado','#1a7a3c');
+            setTimeout(function(){bdoSyncBar('');},2000);
+            bdoInit();
+          }).catch(function(){
+            bdoSyncBar('⚠ Offline — dados locais','#d97706');
+            setTimeout(function(){bdoSyncBar('');},3000);
+          });
+        }
+      }
+    };
+  });
+})();
+
 </script>
 </body>
 </html>
