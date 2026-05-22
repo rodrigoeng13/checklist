@@ -2830,10 +2830,17 @@ function repCopy(mode){
 // BDO — Google Sheets Sync
 // ═══════════════════════════════════════════════════════════════════
 (function(){
-  var GS_URL_KEY = 'bdo_gs_url';
-  var GS_ON_KEY  = 'bdo_gs_on';
+  var GS_URL_KEY     = 'bdo_gs_url';
+  var GS_ON_KEY      = 'bdo_gs_on';
+  var GS_DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbxP-PGJMOeV2fOAiOWOo_S6lSOTyDSud5zr8fj1LrL_zfQdVAz62oN46mqK99wJ9k1I/exec';
 
-  function gsUrl(){ return localStorage.getItem(GS_URL_KEY)||''; }
+  // Auto-connect: injeta URL padrão se ainda não configurado
+  if(!localStorage.getItem(GS_URL_KEY)){
+    localStorage.setItem(GS_URL_KEY, GS_DEFAULT_URL);
+    localStorage.setItem(GS_ON_KEY, '1');
+  }
+
+  function gsUrl(){ return localStorage.getItem(GS_URL_KEY) || GS_DEFAULT_URL; }
   function gsOn(){  return localStorage.getItem(GS_ON_KEY)==='1' && !!gsUrl(); }
 
   // ── HTTP helper ─────────────────────────────────────────────────
@@ -2949,33 +2956,32 @@ function repCopy(mode){
   // ── Hook em bdoSave: ponto único de escrita ──────────────────────
   // Aguarda o DOM+JS estarem prontos antes de fazer o patch
   window.addEventListener('load', function(){
+    // Hook em bdoSave: toda escrita local sobe para a Sheet em background
     var _origSave = bdoSave;
     bdoSave = function(d){
       _origSave(d);
-      if(!gsOn())return;
-      // Sync em background — replace completo (simples e confiável)
+      if(!gsOn()) return;
       gsPost({entity:'bdo',action:'replace'},{records:d})
-        .catch(function(e){console.warn('[GSheets] sync falhou:',e);});
+        .catch(function(e){ console.warn('[GSheets] sync falhou:',e); });
     };
 
-    // Sync silencioso ao abrir o BDO
-    var _origShow = window.show;
-    window.show = function(id){
-      _origShow(id);
-      if(id==='bdo'){
-        syncBtnUpdate();
-        if(gsOn()){
-          bdoSyncBar('⏳ Sincronizando…');
-          gsFullSync().then(function(){
-            bdoSyncBar('✅ Atualizado','#1a7a3c');
-            setTimeout(function(){bdoSyncBar('');},2000);
-            bdoInit();
-          }).catch(function(){
-            bdoSyncBar('⚠ Offline — dados locais','#d97706');
-            setTimeout(function(){bdoSyncBar('');},3000);
-          });
-        }
-      }
+    // Patch seguro em bdoInit: sync silencioso ao abrir o BDO
+    var _origBdoInit = bdoInit;
+    bdoInit = function(){
+      _origBdoInit();
+      syncBtnUpdate();
+      if(!gsOn()) return;
+      bdoSyncBar('⏳ Sincronizando…');
+      gsFullSync()
+        .then(function(){
+          _origBdoInit();
+          bdoSyncBar('✅ Atualizado','#1a7a3c');
+          setTimeout(function(){ bdoSyncBar(''); }, 2000);
+        })
+        .catch(function(){
+          bdoSyncBar('⚠ Offline — dados locais','#d97706');
+          setTimeout(function(){ bdoSyncBar(''); }, 3000);
+        });
     };
   });
 })();
